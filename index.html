@@ -554,6 +554,8 @@
             "cortina_triple_pliegue": "Cortina Triple Pliegue",
             "cortina_palas": "Cortina Palas"
         };
+        const COSTO_INSTALACION = 50;
+
 
         // Estado de la aplicación
         let itemsActuales = [];
@@ -608,6 +610,9 @@
             const alto = parseFloat(document.getElementById('alto').value);
             const tejidoNombre = document.getElementById('tejido').value;
             const sistemaNombre = document.getElementById('sistema').value;
+            const incluirInstalacion = document.getElementById('incluir-instalacion').checked;
+            const cortinasPartidas = document.getElementById('cortinas-partidas').checked;
+        
 
             if (!tipo || !ancho || !alto || !tejidoNombre) {
                 alert('Por favor completa todos los campos obligatorios (Tipo, Ancho, Alto y Tejido)');
@@ -646,6 +651,20 @@
 
             const precioTejido = tejidoMetros * tejido.precio;
 
+             // Cálculo especial si va partida:
+    let precioTejido, precioConfeccion, precioSistema;
+    if (cortinasPartidas) {
+        // Por ejemplo: se parte el ancho a la mitad y se calcula cada lado 
+        const mitadAncho = ancho / 2;
+        precioTejido = 2 * calcularPrecioTejido(mitadAncho, alto, tipo, tejidoNombre);
+        precioConfeccion = 2 * calcularPrecioConfeccion(mitadAncho, tipo);
+        precioSistema = sistemaNombre ? 2 * calcularPrecioSistema(mitadAncho, sistemaNombre) : 0;
+    } else {
+        precioTejido = calcularPrecioTejido(ancho, alto, tipo, tejidoNombre);
+        precioConfeccion = calcularPrecioConfeccion(ancho, tipo);
+        precioSistema = sistemaNombre ? calcularPrecioSistema(ancho, sistemaNombre) : 0;
+    }
+
             // Precio confección
             const confeccion = CONFECCION[tipo];
             let precioConfeccion = 0;
@@ -679,6 +698,9 @@
                 alto,
                 tejido_nombre: tejidoNombre,
                 precio_total: precioTotal
+                incluir_instalacion: incluirInstalacion,
+        cortinas_partidas: cortinasPartidas,
+        precio_total: precioTejido + precioConfeccion + precioSistema
             };
 
             itemsActuales.push(item);
@@ -750,6 +772,9 @@
                 alert('Agrega al menos un item al presupuesto');
                 return;
             }
+            const incluirInstalacion = itemsActuales.some(item => item.incluir_instalacion);
+    let subtotal = itemsActuales.reduce((sum, item) => sum + item.precio_total, 0);
+    if (incluirInstalacion) subtotal += COSTO_INSTALACION;
 
             const subtotal = itemsActuales.reduce((sum, item) => sum + item.precio_total, 0);
             const total = subtotal * 1.21;
