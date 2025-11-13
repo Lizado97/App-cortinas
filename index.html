@@ -575,7 +575,22 @@
             cargarSistemas();
             cargarDashboard();
         });
-
+        
+       function mostrarVista(vista) {
+    document.getElementById('dashboard-view').classList.add('hidden');
+    document.getElementById('nuevo-view').classList.add('hidden');
+    document.getElementById('detalle-view').classList.add('hidden');
+    
+    if (vista === 'dashboard') {
+        document.getElementById('dashboard-view').classList.remove('hidden');
+        cargarDashboard();
+    } else if (vista === 'nuevo') {
+        document.getElementById('nuevo-view').classList.remove('hidden');
+        limpiarFormulario();
+    } else if (vista === 'detalle') {
+        document.getElementById('detalle-view').classList.remove('hidden');
+    }
+}
         function cargarTejidos() {
             const select = document.getElementById('tejido');
             TEJIDOS.forEach(t => {
@@ -596,21 +611,7 @@
             });
         }
 
-       function mostrarVista(vista) {
-    document.getElementById('dashboard-view').classList.add('hidden');
-    document.getElementById('nuevo-view').classList.add('hidden');
-    document.getElementById('detalle-view').classList.add('hidden');
-    
-    if (vista === 'dashboard') {
-        document.getElementById('dashboard-view').classList.remove('hidden');
-        cargarDashboard();
-    } else if (vista === 'nuevo') {
-        document.getElementById('nuevo-view').classList.remove('hidden');
-        limpiarFormulario();
-    } else if (vista === 'detalle') {
-        document.getElementById('detalle-view').classList.remove('hidden');
-    }
-}
+
 
         function agregarItem() {
             const tipo = document.getElementById('tipo-cortina').value;
