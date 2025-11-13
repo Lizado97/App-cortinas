@@ -458,6 +458,10 @@
                             <span>Total Items:</span>
                             <span id="total-items">0</span>
                         </div>
+                        <div class="resumen-linea" id="linea-instalacion" style="display: none;">
+                        <span>Instalación:</span>
+                        <span>50.00€</span>
+                        </div>
                         <div class="resumen-linea">
                             <span>Subtotal (sin IVA):</span>
                             <span id="subtotal">0.00€</span>
@@ -472,6 +476,9 @@
                                 <span id="total">0.00€</span>
                             </div>
                         </div>
+                        <button class="btn" id="btn-instalacion" onclick="toggleInstalacion()" style="width: 100%; background: #fde047; color: #92400e; font-weight: bold; margin-top: 1rem;">
+    ➕ Añadir Instalación (+50 €)
+</button>
                         <button class="btn" onclick="guardarPresupuesto()" style="width: 100%; background: white; color: #2563eb; margin-top: 2rem; font-weight: bold;">
                             💾 Guardar Presupuesto
                         </button>
@@ -725,10 +732,28 @@
                 lista.appendChild(div);
             });
         }
+        function toggleInstalacion() {
+            instalacionIncluida = !instalacionIncluida;
+            actualizarResumen();
+            actualizarBotonInstalacion();
+            }
+
+        function actualizarBotonInstalacion() {
+            const btn = document.getElementById('btn-instalacion');
+            btn.textContent = instalacionIncluida ? 'Quitar Instalación (-50 €)' : '➕ Añadir Instalación (+50 €)';
+            btn.style.background = instalacionIncluida ? '#fecaca' : '#fde047';
+            btn.style.color = instalacionIncluida ? '#b91c1c' : '#92400e';
+}
 
         function actualizarResumen() {
             const totalItems = itemsActuales.length;
-            const subtotal = itemsActuales.reduce((sum, item) => sum + item.precio_total, 0);
+            let subtotal = itemsActuales.reduce((sum, item) => sum + item.precio_total, 0);
+            if (instalacionIncluida) {
+                subtotal += 50;
+                document.getElementById('linea-instalacion').style.display = "";
+            } else {
+                document.getElementById('linea-instalacion').style.display = "none";
+            }
             const iva = subtotal * 0.21;
             const total = subtotal + iva;
 
@@ -736,11 +761,16 @@
             document.getElementById('subtotal').textContent = subtotal.toFixed(2) + '€';
             document.getElementById('iva').textContent = iva.toFixed(2) + '€';
             document.getElementById('total').textContent = total.toFixed(2) + '€';
+            if (typeof actualizarBotonInstalacion === 'function') {
+                actualizarBotonInstalacion();
+            }
         }
 
         function guardarPresupuesto() {
             const nombre = document.getElementById('cliente-nombre').value;
-            
+            let subtotal = itemsActuales.reduce((sum, item) => sum + item.precio_total, 0);
+            if (instalacionIncluida) subtotal += 50;
+               
             if (!nombre) {
                 alert('Por favor ingresa el nombre del cliente');
                 return;
@@ -921,6 +951,8 @@
             itemsActuales = [];
             actualizarItems();
             actualizarResumen();
+            instalacionIncluida = false;
+            actualizarBotonInstalacion();
         }
     </script>
 </body>
