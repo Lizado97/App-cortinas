@@ -651,19 +651,7 @@
 
             const precioTejido = tejidoMetros * tejido.precio;
 
-             // Cálculo especial si va partida:
-    let precioTejido, precioConfeccion, precioSistema;
-    if (cortinasPartidas) {
-        // Por ejemplo: se parte el ancho a la mitad y se calcula cada lado 
-        const mitadAncho = ancho / 2;
-        precioTejido = 2 * calcularPrecioTejido(mitadAncho, alto, tipo, tejidoNombre);
-        precioConfeccion = 2 * calcularPrecioConfeccion(mitadAncho, tipo);
-        precioSistema = sistemaNombre ? 2 * calcularPrecioSistema(mitadAncho, sistemaNombre) : 0;
-    } else {
-        precioTejido = calcularPrecioTejido(ancho, alto, tipo, tejidoNombre);
-        precioConfeccion = calcularPrecioConfeccion(ancho, tipo);
-        precioSistema = sistemaNombre ? calcularPrecioSistema(ancho, sistemaNombre) : 0;
-    }
+       
 
             // Precio confección
             const confeccion = CONFECCION[tipo];
@@ -674,7 +662,10 @@
             else if (ancho <= 250) precioConfeccion = confeccion[250];
             else if (ancho <= 300) precioConfeccion = confeccion[300];
             else precioConfeccion = confeccion[350] || confeccion[300];
+            if (cortinasPartidas) precioConfeccion = 2 * calcularPrecioConfeccion(mitadAncho, tipo);
+            else precioConfeccion = calcularPrecioConfeccion(ancho, tipo);
 
+    
             // Precio sistema
             let precioSistema = 0;
             if (sistemaNombre) {
@@ -697,7 +688,7 @@
                 ancho,
                 alto,
                 tejido_nombre: tejidoNombre,
-                precio_total: precioTotal
+                precio_total: precioTotal,
                 incluir_instalacion: incluirInstalacion,
         cortinas_partidas: cortinasPartidas,
         precio_total: precioTejido + precioConfeccion + precioSistema
