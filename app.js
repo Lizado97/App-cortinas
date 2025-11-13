@@ -6,12 +6,13 @@ import {
 
 // ------------------- CONFIGURA AQUÍ tu Firebase -------------------
 const firebaseConfig = {
-  apiKey: "TU_API_KEY",
-  authDomain: "TU_AUTHDOMAIN",
-  projectId: "TU_PROJECT_ID",
-  storageBucket: "TU_STORAGE_BUCKET",
-  messagingSenderId: "TU_MSG_ID",
-  appId: "TU_APP_ID"
+  apiKey: "AIzaSyC6xBnd3x_SVXfUy-t2wfnGTFnURRPiLQA",
+  authDomain: "calculocortinas.firebaseapp.com",
+  projectId: "calculocortinas",
+  storageBucket: "calculocortinas.firebasestorage.app",
+  messagingSenderId: "929588769197",
+  appId: "1:929588769197:web:ad491a77c3f18289cab124",
+  measurementId: "G-BSTNE5DLDT"
 };
 // -----------------------------------------------------------------
 
