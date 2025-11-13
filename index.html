@@ -288,6 +288,61 @@
             font-weight: bold;
         }
 
+        .checkbox-container {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 1rem;
+            background: #dbeafe;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+        }
+
+        .checkbox-container input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+
+        .checkbox-container label {
+            cursor: pointer;
+            margin: 0;
+            font-weight: 500;
+        }
+
+        .search-box {
+            position: relative;
+        }
+
+        .search-results {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: white;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+            max-height: 300px;
+            overflow-y: auto;
+            z-index: 1000;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            margin-top: 0.5rem;
+        }
+
+        .search-result-item {
+            padding: 1rem;
+            cursor: pointer;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .search-result-item:hover {
+            background: #f8fafc;
+        }
+
+        .search-result-item:last-child {
+            border-bottom: none;
+        }
+
         @media print {
             body {
                 background: white;
@@ -418,11 +473,20 @@
                                 <input type="number" id="alto" placeholder="280">
                             </div>
                         </div>
+                        
+                        <!-- Checkbox 2 piezas -->
+                        <div class="checkbox-container">
+                            <input type="checkbox" id="dos-piezas">
+                            <label for="dos-piezas">Dividir en 2 piezas (divide ancho÷2 y multiplica confección x2)</label>
+                        </div>
+
                         <div class="form-group">
-                            <label>Tejido *</label>
-                            <select id="tejido">
-                                <option value="">Selecciona el tejido...</option>
-                            </select>
+                            <label>Tejido * <small>(Buscar por nombre)</small></label>
+                            <div class="search-box">
+                                <input type="text" id="tejido-search" placeholder="Buscar tejido..." oninput="buscarTejido()">
+                                <div id="search-results" class="search-results hidden"></div>
+                            </div>
+                            <input type="hidden" id="tejido">
                         </div>
                         <div class="form-group">
                             <label>Sistema de Instalación</label>
@@ -462,6 +526,13 @@
                             <span>Subtotal (sin IVA):</span>
                             <span id="subtotal">0.00€</span>
                         </div>
+                        
+                        <!-- Checkbox instalación -->
+                        <div class="checkbox-container" style="background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2);">
+                            <input type="checkbox" id="incluir-instalacion" onchange="actualizarResumen()">
+                            <label for="incluir-instalacion" style="color: white;">Instalación (+50€)</label>
+                        </div>
+
                         <div class="resumen-linea">
                             <span>IVA (21%):</span>
                             <span id="iva">0.00€</span>
@@ -501,37 +572,206 @@
     </div>
 
     <script>
-        // Datos de tarifas
+        // Datos de tarifas - TODOS LOS TEJIDOS
         const TEJIDOS = [
             { nombre: "AALBORG 110-111-114", precio: 41.28, ancho: 300, composicion: "50% Pes 50% Li" },
             { nombre: "AALBORG 60-61-64", precio: 41.28, ancho: 300, composicion: "53% Pes 47% Li" },
             { nombre: "AALBORG 90-91-94", precio: 41.28, ancho: 300, composicion: "57% Pes 43% Li" },
             { nombre: "ABI", precio: 35.13, ancho: 300, composicion: "100% Pes" },
+            { nombre: "ACHIRA", precio: 42.25, ancho: 315, composicion: "100% Pes" },
+            { nombre: "AKINA", precio: 59.08, ancho: 280, composicion: "70%CV-30%LI" },
+            { nombre: "ALCACERES", precio: 51.45, ancho: 315, composicion: "100% Pes" },
+            { nombre: "ALISHA", precio: 38.12, ancho: 280, composicion: "100% Pes" },
+            { nombre: "ALISON", precio: 31.35, ancho: 140, composicion: "100% Pes" },
+            { nombre: "AMETISTA", precio: 39.20, ancho: 300, composicion: "100% Pes" },
+            { nombre: "ANEKO", precio: 59.08, ancho: 280, composicion: "70%CV-30%LI" },
             { nombre: "ANETO", precio: 38.40, ancho: 300, composicion: "100%Pes" },
+            { nombre: "APATITE", precio: 39.20, ancho: 300, composicion: "100% Pes" },
+            { nombre: "ARACHOVA", precio: 43.26, ancho: 280, composicion: "60% Pes 20% Co 20% PAN" },
+            { nombre: "ARNIKA", precio: 45.36, ancho: 295, composicion: "18%Li 82% Pes" },
+            { nombre: "ASA", precio: 50.63, ancho: 310, composicion: "88%PES-12%CO" },
+            { nombre: "ASLAN", precio: 35.13, ancho: 300, composicion: "100%Pes" },
             { nombre: "ASPEN BCO/CRUDO", precio: 43.70, ancho: 300, composicion: "50% Pes 50% Li" },
             { nombre: "ASPEN LINO", precio: 45.45, ancho: 300, composicion: "50% Pes 50% Li" },
+            { nombre: "ASTRID", precio: 38.12, ancho: 280, composicion: "100% Pes" },
+            { nombre: "ASTUN", precio: 33.41, ancho: 300, composicion: "50% Pes 50% Li" },
+            { nombre: "AZAD", precio: 35.13, ancho: 300, composicion: "80% Pes 20% Li" },
+            { nombre: "AZAMI", precio: 59.08, ancho: 280, composicion: "70%CV-30%LI" },
             { nombre: "BAVAY", precio: 48.60, ancho: 300, composicion: "50% Pes 50% Li" },
             { nombre: "BEGUR", precio: 43.50, ancho: 300, composicion: "60% Pes 40% Li" },
+            { nombre: "BERLIN", precio: 31.40, ancho: 140, composicion: "100% Pes" },
+            { nombre: "BEST", precio: 50.42, ancho: 320, composicion: "84% Li 14% Pes 2% Pa" },
             { nombre: "BIBLOS", precio: 27.52, ancho: 300, composicion: "80% Pes 20% Li" },
+            { nombre: "BINDY", precio: 54.99, ancho: 310, composicion: "62%PES-38%PAN" },
             { nombre: "BLITZ", precio: 39.67, ancho: 300, composicion: "58% Pes 42% Li" },
+            { nombre: "BOHEM", precio: 47.88, ancho: 300, composicion: "50% Pes 50% Li" },
+            { nombre: "BOLLY", precio: 35.46, ancho: 310, composicion: "95%PES-5%CO" },
+            { nombre: "BONIFACIO", precio: 42.30, ancho: 300, composicion: "60% Pes 40% Li" },
             { nombre: "BRERA", precio: 39.10, ancho: 300, composicion: "50% Pes 50% Li" },
+            { nombre: "BRISA", precio: 64.68, ancho: 310, composicion: "97%PES 3%CO" },
+            { nombre: "BUBBLES", precio: 48.56, ancho: 280, composicion: "50% Pes 50% Co" },
+            { nombre: "CACTUS", precio: 56.70, ancho: 290, composicion: "47% Co 53% Pes" },
+            { nombre: "CALVI", precio: 38.15, ancho: 300, composicion: "50% Li 50% Pes" },
+            { nombre: "CANNES", precio: 35.96, ancho: 140, composicion: "100% Pes" },
+            { nombre: "CANVAS", precio: 52.71, ancho: 310, composicion: "50 % Li 50 % Co" },
+            { nombre: "CARLOTA", precio: 40.70, ancho: 300, composicion: "100% Pes" },
+            { nombre: "CASSIS", precio: 34.13, ancho: 300, composicion: "50% Li 50% Pes" },
+            { nombre: "CHATEAU", precio: 51.45, ancho: 310, composicion: "100% Pes" },
+            { nombre: "CIARA", precio: 50.63, ancho: 310, composicion: "88%PES-12%CO" },
+            { nombre: "CIVITA", precio: 48.58, ancho: 300, composicion: "28% Pes 60% Co 12% Li" },
+            { nombre: "CLOUD", precio: 31.96, ancho: 320, composicion: "87% Pes 13% Li" },
+            { nombre: "COLONIA", precio: 31.40, ancho: 140, composicion: "100% Pes" },
+            { nombre: "DESIGN", precio: 52.07, ancho: 280, composicion: "40% Pes 40% Co 20% Pac" },
+            { nombre: "DEVA", precio: 116.98, ancho: 300, composicion: "43%LI-40%CV-17%WO" },
+            { nombre: "DIAMANTE", precio: 39.20, ancho: 300, composicion: "9 % Acr 91 % Pes" },
+            { nombre: "DILARA", precio: 35.13, ancho: 300, composicion: "100% Pes" },
+            { nombre: "DISTEL", precio: 45.36, ancho: 320, composicion: "10%Visc 90% Pes" },
             { nombre: "ECLIPSE", precio: 31.87, ancho: 300, composicion: "65% Pes 35% Li" },
             { nombre: "ELISE BCO/CRUDO", precio: 28.07, ancho: 300, composicion: "50% Pes 50% Li" },
             { nombre: "ELISE LINO", precio: 31.43, ancho: 300, composicion: "50% Pes 50% Li" },
+            { nombre: "ELMA", precio: 39.56, ancho: 300, composicion: "100% Pes" },
+            { nombre: "ENDER", precio: 35.13, ancho: 300, composicion: "100% Pes" },
+            { nombre: "ESPIGA", precio: 52.70, ancho: 280, composicion: "65% Pes 35% Co" },
+            { nombre: "EWAN", precio: 31.35, ancho: 140, composicion: "100% Pes" },
+            { nombre: "FLAT", precio: 34.24, ancho: 140, composicion: "100% Pes" },
+            { nombre: "FLIEDER", precio: 58.25, ancho: 290, composicion: "60% CV 25% Li 15% Pes" },
+            { nombre: "FLORAL", precio: 52.70, ancho: 280, composicion: "65% Pes 35% Co" },
+            { nombre: "FUJI", precio: 59.08, ancho: 280, composicion: "70%CV-30%LI" },
+            { nombre: "GEN", precio: 50.63, ancho: 300, composicion: "100% PES" },
+            { nombre: "GINEBRA", precio: 40.70, ancho: 300, composicion: "100% Pes" },
+            { nombre: "GLAT", precio: 47.31, ancho: 315, composicion: "100% Pes Ignifugo" },
+            { nombre: "GORBEA", precio: 35.12, ancho: 300, composicion: "100%Pes" },
+            { nombre: "HAMLET", precio: 38.12, ancho: 280, composicion: "100% Pes" },
+            { nombre: "HANOVER", precio: 31.40, ancho: 140, composicion: "100% Pes" },
+            { nombre: "HYDRA", precio: 43.26, ancho: 280, composicion: "60% Pes 20% Co 20% PAN" },
+            { nombre: "IMA", precio: 59.08, ancho: 280, composicion: "70%CV-30%LI" },
+            { nombre: "INDIRA", precio: 38.12, ancho: 280, composicion: "100% Pes" },
+            { nombre: "JANIN", precio: 50.04, ancho: 300, composicion: "66%PES-34%CV" },
+            { nombre: "JIN", precio: 59.08, ancho: 280, composicion: "70%CV-30%LI" },
+            { nombre: "KALIA", precio: 38.12, ancho: 280, composicion: "100% Pes" },
+            { nombre: "KAMILLE", precio: 36.10, ancho: 305, composicion: "100% Pes" },
+            { nombre: "KATY", precio: 50.04, ancho: 300, composicion: "78%PES-22%LI" },
+            { nombre: "KEIKO", precio: 59.08, ancho: 280, composicion: "70%CV-30%LI" },
+            { nombre: "KEREN", precio: 35.13, ancho: 300, composicion: "100% Pes" },
+            { nombre: "KHAN", precio: 35.13, ancho: 290, composicion: "92% Pes 8% Cv" },
+            { nombre: "KIMI", precio: 59.08, ancho: 280, composicion: "70%CV-30%LI" },
+            { nombre: "KLEE", precio: 42.25, ancho: 300, composicion: "100% Pes" },
+            { nombre: "KURVEN", precio: 122.75, ancho: 275, composicion: "100 % Li" },
+            { nombre: "LEGI", precio: 38.12, ancho: 280, composicion: "100% Pes" },
+            { nombre: "LIMENI", precio: 43.26, ancho: 280, composicion: "60% CV 25% Li 15% Pes" },
+            { nombre: "LINE", precio: 47.31, ancho: 315, composicion: "100% Pes Ignifugo" },
+            { nombre: "LINSE", precio: 61.66, ancho: 290, composicion: "60% CV 25% Li 15% Pes" },
+            { nombre: "LOCA", precio: 50.04, ancho: 280, composicion: "90%CV- 10%PES" },
+            { nombre: "LOGAN", precio: 31.35, ancho: 140, composicion: "100% Pes" },
+            { nombre: "LOTUS", precio: 45.36, ancho: 300, composicion: "100% Pes" },
+            { nombre: "LOUTROS", precio: 43.26, ancho: 280, composicion: "60% Pes 20% Co 20% PAN" },
+            { nombre: "LULI", precio: 50.04, ancho: 300, composicion: "100% PES" },
+            { nombre: "LUZZI", precio: 47.63, ancho: 300, composicion: "80% Pes 20% Li" },
+            { nombre: "MALADETA", precio: 36.23, ancho: 300, composicion: "100%Pes" },
+            { nombre: "MALVE", precio: 36.10, ancho: 310, composicion: "100% Pes" },
+            { nombre: "MATI", precio: 38.12, ancho: 280, composicion: "100% Pes" },
+            { nombre: "MAVI", precio: 35.13, ancho: 300, composicion: "94% Pes 4% Co 2% Li" },
+            { nombre: "MENTON", precio: 48.55, ancho: 300, composicion: "50% Li 50% Pes" },
+            { nombre: "MESH", precio: 61.20, ancho: 300, composicion: "52% Li 48% Pes" },
+            { nombre: "MIDORI", precio: 59.08, ancho: 280, composicion: "70%CV-30%LI" },
+            { nombre: "MIKA", precio: 59.08, ancho: 280, composicion: "70%CV-30%LI" },
             { nombre: "MILAN BCO/CRUDO", precio: 43.50, ancho: 300, composicion: "60% Pes 40% Li" },
+            { nombre: "MOIRA", precio: 31.35, ancho: 140, composicion: "100% Pes" },
+            { nombre: "MONET", precio: 56.70, ancho: 300, composicion: "3% Li 97% Pes" },
+            { nombre: "MOOT", precio: 60.38, ancho: 280, composicion: "50% Li 30% Co 20% Pes" },
             { nombre: "MORITZ", precio: 35.75, ancho: 300, composicion: "50% Pes 50% Li" },
             { nombre: "MULHACEN", precio: 38.40, ancho: 300, composicion: "100%Pes" },
+            { nombre: "MULIAN", precio: 38.12, ancho: 280, composicion: "100% Pes" },
+            { nombre: "MUNICH", precio: 31.40, ancho: 140, composicion: "100% Pes" },
+            { nombre: "NAOKO", precio: 59.08, ancho: 280, composicion: "70%CV-30%LI" },
+            { nombre: "NAPOLES", precio: 41.58, ancho: 280, composicion: "40% Pes 30% Pan 30% Co" },
+            { nombre: "NARA", precio: 59.08, ancho: 280, composicion: "70%CV-30%LI" },
+            { nombre: "NAUPLIA", precio: 43.26, ancho: 280, composicion: "60% Pes 20% Co 20% PAN" },
+            { nombre: "NELKE", precio: 60.62, ancho: 290, composicion: "60% CV 25% Li 15% Pes" },
             { nombre: "NEUTRA", precio: 31.15, ancho: 300, composicion: "50% Pes 50% Li" },
+            { nombre: "NEYLAN", precio: 35.13, ancho: 300, composicion: "100% Pes" },
+            { nombre: "NICE", precio: 34.24, ancho: 140, composicion: "100% Pes" },
+            { nombre: "NIKI", precio: 50.04, ancho: 280, composicion: "90%CV- 10%PES" },
+            { nombre: "NOMI", precio: 54.04, ancho: 280, composicion: "70%CV-30%LI" },
+            { nombre: "NOVELTY", precio: 56.53, ancho: 285, composicion: "77% Pes 23% Li" },
+            { nombre: "NOZOMI", precio: 59.08, ancho: 280, composicion: "70%CV-30%LI" },
+            { nombre: "OHARA", precio: 59.08, ancho: 280, composicion: "70%CV-30%LI" },
+            { nombre: "ONDAS", precio: 52.70, ancho: 280, composicion: "65% Pes 35% Co" },
+            { nombre: "ONLY", precio: 86.54, ancho: 300, composicion: "86 % Li 13 % Pes 1 % Pa" },
+            { nombre: "ONUR", precio: 46.89, ancho: 315, composicion: "53% Pan 47% Pes" },
+            { nombre: "OPERA", precio: 92.16, ancho: 310, composicion: "100% Li" },
+            { nombre: "PANDORA", precio: 50.04, ancho: 300, composicion: "90%CV- 10%PES" },
+            { nombre: "PAPINGO", precio: 43.26, ancho: 280, composicion: "60% Pes 20% Co 20% PAN" },
+            { nombre: "PERDI", precio: 40.06, ancho: 310, composicion: "77%PAN-20%PES-3%PA" },
+            { nombre: "PLAIN", precio: 55.25, ancho: 280, composicion: "65% Li 25% Co 10% Pes" },
+            { nombre: "POINT", precio: 37.32, ancho: 140, composicion: "100% Pes" },
+            { nombre: "PUNKE", precio: 47.31, ancho: 315, composicion: "100% Pes Ignifugo" },
             { nombre: "RACK", precio: 25.34, ancho: 300, composicion: "100% Pes" },
-            { nombre: "SIESTA", precio: 39.27, ancho: 300, composicion: "60% Pes 40% Li" }
+            { nombre: "RALPH BCO/CRUDO", precio: 68.40, ancho: 300, composicion: "50% Pes 50% Li" },
+            { nombre: "RALPH LINO", precio: 70.59, ancho: 300, composicion: "50% Pes 50% Li" },
+            { nombre: "RAU", precio: 50.12, ancho: 280, composicion: "75% Co 25% Pes" },
+            { nombre: "REINA", precio: 74.94, ancho: 315, composicion: "94%PES- 6%CV" },
+            { nombre: "RETINO", precio: 43.26, ancho: 280, composicion: "60% Pes 20% Co 20% PAN" },
+            { nombre: "ROMA", precio: 41.58, ancho: 280, composicion: "40% Pes 30% Pan 30% Co" },
+            { nombre: "ROMBO", precio: 52.70, ancho: 280, composicion: "65% Pes 35% Co" },
+            { nombre: "ROMBUS", precio: 100.38, ancho: 290, composicion: "100 % Li" },
+            { nombre: "RUBINO", precio: 39.20, ancho: 300, composicion: "100% Pes" },
+            { nombre: "SABATINI", precio: 56.70, ancho: 320, composicion: "100% Pes" },
+            { nombre: "SANSA", precio: 55.86, ancho: 280, composicion: "90%CV- 10%PES" },
+            { nombre: "SCOTT", precio: 31.35, ancho: 140, composicion: "100% Pes" },
+            { nombre: "SELIN", precio: 35.13, ancho: 300, composicion: "80% Pes 20% Li" },
+            { nombre: "SHIELD", precio: 60.38, ancho: 280, composicion: "50% Li 30% Co 20% Pes" },
+            { nombre: "SIESTA", precio: 39.27, ancho: 300, composicion: "60% Pes 40% Li" },
+            { nombre: "SISUCA", precio: 48.27, ancho: 310, composicion: "67%PAN-26%PES-7%PA" },
+            { nombre: "SMERALDO", precio: 40.93, ancho: 300, composicion: "100% Pes" },
+            { nombre: "SMOOTH", precio: 68.60, ancho: 280, composicion: "100 % Li" },
+            { nombre: "SOFT", precio: 54.68, ancho: 310, composicion: "77% Trev 23% Pes" },
+            { nombre: "SORA", precio: 37.58, ancho: 300, composicion: "100% Pes" },
+            { nombre: "STAR", precio: 48.56, ancho: 280, composicion: "50% Pes 50% Co" },
+            { nombre: "STICK", precio: 48.56, ancho: 280, composicion: "50% Pes 50% Co" },
+            { nombre: "STILO", precio: 68.65, ancho: 295, composicion: "80% Vis 20% Li" },
+            { nombre: "SWEET", precio: 25.34, ancho: 310, composicion: "100 % Pes ignifug" },
+            { nombre: "SYMI", precio: 43.26, ancho: 280, composicion: "60% Pes 20% Co 20% PAN" },
+            { nombre: "TANG", precio: 55.25, ancho: 290, composicion: "55% Li 30% Co 20% Pes" },
+            { nombre: "TEIDE", precio: 36.23, ancho: 300, composicion: "100%Pes" },
+            { nombre: "TENDER", precio: 44.85, ancho: 245, composicion: "75% Li 25% Pes" },
+            { nombre: "TIM", precio: 55.25, ancho: 290, composicion: "65% Li 25% Co 10% Pes" },
+            { nombre: "TORTORA", precio: 45.89, ancho: 310, composicion: "60%PES-40%LI" },
+            { nombre: "TRAUBE", precio: 58.25, ancho: 290, composicion: "60% CV 25% Li 15% Pes" },
+            { nombre: "TRAUM", precio: 69.75, ancho: 290, composicion: "100% Li" },
+            { nombre: "TULPE", precio: 36.10, ancho: 300, composicion: "20% Li 80% Pes" },
+            { nombre: "VELLUTO", precio: 48.51, ancho: 280, composicion: "100% Pes" },
+            { nombre: "VENECIA", precio: 41.58, ancho: 280, composicion: "40% Pes 30% Pan 30% Co" },
+            { nombre: "VERSALLES", precio: 51.45, ancho: 280, composicion: "100% Pes" },
+            { nombre: "VILMA", precio: 37.50, ancho: 300, composicion: "100% PES" },
+            { nombre: "WONDER", precio: 32.62, ancho: 320, composicion: "60% Li 40% Co" },
+            { nombre: "XENA", precio: 37.58, ancho: 300, composicion: "100% PES" },
+            { nombre: "YECLA 01-02-03", precio: 42.08, ancho: 300, composicion: "50% Pes 50% Li" },
+            { nombre: "YECLA 11-12-13", precio: 42.08, ancho: 300, composicion: "50% Pes 50% Li" },
+            { nombre: "YECLA 41-42-43", precio: 42.08, ancho: 310, composicion: "50% Pes 50% Li" },
+            { nombre: "YECLA 51-52-53", precio: 42.08, ancho: 300, composicion: "50% Pes 50% Li" },
+            { nombre: "YUYUAN", precio: 51.45, ancho: 300, composicion: "100% Pes" },
+            { nombre: "ZAFFIRO", precio: 40.93, ancho: 300, composicion: "100% Pes" },
+            { nombre: "ZURA", precio: 37.58, ancho: 300, composicion: "100% PES" }
         ];
 
-        const SISTEMAS = [
-            { nombre: "Estor a Cadena - Paquetto", precios: {75:52.20, 100:57.38, 125:67.80, 150:77.19, 175:79.18, 200:88.61, 225:103.04, 250:107.97, 275:117.27, 300:126.66} },
-            { nombre: "Estor a Cadena - Plegable", precios: {75:54.01, 100:59.91, 125:69.94, 150:82.26, 175:89.06, 200:94.02, 225:108.11, 250:116.51, 275:128.41, 300:136.81} },
-            { nombre: "Guía Manual 1 Vía - Convencional", precios: {100:10.17, 125:12.86, 150:15.01, 175:16.74, 200:18.87, 225:20.95, 250:24.10, 275:26.42, 300:28.90} },
-            { nombre: "Guía Manual 1 Vía - Onda Perfecta", precios: {100:23.10, 125:29.03, 150:34.41, 175:39.38, 200:44.74, 225:50.06, 250:56.44, 275:61.99, 300:67.70} }
-        ];
+        // TODOS LOS SISTEMAS
+        const SISTEMAS = {
+            "Estor a Cadena - Paquetto": {75:52.20, 100:57.38, 125:67.80, 150:77.19, 175:79.18, 200:88.61, 225:103.04, 250:107.97, 275:117.27, 300:126.66},
+            "Estor a Cadena - Plegable": {75:54.01, 100:59.91, 125:69.94, 150:82.26, 175:89.06, 200:94.02, 225:108.11, 250:116.51, 275:128.41, 300:136.81},
+            "Guía Manual 1 Vía - Convencional": {100:10.17, 125:12.86, 150:15.01, 175:16.74, 200:18.87, 225:20.95, 250:24.10, 275:26.42, 300:28.90},
+            "Guía Manual 1 Vía - Onda Perfecta": {100:23.10, 125:29.03, 150:34.41, 175:39.38, 200:44.74, 225:50.06, 250:56.44, 275:61.99, 300:67.70},
+            "Guía Profesional Manual - Convencional": {100:40.99, 150:55.77, 200:69.05, 250:85.07, 300:99.30},
+            "Guía Profesional Manual - Onda Perfecta": {100:43.15, 150:58.72, 200:72.68, 250:89.54, 300:104.54},
+            "Guía Profesional a Cordón - Convencional": {100:52.53, 150:67.45, 200:81.01, 250:97.34, 300:111.90},
+            "Guía Profesional a Cordón - Onda Perfecta": {100:55.30, 150:70.99, 200:85.27, 250:102.46, 300:117.80},
+            "Barra Guía Cuadrada - Convencional": {100:65.77, 150:79.68, 200:93.59, 250:124.26, 300:138.18},
+            "Barra Guía Cuadrada - Onda Perfecta": {100:67.78, 150:82.70, 200:97.61, 250:129.29, 300:144.21},
+            "Barra Guía Redonda 20mm - Convencional": {100:64.51, 150:78.17, 200:91.81, 250:121.89, 300:135.54},
+            "Barra Guía Redonda 20mm - Onda Perfecta": {100:66.49, 150:81.12, 200:95.75, 250:126.82, 300:141.46},
+            "Barra Guía Redonda 28mm - Convencional": {100:74.18, 150:85.98, 200:100.99, 250:134.08, 300:149.09},
+            "Barra Guía Redonda 28mm - Onda Perfecta": {100:76.46, 150:93.28, 200:105.32, 250:139.51, 300:155.60}
+        };
 
         const CONFECCION = {
             "estor_paquetto": {100:60.08, 150:72.10, 200:84.12, 250:96.13, 300:120.17, 350:132.18},
@@ -554,8 +794,6 @@
             "cortina_triple_pliegue": "Cortina Triple Pliegue",
             "cortina_palas": "Cortina Palas"
         };
-        const COSTO_INSTALACION = 50;
-
 
         // Estado de la aplicación
         let itemsActuales = [];
@@ -563,30 +801,64 @@
 
         // Inicializar
         document.addEventListener('DOMContentLoaded', function() {
-            cargarTejidos();
             cargarSistemas();
             cargarDashboard();
         });
 
-        function cargarTejidos() {
-            const select = document.getElementById('tejido');
-            TEJIDOS.forEach(t => {
+        function cargarSistemas() {
+            const select = document.getElementById('sistema');
+            Object.keys(SISTEMAS).forEach(s => {
                 const option = document.createElement('option');
-                option.value = t.nombre;
-                option.textContent = `${t.nombre} - ${t.precio}€/ml (${t.composicion})`;
+                option.value = s;
+                option.textContent = s;
                 select.appendChild(option);
             });
         }
 
-        function cargarSistemas() {
-            const select = document.getElementById('sistema');
-            SISTEMAS.forEach(s => {
-                const option = document.createElement('option');
-                option.value = s.nombre;
-                option.textContent = s.nombre;
-                select.appendChild(option);
-            });
+        // Buscador de tejidos
+        function buscarTejido() {
+            const searchInput = document.getElementById('tejido-search');
+            const searchResults = document.getElementById('search-results');
+            const query = searchInput.value.toLowerCase();
+
+            if (query.length === 0) {
+                searchResults.classList.add('hidden');
+                return;
+            }
+
+            const filtered = TEJIDOS.filter(t => 
+                t.nombre.toLowerCase().includes(query)
+            );
+
+            if (filtered.length === 0) {
+                searchResults.innerHTML = '<div class="search-result-item">No se encontraron tejidos</div>';
+                searchResults.classList.remove('hidden');
+                return;
+            }
+
+            searchResults.innerHTML = filtered.map(t => `
+                <div class="search-result-item" onclick="seleccionarTejido('${t.nombre}')">
+                    <strong>${t.nombre}</strong><br>
+                    <small style="color: #64748b;">${t.precio}€/ml - ${t.composicion}</small>
+                </div>
+            `).join('');
+            
+            searchResults.classList.remove('hidden');
         }
+
+        function seleccionarTejido(nombre) {
+            document.getElementById('tejido-search').value = nombre;
+            document.getElementById('tejido').value = nombre;
+            document.getElementById('search-results').classList.add('hidden');
+        }
+
+        // Cerrar resultados al hacer click fuera
+        document.addEventListener('click', function(e) {
+            const searchBox = document.querySelector('.search-box');
+            if (searchBox && !searchBox.contains(e.target)) {
+                document.getElementById('search-results').classList.add('hidden');
+            }
+        });
 
         function mostrarVista(vista) {
             document.getElementById('dashboard-view').classList.add('hidden');
@@ -610,9 +882,7 @@
             const alto = parseFloat(document.getElementById('alto').value);
             const tejidoNombre = document.getElementById('tejido').value;
             const sistemaNombre = document.getElementById('sistema').value;
-            const incluirInstalacion = document.getElementById('incluir-instalacion').checked;
-            const cortinasPartidas = document.getElementById('cortinas-partidas').checked;
-        
+            const dosPiezas = document.getElementById('dos-piezas').checked;
 
             if (!tipo || !ancho || !alto || !tejidoNombre) {
                 alert('Por favor completa todos los campos obligatorios (Tipo, Ancho, Alto y Tejido)');
@@ -621,65 +891,68 @@
 
             const tejido = TEJIDOS.find(t => t.nombre === tejidoNombre);
             
+            // Si es en 2 piezas, dividir el ancho por 2
+            const anchoCalculado = dosPiezas ? ancho / 2 : ancho;
+
             // Calcular metros de tejido
             let multiplicador = 1;
             let tejidoMetros = 0;
             
             if (tipo === 'estor_paquetto' || tipo === 'estor_plegable') {
-                tejidoMetros = (ancho + 40) / 100;
-            } else if (tipo === 'cortina_onda_perfecta' ) {
+                tejidoMetros = (anchoCalculado + 40) / 100;
+            } else if (tipo === 'cortina_onda_perfecta') {
                 multiplicador = 2.4;
-                tejidoMetros = (ancho * multiplicador) / 100;
+                tejidoMetros = (anchoCalculado * multiplicador) / 100;
             } else if (tipo === 'cortina_ollados') {
                 multiplicador = 2.2;
-                tejidoMetros = (ancho * multiplicador) / 100;
+                tejidoMetros = (anchoCalculado * multiplicador) / 100;
             } else if (tipo === 'cortina_plana') {
-                tejidoMetros = (ancho * 1.4) / 100;
-            }
-            else if ( tipo === 'cortina_fruncida' ) {
+                tejidoMetros = (anchoCalculado * 1.4) / 100;
+            } else if (tipo === 'cortina_fruncida') {
                 multiplicador = 2.5;
-                tejidoMetros = (ancho * multiplicador) / 100;
-            }
-            else if ( tipo === 'cortina_triple_pliegue') {
+                tejidoMetros = (anchoCalculado * multiplicador) / 100;
+            } else if (tipo === 'cortina_triple_pliegue') {
                 multiplicador = 2.7;
-                tejidoMetros = (ancho * multiplicador) / 100;
-            }
-             else if ( tipo === 'cortina_palas' ) {
+                tejidoMetros = (anchoCalculado * multiplicador) / 100;
+            } else if (tipo === 'cortina_palas') {
                 multiplicador = 2.6;
-                tejidoMetros = (ancho * multiplicador) / 100;
+                tejidoMetros = (anchoCalculado * multiplicador) / 100;
             }
 
             const precioTejido = tejidoMetros * tejido.precio;
 
-       
-
             // Precio confección
             const confeccion = CONFECCION[tipo];
             let precioConfeccion = 0;
-            if (ancho <= 100) precioConfeccion = confeccion[100];
-            else if (ancho <= 150) precioConfeccion = confeccion[150];
-            else if (ancho <= 200) precioConfeccion = confeccion[200];
-            else if (ancho <= 250) precioConfeccion = confeccion[250];
-            else if (ancho <= 300) precioConfeccion = confeccion[300];
+            if (anchoCalculado <= 100) precioConfeccion = confeccion[100];
+            else if (anchoCalculado <= 150) precioConfeccion = confeccion[150];
+            else if (anchoCalculado <= 200) precioConfeccion = confeccion[200];
+            else if (anchoCalculado <= 250) precioConfeccion = confeccion[250];
+            else if (anchoCalculado <= 300) precioConfeccion = confeccion[300];
             else precioConfeccion = confeccion[350] || confeccion[300];
-            if (cortinasPartidas) precioConfeccion = 2 * calcularPrecioConfeccion(mitadAncho, tipo);
-            else precioConfeccion = calcularPrecioConfeccion(ancho, tipo);
 
-    
             // Precio sistema
             let precioSistema = 0;
             if (sistemaNombre) {
-                const sistema = SISTEMAS.find(s => s.nombre === sistemaNombre);
+                const sistema = SISTEMAS[sistemaNombre];
                 if (sistema) {
-                    if (ancho <= 100) precioSistema = sistema.precios[100] || 0;
-                    else if (ancho <= 150) precioSistema = sistema.precios[150] || 0;
-                    else if (ancho <= 200) precioSistema = sistema.precios[200] || 0;
-                    else if (ancho <= 250) precioSistema = sistema.precios[250] || 0;
-                    else precioSistema = sistema.precios[300] || 0;
+                    if (anchoCalculado <= 100) precioSistema = sistema[100] || sistema[75] || 0;
+                    else if (anchoCalculado <= 125) precioSistema = sistema[125] || sistema[100] || 0;
+                    else if (anchoCalculado <= 150) precioSistema = sistema[150] || sistema[125] || 0;
+                    else if (anchoCalculado <= 175) precioSistema = sistema[175] || sistema[150] || 0;
+                    else if (anchoCalculado <= 200) precioSistema = sistema[200] || sistema[175] || 0;
+                    else if (anchoCalculado <= 225) precioSistema = sistema[225] || sistema[200] || 0;
+                    else if (anchoCalculado <= 250) precioSistema = sistema[250] || sistema[225] || 0;
+                    else if (anchoCalculado <= 275) precioSistema = sistema[275] || sistema[250] || 0;
+                    else precioSistema = sistema[300] || sistema[275] || 0;
                 }
             }
 
-            const precioTotal = precioTejido + precioConfeccion + precioSistema;
+            // Si es en 2 piezas, multiplicar el tejido y la confección por 2
+            const precioTejidoFinal = dosPiezas ? precioTejido * 2 : precioTejido;
+            const precioConfeccionFinal = dosPiezas ? precioConfeccion * 2 : precioConfeccion;
+
+            const precioTotal = precioTejidoFinal + precioConfeccionFinal + precioSistema;
 
             const item = {
                 id: Date.now(),
@@ -689,9 +962,10 @@
                 alto,
                 tejido_nombre: tejidoNombre,
                 precio_total: precioTotal,
-                incluir_instalacion: incluirInstalacion,
-        cortinas_partidas: cortinasPartidas,
-        precio_total: precioTejido + precioConfeccion + precioSistema
+                dos_piezas: dosPiezas,
+                precio_tejido: precioTejidoFinal,
+                precio_confeccion: precioConfeccionFinal,
+                precio_sistema: precioSistema
             };
 
             itemsActuales.push(item);
@@ -703,7 +977,9 @@
             document.getElementById('ancho').value = '';
             document.getElementById('alto').value = '';
             document.getElementById('tejido').value = '';
+            document.getElementById('tejido-search').value = '';
             document.getElementById('sistema').value = '';
+            document.getElementById('dos-piezas').checked = false;
         }
 
         function eliminarItem(id) {
@@ -730,7 +1006,10 @@
                 div.innerHTML = `
                     <div class="item-info">
                         <h4>#${index + 1} - ${item.descripcion}</h4>
-                        <p>Medidas: ${item.ancho}cm x ${item.alto}cm</p>
+                        <p>Medidas: ${item.ancho}cm x ${item.alto}cm ${item.dos_piezas ? '(2 piezas)' : ''}</p>
+                        <p style="font-size: 0.75rem; color: #64748b; margin-top: 0.25rem;">
+                            Tejido: ${item.precio_tejido.toFixed(2)}€ | Confección: ${item.precio_confeccion.toFixed(2)}€ | Sistema: ${item.precio_sistema.toFixed(2)}€
+                        </p>
                     </div>
                     <div class="item-price">${item.precio_total.toFixed(2)}€</div>
                     <button class="btn btn-danger" onclick="eliminarItem(${item.id})">🗑️</button>
@@ -742,8 +1021,11 @@
         function actualizarResumen() {
             const totalItems = itemsActuales.length;
             const subtotal = itemsActuales.reduce((sum, item) => sum + item.precio_total, 0);
-            const iva = subtotal * 0.21;
-            const total = subtotal + iva;
+            const incluirInstalacion = document.getElementById('incluir-instalacion').checked;
+            const instalacion = incluirInstalacion ? 50 : 0;
+            const subtotalConInstalacion = subtotal + instalacion;
+            const iva = subtotalConInstalacion * 0.21;
+            const total = subtotalConInstalacion + iva;
 
             document.getElementById('total-items').textContent = totalItems;
             document.getElementById('subtotal').textContent = subtotal.toFixed(2) + '€';
@@ -763,12 +1045,11 @@
                 alert('Agrega al menos un item al presupuesto');
                 return;
             }
-            const incluirInstalacion = itemsActuales.some(item => item.incluir_instalacion);
-    let subtotal = itemsActuales.reduce((sum, item) => sum + item.precio_total, 0);
-    if (incluirInstalacion) subtotal += COSTO_INSTALACION;
 
             const subtotal = itemsActuales.reduce((sum, item) => sum + item.precio_total, 0);
-            const total = subtotal * 1.21;
+            const incluirInstalacion = document.getElementById('incluir-instalacion').checked;
+            const instalacion = incluirInstalacion ? 50 : 0;
+            const total = (subtotal + instalacion) * 1.21;
 
             const presupuesto = {
                 id: Date.now().toString(),
@@ -779,10 +1060,11 @@
                 cliente_direccion: document.getElementById('cliente-direccion').value,
                 fecha: new Date().toISOString().split('T')[0],
                 items: itemsActuales,
-                total_sin_iva: subtotal,
+                total_sin_iva: subtotal + instalacion,
                 total_con_iva: total,
                 estado: 'borrador',
-                notas: document.getElementById('notas').value
+                notas: document.getElementById('notas').value,
+                incluir_instalacion: incluirInstalacion
             };
 
             // Guardar en localStorage
@@ -887,6 +1169,7 @@
                                 <td>
                                     <strong>${item.descripcion}</strong><br>
                                     <small style="color: #64748b;">Tejido: ${item.tejido_nombre}</small>
+                                    ${item.dos_piezas ? '<br><small style="color: #2563eb;">En 2 piezas</small>' : ''}
                                 </td>
                                 <td>${item.ancho} x ${item.alto} cm</td>
                                 <td style="text-align: right; font-weight: bold;">${item.precio_total.toFixed(2)}€</td>
@@ -899,8 +1182,14 @@
                     <div style="width: 400px;">
                         <div style="display: flex; justify-content: space-between; padding: 1rem 0; border-bottom: 1px solid #e2e8f0;">
                             <span>Subtotal (sin IVA):</span>
-                            <strong>${presupuesto.total_sin_iva.toFixed(2)}€</strong>
+                            <strong>${(presupuesto.total_sin_iva - (presupuesto.incluir_instalacion ? 50 : 0)).toFixed(2)}€</strong>
                         </div>
+                        ${presupuesto.incluir_instalacion ? `
+                        <div style="display: flex; justify-content: space-between; padding: 1rem 0; border-bottom: 1px solid #e2e8f0;">
+                            <span>Instalación:</span>
+                            <strong>50.00€</strong>
+                        </div>
+                        ` : ''}
                         <div style="display: flex; justify-content: space-between; padding: 1rem 0; border-bottom: 1px solid #e2e8f0;">
                             <span>IVA (21%):</span>
                             <strong>${(presupuesto.total_sin_iva * 0.21).toFixed(2)}€</strong>
@@ -934,6 +1223,7 @@
             document.getElementById('cliente-email').value = '';
             document.getElementById('cliente-direccion').value = '';
             document.getElementById('notas').value = '';
+            document.getElementById('incluir-instalacion').checked = false;
             itemsActuales = [];
             actualizarItems();
             actualizarResumen();
