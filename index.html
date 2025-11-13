@@ -452,7 +452,7 @@
 
                 <!-- Resumen -->
                 <div>
-                    <div class="resumen">
+  <div class="resumen">
     <h3>📦 Resumen del Presupuesto</h3>
     <div class="resumen-linea">
         <span>Total Items:</span>
@@ -466,7 +466,6 @@
         <span>IVA (21%):</span>
         <span id="iva">0.00€</span>
     </div>
-    <!-- ▼ Agrega esta línea, aquí irá el extra de instalación -->
     <div class="resumen-linea" id="linea-instalacion" style="display: none;">
         <span>Instalación:</span>
         <span>50.00€</span>
@@ -477,7 +476,6 @@
             <span id="total">0.00€</span>
         </div>
     </div>
-    <!-- ▼ Botón para incluir la instalación -->
     <button class="btn" id="btn-instalacion" onclick="toggleInstalacion()" style="width: 100%; background: #fde047; color: #92400e; font-weight: bold; margin-top: 1rem;">
         ➕ Añadir Instalación (+50 €)
     </button>
@@ -575,22 +573,8 @@
             cargarSistemas();
             cargarDashboard();
         });
-        
-       function mostrarVista(vista) {
-    document.getElementById('dashboard-view').classList.add('hidden');
-    document.getElementById('nuevo-view').classList.add('hidden');
-    document.getElementById('detalle-view').classList.add('hidden');
-    
-    if (vista === 'dashboard') {
-        document.getElementById('dashboard-view').classList.remove('hidden');
-        cargarDashboard();
-    } else if (vista === 'nuevo') {
-        document.getElementById('nuevo-view').classList.remove('hidden');
-        limpiarFormulario();
-    } else if (vista === 'detalle') {
-        document.getElementById('detalle-view').classList.remove('hidden');
-    }
-}
+       }
+     
         function cargarTejidos() {
             const select = document.getElementById('tejido');
             TEJIDOS.forEach(t => {
@@ -736,20 +720,20 @@
                 lista.appendChild(div);
             });
         }
-        function toggleInstalacion() {
-            instalacionIncluida = !instalacionIncluida;
-            actualizarResumen();
-            actualizarBotonInstalacion();
-            }
+    function toggleInstalacion() {
+        instalacionIncluida = !instalacionIncluida;
+        actualizarResumen();
+        actualizarBotonInstalacion();
+    }
 
-        function actualizarBotonInstalacion() {
-            const btn = document.getElementById('btn-instalacion');
-            btn.textContent = instalacionIncluida ? 'Quitar Instalación (-50 €)' : '➕ Añadir Instalación (+50 €)';
-            btn.style.background = instalacionIncluida ? '#fecaca' : '#fde047';
-            btn.style.color = instalacionIncluida ? '#b91c1c' : '#92400e';
-}
+    function actualizarBotonInstalacion() {
+        const btn = document.getElementById('btn-instalacion');
+        btn.textContent = instalacionIncluida ? 'Quitar Instalación (-50 €)' : '➕ Añadir Instalación (+50 €)';
+        btn.style.background = instalacionIncluida ? '#fecaca' : '#fde047';
+        btn.style.color = instalacionIncluida ? '#b91c1c' : '#92400e';
+    }
 
-       function actualizarResumen() {
+    function actualizarResumen() {
         const totalItems = itemsActuales.length;
         let subtotal = itemsActuales.reduce((sum, item) => sum + item.precio_total, 0);
         if (instalacionIncluida) {
@@ -767,25 +751,20 @@
         document.getElementById('total').textContent = total.toFixed(2) + '€';
         if (typeof actualizarBotonInstalacion === "function") actualizarBotonInstalacion();
     }
-        }
 
-         function guardarPresupuesto() {
+    function guardarPresupuesto() {
         const nombre = document.getElementById('cliente-nombre').value;
-
         if (!nombre) {
             alert('Por favor ingresa el nombre del cliente');
             return;
         }
-
         if (itemsActuales.length === 0) {
             alert('Agrega al menos un item al presupuesto');
             return;
         }
-
         let subtotal = itemsActuales.reduce((sum, item) => sum + item.precio_total, 0);
         if (instalacionIncluida) subtotal += 50;
         const total = subtotal * 1.21;
-
         const presupuesto = {
             id: Date.now().toString(),
             numero: 'P-' + Date.now(),
@@ -799,15 +778,41 @@
             total_con_iva: total,
             estado: 'borrador',
             notas: document.getElementById('notas').value,
-            instalacionIncluida // (Esto es opcional, por si en el futuro lo necesitas)
+            instalacionIncluida
         };
-
         let presupuestos = JSON.parse(localStorage.getItem('presupuestos') || '[]');
         presupuestos.push(presupuesto);
         localStorage.setItem('presupuestos', JSON.stringify(presupuestos));
-
         alert('✅ Presupuesto guardado correctamente');
         mostrarVista('dashboard');
+    }
+
+    function limpiarFormulario() {
+        document.getElementById('cliente-nombre').value = '';
+        document.getElementById('cliente-telefono').value = '';
+        document.getElementById('cliente-email').value = '';
+        document.getElementById('cliente-direccion').value = '';
+        document.getElementById('notas').value = '';
+        itemsActuales = [];
+        instalacionIncluida = false;
+        actualizarItems();
+        actualizarResumen();
+        actualizarBotonInstalacion();
+    }
+        
+    function mostrarVista(vista) {
+        document.getElementById('dashboard-view').classList.add('hidden');
+        document.getElementById('nuevo-view').classList.add('hidden');
+        document.getElementById('detalle-view').classList.add('hidden');
+        if (vista === 'dashboard') {
+            document.getElementById('dashboard-view').classList.remove('hidden');
+            cargarDashboard();
+        } else if (vista === 'nuevo') {
+            document.getElementById('nuevo-view').classList.remove('hidden');
+            limpiarFormulario();
+        } else if (vista === 'detalle') {
+            document.getElementById('detalle-view').classList.remove('hidden');
+        }
     }
         function cargarDashboard() {
             const presupuestos = JSON.parse(localStorage.getItem('presupuestos') || '[]');
@@ -943,18 +948,6 @@
             mostrarVista('detalle');
         }
 
-    function limpiarFormulario() {
-        document.getElementById('cliente-nombre').value = '';
-        document.getElementById('cliente-telefono').value = '';
-        document.getElementById('cliente-email').value = '';
-        document.getElementById('cliente-direccion').value = '';
-        document.getElementById('notas').value = '';
-        itemsActuales = [];
-        instalacionIncluida = false;
-        actualizarItems();
-        actualizarResumen();
-        actualizarBotonInstalacion();
-    }
     </script>
 </body>
 </html>
