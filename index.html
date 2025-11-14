@@ -343,6 +343,20 @@
             border-bottom: none;
         }
 
+        .aviso-orientativo {
+            background: #fef3c7;
+            border: 2px solid #fbbf24;
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .aviso-orientativo strong {
+            color: #92400e;
+            font-size: 1.1rem;
+        }
+
         @media print {
             body {
                 background: white;
@@ -817,6 +831,39 @@
             });
         }
 
+        // ========== FUNCIÓN MEJORADA PARA CALCULAR PRECIO DE SISTEMA ==========
+        function calcularPrecioSistema(ancho, sistemaNombre) {
+            if (!sistemaNombre) return 0;
+            const sistema = SISTEMAS[sistemaNombre];
+            if (!sistema) return 0;
+            
+            // Obtener todos los rangos disponibles y ordenarlos de menor a mayor
+            const rangos = Object.keys(sistema).map(r => parseInt(r)).sort((a, b) => a - b);
+            const rangoMaximo = rangos[rangos.length - 1];
+            
+            // Si el ancho es mayor que el rango máximo disponible
+            if (ancho > rangoMaximo) {
+                // Dividir ancho entre 2
+                const anchoMitad = ancho / 2;
+                
+                // Buscar el rango aplicable para el ancho dividido
+                const rangoParaMitad = rangos.find(r => anchoMitad <= r) || rangoMaximo;
+                
+                // Obtener el precio y multiplicar por 2
+                return (sistema[rangoParaMitad] || 0) * 2;
+            }
+            
+            // Si el ancho está dentro de los rangos normales
+            // Buscar el primer rango que sea >= al ancho (rango superior más cercano)
+            const rangoAplicable = rangos.find(r => ancho <= r);
+            
+            // Si existe un rango aplicable, usar ese precio
+            // Si no existe, usar el precio del rango más alto
+            const rangoFinal = rangoAplicable || rangoMaximo;
+            
+            return sistema[rangoFinal] || 0;
+        }
+
         // Buscador de tejidos
         function buscarTejido() {
             const searchInput = document.getElementById('tejido-search');
@@ -893,7 +940,7 @@
 
             const tejido = TEJIDOS.find(t => t.nombre === tejidoNombre);
             
-            // CAMBIO: Para tejido y confección se usa el ancho dividido si es 2 piezas
+            // Para tejido y confección se usa el ancho dividido si es 2 piezas
             // Para el sistema se usa SIEMPRE el ancho original (completo)
             const anchoParaTejido = dosPiezas ? ancho / 2 : ancho;
             const anchoParaSistema = ancho; // SIEMPRE el ancho completo
@@ -935,25 +982,11 @@
             else if (anchoParaTejido <= 300) precioConfeccion = confeccion[300];
             else precioConfeccion = confeccion[350] || confeccion[300];
 
-            // CAMBIO: Precio sistema (usa SIEMPRE el ancho COMPLETO, sin dividir)
-            let precioSistema = 0;
-            if (sistemaNombre) {
-                const sistema = SISTEMAS[sistemaNombre];
-                if (sistema) {
-                    if (anchoParaSistema <= 100) precioSistema = sistema[100] || sistema[75] || 0;
-                    else if (anchoParaSistema <= 125) precioSistema = sistema[125] || sistema[100] || 0;
-                    else if (anchoParaSistema <= 150) precioSistema = sistema[150] || sistema[125] || 0;
-                    else if (anchoParaSistema <= 175) precioSistema = sistema[175] || sistema[150] || 0;
-                    else if (anchoParaSistema <= 200) precioSistema = sistema[200] || sistema[175] || 0;
-                    else if (anchoParaSistema <= 225) precioSistema = sistema[225] || sistema[200] || 0;
-                    else if (anchoParaSistema <= 250) precioSistema = sistema[250] || sistema[225] || 0;
-                    else if (anchoParaSistema <= 275) precioSistema = sistema[275] || sistema[250] || 0;
-                    else precioSistema = sistema[300] || sistema[275] || 0;
-                }
-            }
+            // MEJORADO: Precio sistema (usa la nueva función con lógica de división)
+            const precioSistema = calcularPrecioSistema(anchoParaSistema, sistemaNombre);
 
             // Si es en 2 piezas, multiplicar el tejido y la confección por 2
-            // El sistema NO se multiplica porque es el mismo sistema para ambas piezas
+            // El sistema NO se multiplica porque ya está calculado correctamente
             const precioTejidoFinal = dosPiezas ? precioTejido * 2 : precioTejido;
             const precioConfeccionFinal = dosPiezas ? precioConfeccion * 2 : precioConfeccion;
 
@@ -1155,6 +1188,14 @@
 
             const content = document.getElementById('detalle-content');
             content.innerHTML = `
+                <!-- AVISO DE PRESUPUESTO ORIENTATIVO -->
+                <div class="aviso-orientativo">
+                    <strong>⚠️ PRESUPUESTO ORIENTATIVO</strong>
+                    <p style="margin-top: 0.5rem; font-size: 0.9rem; color: #78716c;">
+                        Los precios y cantidades aquí indicados son aproximados y están sujetos a confirmación tras toma de medidas definitiva.
+                    </p>
+                </div>
+
                 <div style="display: flex; justify-content: space-between; margin-bottom: 2rem; padding-bottom: 1rem; border-bottom: 2px solid #e2e8f0;">
                     <div>
                         <h2 style="color: #2563eb; margin-bottom: 0.5rem;">Canotex</h2>
