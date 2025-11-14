@@ -477,7 +477,7 @@
                         <!-- Checkbox 2 piezas -->
                         <div class="checkbox-container">
                             <input type="checkbox" id="dos-piezas">
-                            <label for="dos-piezas">Partida 2 piezas </label>
+                            <label for="dos-piezas">Dividir en 2 piezas (divide ancho÷2 y multiplica confección x2)</label>
                         </div>
 
                         <div class="form-group">
@@ -530,7 +530,9 @@
                         <!-- Checkbox instalación -->
                         <div class="checkbox-container" style="background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2);">
                             <input type="checkbox" id="incluir-instalacion" onchange="actualizarResumen()">
-                            <label for="incluir-instalacion" style="color: white;">Instalación (+50€)</label>
+                            <label for="incluir-instalacion" style="color: white;">
+                                Instalación <span id="texto-instalacion">(+50€ por cortina)</span>
+                            </label>
                         </div>
 
                         <div class="resumen-linea">
@@ -891,64 +893,67 @@
 
             const tejido = TEJIDOS.find(t => t.nombre === tejidoNombre);
             
-            // Si es en 2 piezas, dividir el ancho por 2
-            const anchoCalculado = dosPiezas ? ancho / 2 : ancho;
+            // CAMBIO: Para tejido y confección se usa el ancho dividido si es 2 piezas
+            // Para el sistema se usa SIEMPRE el ancho original (completo)
+            const anchoParaTejido = dosPiezas ? ancho / 2 : ancho;
+            const anchoParaSistema = ancho; // SIEMPRE el ancho completo
 
             // Calcular metros de tejido
             let multiplicador = 1;
             let tejidoMetros = 0;
             
             if (tipo === 'estor_paquetto' || tipo === 'estor_plegable') {
-                tejidoMetros = (anchoCalculado + 40) / 100;
+                tejidoMetros = (anchoParaTejido + 40) / 100;
             } else if (tipo === 'cortina_onda_perfecta') {
                 multiplicador = 2.4;
-                tejidoMetros = (anchoCalculado * multiplicador) / 100;
+                tejidoMetros = (anchoParaTejido * multiplicador) / 100;
             } else if (tipo === 'cortina_ollados') {
                 multiplicador = 2.2;
-                tejidoMetros = (anchoCalculado * multiplicador) / 100;
+                tejidoMetros = (anchoParaTejido * multiplicador) / 100;
             } else if (tipo === 'cortina_plana') {
-                tejidoMetros = (anchoCalculado * 1.4) / 100;
+                tejidoMetros = (anchoParaTejido * 1.4) / 100;
             } else if (tipo === 'cortina_fruncida') {
                 multiplicador = 2.5;
-                tejidoMetros = (anchoCalculado * multiplicador) / 100;
+                tejidoMetros = (anchoParaTejido * multiplicador) / 100;
             } else if (tipo === 'cortina_triple_pliegue') {
                 multiplicador = 2.7;
-                tejidoMetros = (anchoCalculado * multiplicador) / 100;
+                tejidoMetros = (anchoParaTejido * multiplicador) / 100;
             } else if (tipo === 'cortina_palas') {
                 multiplicador = 2.6;
-                tejidoMetros = (anchoCalculado * multiplicador) / 100;
+                tejidoMetros = (anchoParaTejido * multiplicador) / 100;
             }
 
             const precioTejido = tejidoMetros * tejido.precio;
 
-            // Precio confección
+            // Precio confección (usa ancho dividido si es 2 piezas)
             const confeccion = CONFECCION[tipo];
             let precioConfeccion = 0;
-            if (anchoCalculado <= 100) precioConfeccion = confeccion[100];
-            else if (anchoCalculado <= 150) precioConfeccion = confeccion[150];
-            else if (anchoCalculado <= 200) precioConfeccion = confeccion[200];
-            else if (anchoCalculado <= 250) precioConfeccion = confeccion[250];
-            else if (anchoCalculado <= 300) precioConfeccion = confeccion[300];
+            if (anchoParaTejido <= 100) precioConfeccion = confeccion[100];
+            else if (anchoParaTejido <= 150) precioConfeccion = confeccion[150];
+            else if (anchoParaTejido <= 200) precioConfeccion = confeccion[200];
+            else if (anchoParaTejido <= 250) precioConfeccion = confeccion[250];
+            else if (anchoParaTejido <= 300) precioConfeccion = confeccion[300];
             else precioConfeccion = confeccion[350] || confeccion[300];
 
-            // Precio sistema
+            // CAMBIO: Precio sistema (usa SIEMPRE el ancho COMPLETO, sin dividir)
             let precioSistema = 0;
             if (sistemaNombre) {
                 const sistema = SISTEMAS[sistemaNombre];
                 if (sistema) {
-                    if (anchoCalculado <= 100) precioSistema = sistema[100] || sistema[75] || 0;
-                    else if (anchoCalculado <= 125) precioSistema = sistema[125] || sistema[100] || 0;
-                    else if (anchoCalculado <= 150) precioSistema = sistema[150] || sistema[125] || 0;
-                    else if (anchoCalculado <= 175) precioSistema = sistema[175] || sistema[150] || 0;
-                    else if (anchoCalculado <= 200) precioSistema = sistema[200] || sistema[175] || 0;
-                    else if (anchoCalculado <= 225) precioSistema = sistema[225] || sistema[200] || 0;
-                    else if (anchoCalculado <= 250) precioSistema = sistema[250] || sistema[225] || 0;
-                    else if (anchoCalculado <= 275) precioSistema = sistema[275] || sistema[250] || 0;
+                    if (anchoParaSistema <= 100) precioSistema = sistema[100] || sistema[75] || 0;
+                    else if (anchoParaSistema <= 125) precioSistema = sistema[125] || sistema[100] || 0;
+                    else if (anchoParaSistema <= 150) precioSistema = sistema[150] || sistema[125] || 0;
+                    else if (anchoParaSistema <= 175) precioSistema = sistema[175] || sistema[150] || 0;
+                    else if (anchoParaSistema <= 200) precioSistema = sistema[200] || sistema[175] || 0;
+                    else if (anchoParaSistema <= 225) precioSistema = sistema[225] || sistema[200] || 0;
+                    else if (anchoParaSistema <= 250) precioSistema = sistema[250] || sistema[225] || 0;
+                    else if (anchoParaSistema <= 275) precioSistema = sistema[275] || sistema[250] || 0;
                     else precioSistema = sistema[300] || sistema[275] || 0;
                 }
             }
 
             // Si es en 2 piezas, multiplicar el tejido y la confección por 2
+            // El sistema NO se multiplica porque es el mismo sistema para ambas piezas
             const precioTejidoFinal = dosPiezas ? precioTejido * 2 : precioTejido;
             const precioConfeccionFinal = dosPiezas ? precioConfeccion * 2 : precioConfeccion;
 
@@ -1022,7 +1027,10 @@
             const totalItems = itemsActuales.length;
             const subtotal = itemsActuales.reduce((sum, item) => sum + item.precio_total, 0);
             const incluirInstalacion = document.getElementById('incluir-instalacion').checked;
-            const instalacion = incluirInstalacion ? 50 : 0;
+            
+            // Instalación es 50€ por cada item/cortina
+            const instalacion = incluirInstalacion ? (50 * totalItems) : 0;
+            
             const subtotalConInstalacion = subtotal + instalacion;
             const iva = subtotalConInstalacion * 0.21;
             const total = subtotalConInstalacion + iva;
@@ -1031,6 +1039,14 @@
             document.getElementById('subtotal').textContent = subtotal.toFixed(2) + '€';
             document.getElementById('iva').textContent = iva.toFixed(2) + '€';
             document.getElementById('total').textContent = total.toFixed(2) + '€';
+            
+            // Actualizar texto de instalación para mostrar el total
+            if (totalItems > 0) {
+                document.getElementById('texto-instalacion').textContent = 
+                    `(+${instalacion.toFixed(2)}€ = 50€ x ${totalItems} cortinas)`;
+            } else {
+                document.getElementById('texto-instalacion').textContent = '(+50€ por cortina)';
+            }
         }
 
         function guardarPresupuesto() {
@@ -1048,7 +1064,10 @@
 
             const subtotal = itemsActuales.reduce((sum, item) => sum + item.precio_total, 0);
             const incluirInstalacion = document.getElementById('incluir-instalacion').checked;
-            const instalacion = incluirInstalacion ? 50 : 0;
+            
+            // Instalación es 50€ por cada item/cortina
+            const instalacion = incluirInstalacion ? (50 * itemsActuales.length) : 0;
+            
             const total = (subtotal + instalacion) * 1.21;
 
             const presupuesto = {
@@ -1064,7 +1083,8 @@
                 total_con_iva: total,
                 estado: 'borrador',
                 notas: document.getElementById('notas').value,
-                incluir_instalacion: incluirInstalacion
+                incluir_instalacion: incluirInstalacion,
+                instalacion_total: instalacion
             };
 
             // Guardar en localStorage
@@ -1129,6 +1149,10 @@
             
             if (!presupuesto) return;
 
+            // Calcular instalación total (para presupuestos antiguos que no tengan este campo)
+            const instalacionTotal = presupuesto.instalacion_total || 
+                (presupuesto.incluir_instalacion ? (50 * presupuesto.items.length) : 0);
+
             const content = document.getElementById('detalle-content');
             content.innerHTML = `
                 <div style="display: flex; justify-content: space-between; margin-bottom: 2rem; padding-bottom: 1rem; border-bottom: 2px solid #e2e8f0;">
@@ -1182,12 +1206,12 @@
                     <div style="width: 400px;">
                         <div style="display: flex; justify-content: space-between; padding: 1rem 0; border-bottom: 1px solid #e2e8f0;">
                             <span>Subtotal (sin IVA):</span>
-                            <strong>${(presupuesto.total_sin_iva - (presupuesto.incluir_instalacion ? 50 : 0)).toFixed(2)}€</strong>
+                            <strong>${(presupuesto.total_sin_iva - instalacionTotal).toFixed(2)}€</strong>
                         </div>
                         ${presupuesto.incluir_instalacion ? `
                         <div style="display: flex; justify-content: space-between; padding: 1rem 0; border-bottom: 1px solid #e2e8f0;">
-                            <span>Instalación:</span>
-                            <strong>50.00€</strong>
+                            <span>Instalación (${presupuesto.items.length} x 50€):</span>
+                            <strong>${instalacionTotal.toFixed(2)}€</strong>
                         </div>
                         ` : ''}
                         <div style="display: flex; justify-content: space-between; padding: 1rem 0; border-bottom: 1px solid #e2e8f0;">
