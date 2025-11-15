@@ -129,12 +129,6 @@
             grid-template-columns: repeat(2, 1fr);
         }
 
-        @media (max-width: 768px) {
-            .grid-2 {
-                grid-template-columns: 1fr;
-            }
-        }
-
         .item-list {
             margin-top: 1rem;
         }
@@ -201,7 +195,7 @@
         }
 
         .hidden {
-            display: none;
+            display: none !important;
         }
 
         .tabla {
@@ -263,12 +257,6 @@
             margin-bottom: 2rem;
         }
 
-        @media (max-width: 768px) {
-            .stats {
-                grid-template-columns: 1fr;
-            }
-        }
-
         .stat-card {
             background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
             color: white;
@@ -302,6 +290,7 @@
             width: 20px;
             height: 20px;
             cursor: pointer;
+            flex-shrink: 0;
         }
 
         .checkbox-container label {
@@ -346,27 +335,139 @@
         .aviso-orientativo {
             background: #fef3c7;
             border: 2px solid #fbbf24;
-            padding: 1rem 1.5rem;
+            padding: 0.75rem 1rem;
             border-radius: 8px;
-            margin-bottom: 2rem;
+            margin-bottom: 1rem;
             text-align: center;
         }
 
         .aviso-orientativo strong {
             color: #92400e;
-            font-size: 1.1rem;
+            font-size: 0.875rem;
+            display: block;
+        }
+
+        .aviso-orientativo p {
+            color: #78716c;
+            font-size: 0.75rem;
+            margin-top: 0.25rem;
+        }
+
+        .tabla-wrapper {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .tipo-selector {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .tipo-option {
+            padding: 1.5rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+        }
+
+        .tipo-option:hover {
+            border-color: #cbd5e1;
+            background: #f8fafc;
+        }
+
+        .tipo-option.active {
+            border-color: #2563eb;
+            background: #dbeafe;
+        }
+
+        .tipo-option .icon {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .tipo-option .title {
+            font-weight: 600;
+            color: #1e293b;
+            margin-bottom: 0.25rem;
+        }
+
+        .tipo-option .desc {
+            font-size: 0.75rem;
+            color: #64748b;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+
+            .header {
+                flex-direction: column;
+                gap: 1rem;
+                padding: 1.25rem;
+                align-items: stretch;
+            }
+
+            .header h1 {
+                font-size: 1.25rem;
+            }
+
+            .btn {
+                padding: 0.625rem 1rem;
+                font-size: 0.875rem;
+                justify-content: center;
+                width: 100%;
+            }
+
+            .card {
+                padding: 1.25rem;
+            }
+
+            .grid-2 {
+                grid-template-columns: 1fr;
+            }
+
+            .stats {
+                grid-template-columns: 1fr;
+            }
+
+            .tipo-selector {
+                grid-template-columns: 1fr;
+            }
+
+            .resumen {
+                position: static;
+                margin-top: 1rem;
+            }
+
+            .item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.75rem;
+            }
+
+            .item-price {
+                align-self: flex-end;
+                margin-right: 0;
+            }
         }
 
         @media print {
             body {
                 background: white;
             }
+            
             .btn, .hidden-print {
                 display: none !important;
             }
+
             .card {
                 box-shadow: none;
-                page-break-inside: avoid;
+                border: 1px solid #e2e8f0;
             }
         }
     </style>
@@ -402,42 +503,43 @@
 
             <div class="card">
                 <h2>Presupuestos Recientes</h2>
-                <table class="tabla" id="tabla-presupuestos">
-                    <thead>
-                        <tr>
-                            <th>Número</th>
-                            <th>Cliente</th>
-                            <th>Fecha</th>
-                            <th>Items</th>
-                            <th style="text-align: right;">Total</th>
-                            <th style="text-align: center;">Estado</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td colspan="6" style="text-align: center; padding: 3rem; color: #64748b;">
-                                No hay presupuestos. ¡Crea el primero!
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+                <div class="tabla-wrapper">
+                    <table class="tabla" id="tabla-presupuestos">
+                        <thead>
+                            <tr>
+                                <th>Número</th>
+                                <th>Cliente</th>
+                                <th>Fecha</th>
+                                <th>Items</th>
+                                <th style="text-align: right;">Total</th>
+                                <th style="text-align: center;">Estado</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td colspan="6" style="text-align: center; padding: 3rem; color: #64748b;">
+                                    No hay presupuestos. ¡Crea el primero!
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
 
         <!-- Vista Nuevo Presupuesto -->
         <div id="nuevo-view" class="hidden">
             <div class="header">
-                <div>
-                    <button class="btn btn-secondary" onclick="mostrarVista('dashboard')" style="margin-right: 1rem;">
+                <div style="display: flex; align-items: center; gap: 1rem;">
+                    <button class="btn btn-secondary" onclick="mostrarVista('dashboard')">
                         ← Volver
                     </button>
-                    <h1 style="display: inline;">Nuevo Presupuesto</h1>
+                    <h1>Nuevo Presupuesto</h1>
                 </div>
             </div>
 
             <div class="grid grid-2">
                 <div>
-                    <!-- Datos del Cliente -->
                     <div class="card">
                         <h2>Datos del Cliente</h2>
                         <div class="form-group">
@@ -460,66 +562,116 @@
                         </div>
                     </div>
 
-                    <!-- Calculadora -->
                     <div class="card">
                         <h2>🧮 Calculadora de Cortinas</h2>
-                        <div class="form-group">
-                            <label>Tipo de Cortina *</label>
-                            <select id="tipo-cortina">
-                                <option value="">Selecciona el tipo...</option>
-                                <option value="estor_paquetto">Estor Paquetto (sin varillas)</option>
-                                <option value="estor_plegable">Estor Plegable (con varillas)</option>
-                                <option value="cortina_onda_perfecta">Cortina Onda Perfecta</option>
-                                <option value="cortina_fruncida">Cortina Fruncida</option>
-                                <option value="cortina_plana">Cortina Plana sin Frunce</option>
-                                <option value="cortina_ollados">Cortina con Ollados</option>
-                                <option value="cortina_triple_pliegue">Cortina Triple Pliegue</option>
-                                <option value="cortina_palas">Cortina Palas</option>
-                            </select>
-                        </div>
-                        <div class="grid grid-2">
-                            <div class="form-group">
-                                <label>Ancho (cm) *</label>
-                                <input type="number" id="ancho" placeholder="200">
-                            </div>
-                            <div class="form-group">
-                                <label>Alto (cm) *</label>
-                                <input type="number" id="alto" placeholder="280">
-                            </div>
-                        </div>
                         
-                        <!-- Checkbox 2 piezas -->
-                        <div class="checkbox-container">
-                            <input type="checkbox" id="dos-piezas">
-                            <label for="dos-piezas">Dividir en 2 piezas (divide ancho÷2 y multiplica confección x2)</label>
+                        <div class="form-group">
+                            <label>Tipo de Sistema *</label>
+                            <div class="tipo-selector">
+                                <div class="tipo-option active" id="opt-tradicional" onclick="cambiarTipoCortina('tradicional')">
+                                    <div class="icon">🪟</div>
+                                    <div class="title">Cortinas Tradicionales</div>
+                                    <div class="desc">Estores, onda perfecta, fruncidas...</div>
+                                </div>
+                                <div class="tipo-option" id="opt-tecnica" onclick="cambiarTipoCortina('tecnica')">
+                                    <div class="icon">⚙️</div>
+                                    <div class="title">Cortinas Técnicas</div>
+                                    <div class="desc">Enrollables, screen, blackout...</div>
+                                </div>
+                            </div>
                         </div>
 
-                        <div class="form-group">
-                            <label>Tejido * <small>(Buscar por nombre)</small></label>
-                            <div class="search-box">
-                                <input type="text" id="tejido-search" placeholder="Buscar tejido..." oninput="buscarTejido()">
-                                <div id="search-results" class="search-results hidden"></div>
+                        <!-- Formulario Tradicional -->
+                        <div id="form-tradicional">
+                            <div class="form-group">
+                                <label>Tipo de Cortina *</label>
+                                <select id="tipo-cortina">
+                                    <option value="">Selecciona el tipo...</option>
+                                    <option value="estor_paquetto">Estor Paquetto (sin varillas)</option>
+                                    <option value="estor_plegable">Estor Plegable (con varillas)</option>
+                                    <option value="cortina_onda_perfecta">Cortina Onda Perfecta</option>
+                                    <option value="cortina_fruncida">Cortina Fruncida</option>
+                                    <option value="cortina_plana">Cortina Plana sin Frunce</option>
+                                    <option value="cortina_ollados">Cortina con Ollados</option>
+                                    <option value="cortina_triple_pliegue">Cortina Triple Pliegue</option>
+                                </select>
                             </div>
-                            <input type="hidden" id="tejido">
+                            <div class="grid grid-2">
+                                <div class="form-group">
+                                    <label>Ancho (cm) *</label>
+                                    <input type="number" id="ancho" placeholder="200">
+                                </div>
+                                <div class="form-group">
+                                    <label>Alto (cm) *</label>
+                                    <input type="number" id="alto" placeholder="280">
+                                </div>
+                            </div>
+                            
+                            <div class="checkbox-container">
+                                <input type="checkbox" id="dos-piezas">
+                                <label for="dos-piezas">✂️ Cortina en 2 piezas (divide ancho÷2, multiplica confección x2)</label>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Tejido * <small>(Buscar por nombre)</small></label>
+                                <div class="search-box">
+                                    <input type="text" id="tejido-search" placeholder="Buscar tejido..." oninput="buscarTejido()">
+                                    <div id="search-results" class="search-results hidden"></div>
+                                </div>
+                                <input type="hidden" id="tejido">
+                            </div>
+                            <div class="form-group">
+                                <label>Sistema de Instalación</label>
+                                <select id="sistema">
+                                    <option value="">Opcional - Selecciona el sistema...</option>
+                                </select>
+                            </div>
+                            <button class="btn btn-primary" onclick="agregarItem()" style="width: 100%;">
+                                ➕ Calcular y Agregar al Presupuesto
+                            </button>
                         </div>
-                        <div class="form-group">
-                            <label>Sistema de Instalación</label>
-                            <select id="sistema">
-                                <option value="">Opcional - Selecciona el sistema...</option>
-                            </select>
+
+                        <!-- Formulario Técnico -->
+                        <div id="form-tecnico" class="hidden">
+                            <div class="form-group">
+                                <label>Tipo de Tejido Técnico *</label>
+                                <select id="tejido-tecnico">
+                                    <option value="">Selecciona el tejido técnico...</option>
+                                </select>
+                            </div>
+                            <div class="grid grid-2">
+                                <div class="form-group">
+                                    <label>Ancho (cm) *</label>
+                                    <input type="number" id="ancho-tecnico" placeholder="200">
+                                </div>
+                                <div class="form-group">
+                                    <label>Alto (cm) *</label>
+                                    <input type="number" id="alto-tecnico" placeholder="250">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>Diámetro del Tubo *</label>
+                                <select id="diametro-tubo">
+                                    <option value="">Selecciona el diámetro...</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Tipo de Accionamiento *</label>
+                                <select id="accionamiento">
+                                    <option value="">Selecciona el accionamiento...</option>
+                                </select>
+                            </div>
+                            <button class="btn btn-primary" onclick="agregarItemTecnico()" style="width: 100%;">
+                                ➕ Calcular y Agregar al Presupuesto
+                            </button>
                         </div>
-                        <button class="btn btn-primary" onclick="agregarItem()" style="width: 100%;">
-                            ➕ Calcular y Agregar al Presupuesto
-                        </button>
                     </div>
 
-                    <!-- Items agregados -->
                     <div class="card" id="items-card" style="display: none;">
                         <h2>Items del Presupuesto</h2>
                         <div class="item-list" id="items-list"></div>
                     </div>
 
-                    <!-- Notas -->
                     <div class="card">
                         <h2>Notas Adicionales</h2>
                         <div class="form-group">
@@ -528,7 +680,6 @@
                     </div>
                 </div>
 
-                <!-- Resumen -->
                 <div>
                     <div class="resumen">
                         <h3>📦 Resumen del Presupuesto</h3>
@@ -541,7 +692,6 @@
                             <span id="subtotal">0.00€</span>
                         </div>
                         
-                        <!-- Checkbox instalación -->
                         <div class="checkbox-container" style="background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2);">
                             <input type="checkbox" id="incluir-instalacion" onchange="actualizarResumen()">
                             <label for="incluir-instalacion" style="color: white;">
@@ -570,227 +720,69 @@
         <!-- Vista Detalle Presupuesto -->
         <div id="detalle-view" class="hidden">
             <div class="header hidden-print">
-                <div>
-                    <button class="btn btn-secondary" onclick="mostrarVista('dashboard')" style="margin-right: 1rem;">
+                <div style="display: flex; align-items: center; gap: 1rem;">
+                    <button class="btn btn-secondary" onclick="mostrarVista('dashboard')">
                         ← Volver
                     </button>
-                    <h1 style="display: inline;">Detalle del Presupuesto</h1>
+                    <h1>Detalle del Presupuesto</h1>
                 </div>
                 <button class="btn btn-primary" onclick="window.print()">
                     🖨️ Imprimir
                 </button>
             </div>
 
-            <div class="card" id="detalle-content">
-                <!-- Se llenará dinámicamente -->
-            </div>
+            <div class="card" id="detalle-content"></div>
         </div>
     </div>
 
     <script>
-        // TODOS LOS TEJIDOS ACTUALIZADOS DEL PDF 2025 (sin BAJA ni FIN EXIST.)
         const TEJIDOS = [
-            { nombre: "AALBORG 60-61-64", precio: 57.68, ancho: 300, composicion: "53% Pes 47% Li" },
-            { nombre: "AALBORG 90-91-94", precio: 57.68, ancho: 300, composicion: "57% Pes 43% Li" },
+            { nombre: "AALBORG 110-111-114", precio: 41.28, ancho: 300, composicion: "50% Pes 50% Li" },
+            { nombre: "AALBORG 60-61-64", precio: 41.28, ancho: 300, composicion: "53% Pes 47% Li" },
+            { nombre: "AALBORG 90-91-94", precio: 41.28, ancho: 300, composicion: "57% Pes 43% Li" },
             { nombre: "ABI", precio: 35.13, ancho: 300, composicion: "100% Pes" },
-            { nombre: "ACHIRA", precio: 42.25, ancho: 315, composicion: "100% Pes" },
-            { nombre: "AKINA", precio: 59.08, ancho: 280, composicion: "70%CV-30%LI" },
-            { nombre: "ALCACERES", precio: 51.45, ancho: 315, composicion: "100% Pes" },
-            { nombre: "ALFA", precio: 33.26, ancho: 140, composicion: "100% Pol" },
-            { nombre: "ALIDA GRIS", precio: 48.62, ancho: 280, composicion: "70% Alg 30% Pes" },
-            { nombre: "ALISHA", precio: 38.12, ancho: 280, composicion: "100% Pes" },
-            { nombre: "ALISON", precio: 31.35, ancho: 140, composicion: "100% Pes" },
-            { nombre: "AMETISTA", precio: 39.20, ancho: 300, composicion: "100% Pes" },
-            { nombre: "ANEKO", precio: 59.08, ancho: 280, composicion: "70%CV-30%LI" },
             { nombre: "ANETO", precio: 38.40, ancho: 300, composicion: "100%Pes" },
-            { nombre: "ANOUK GRIS", precio: 48.62, ancho: 280, composicion: "70% Alg 30% Pes" },
-            { nombre: "APATITE", precio: 39.20, ancho: 300, composicion: "100% Pes" },
-            { nombre: "ARACHOVA", precio: 44.52, ancho: 280, composicion: "60% Pes 20% Co 20% PAN" },
-            { nombre: "ARNIKA", precio: 45.36, ancho: 295, composicion: "18%Li 82% Pes" },
-            { nombre: "ASA", precio: 50.63, ancho: 310, composicion: "88%PES-12%CO" },
-            { nombre: "ASLAN", precio: 35.13, ancho: 300, composicion: "100%Pes" },
-            { nombre: "ASPEN BCO/CRUDO", precio: 51.10, ancho: 300, composicion: "50% Pes 50% Li" },
-            { nombre: "ASPEN LINO", precio: 51.10, ancho: 300, composicion: "50% Pes 50% Li" },
-            { nombre: "ASTIN GRIS", precio: 48.62, ancho: 280, composicion: "70% Alg 30% Pes" },
-            { nombre: "ASTRID", precio: 38.12, ancho: 280, composicion: "100% Pes" },
-            { nombre: "ASTUN", precio: 33.41, ancho: 300, composicion: "50% Pes 50% Li" },
-            { nombre: "AZAD", precio: 35.13, ancho: 300, composicion: "80% Pes 20% Li" },
-            { nombre: "AZAMI", precio: 59.08, ancho: 280, composicion: "70%CV-30%LI" },
-            { nombre: "BAMBERG", precio: 48.72, ancho: 140, composicion: "100% Pol" },
-            { nombre: "BAVAY", precio: 51.10, ancho: 300, composicion: "50% Pes 50% Li" },
-            { nombre: "BEGUR", precio: 45.68, ancho: 300, composicion: "60% Pes 40% Li" },
-            { nombre: "BERLIN", precio: 31.40, ancho: 140, composicion: "100% Pes" },
-            { nombre: "BETA", precio: 33.26, ancho: 140, composicion: "100% Pol" },
-            { nombre: "BIBLOS", precio: 37.52, ancho: 300, composicion: "80% Pes 20% Li" },
-            { nombre: "BINDY", precio: 54.99, ancho: 310, composicion: "62%PES-38%PAN" },
-            { nombre: "BLITZ", precio: 54.88, ancho: 300, composicion: "58% Pes 42% Li" },
-            { nombre: "BOLLY", precio: 35.46, ancho: 310, composicion: "95%PES-5%CO" },
-            { nombre: "BONIFACIO", precio: 45.68, ancho: 300, composicion: "60% Pes 40% Li" },
-            { nombre: "BONN", precio: 48.72, ancho: 140, composicion: "8% Li 92% Pes" },
-            { nombre: "BREMEN", precio: 42.33, ancho: 140, composicion: "100% Pol" },
-            { nombre: "BRERA", precio: 42.53, ancho: 300, composicion: "50% Pes 50% Li" },
-            { nombre: "BRISA", precio: 64.68, ancho: 310, composicion: "97%PES 3%CO" },
-            { nombre: "BUBBLES", precio: 48.56, ancho: 280, composicion: "50% Pes 50% Co" },
-            { nombre: "CALVI", precio: 42.53, ancho: 300, composicion: "50% Li 50% Pes" },
-            { nombre: "CANNES", precio: 35.96, ancho: 140, composicion: "100% Pes" },
-            { nombre: "CANVAS", precio: 59.22, ancho: 310, composicion: "50 % Li 50 % Co" },
-            { nombre: "CARLOTA", precio: 40.70, ancho: 300, composicion: "100% Pes" },
-            { nombre: "CASSIS", precio: 36.57, ancho: 300, composicion: "50% Li 50% Pes" },
-            { nombre: "CATIONIC PLANA", precio: 42.57, ancho: 300, composicion: "100% Pol" },
-            { nombre: "CATIONIC SARGA", precio: 42.57, ancho: 300, composicion: "100% Pol" },
-            { nombre: "CHATEAU", precio: 51.45, ancho: 310, composicion: "100% Pes" },
-            { nombre: "CIARA", precio: 50.63, ancho: 310, composicion: "88%PES-12%CO" },
-            { nombre: "CIVITA", precio: 48.58, ancho: 300, composicion: "28% Pes 60% Co 12% Li" },
-            { nombre: "COLONIA", precio: 31.40, ancho: 140, composicion: "100% Pes" },
-            { nombre: "CONCHA", precio: 41.11, ancho: 300, composicion: "70% Pol 30% Li" },
-            { nombre: "COSAMOC", precio: 55.48, ancho: 280, composicion: "45% Pes 52% Alg 3% Li" },
-            { nombre: "COTICA", precio: 55.48, ancho: 280, composicion: "45% Pes 52% Alg 3% Li" },
-            { nombre: "DESIGN", precio: 52.07, ancho: 280, composicion: "40% Pes 40% Co 20% Pac" },
-            { nombre: "DEVA", precio: 116.98, ancho: 300, composicion: "43%LI-40%CV-17%WO" },
-            { nombre: "DIAMANTE", precio: 39.20, ancho: 300, composicion: "9 % Acr 91 % Pes" },
-            { nombre: "DILARA", precio: 39.06, ancho: 300, composicion: "100% Pes" },
-            { nombre: "DORTMUND", precio: 42.33, ancho: 140, composicion: "100% Pol" },
-            { nombre: "DRESDEN", precio: 48.72, ancho: 140, composicion: "42% Acr 58% Pes" },
-            { nombre: "ELISE BCO/CRUDO", precio: 33.40, ancho: 300, composicion: "50% Pes 50% Li" },
-            { nombre: "ELISE LINO", precio: 33.40, ancho: 300, composicion: "50% Pes 50% Li" },
-            { nombre: "ELMA", precio: 41.58, ancho: 300, composicion: "100% Pes" },
-            { nombre: "ENDER", precio: 39.06, ancho: 300, composicion: "100% Pes" },
-            { nombre: "ESPIGA", precio: 52.70, ancho: 280, composicion: "65% Pes 35% Co" },
-            { nombre: "EWAN", precio: 31.35, ancho: 140, composicion: "100% Pes" },
-            { nombre: "FLAT", precio: 34.24, ancho: 140, composicion: "100% Pes" },
-            { nombre: "FLIEDER", precio: 73.50, ancho: 290, composicion: "60% CV 25% Li 15% Pes" },
-            { nombre: "FLORAL", precio: 52.70, ancho: 280, composicion: "65% Pes 35% Co" },
-            { nombre: "FORNELLS", precio: 41.11, ancho: 300, composicion: "65% Pol 35% Li" },
-            { nombre: "FUJI", precio: 59.08, ancho: 280, composicion: "70%CV-30%LI" },
-            { nombre: "GAMMA", precio: 33.26, ancho: 140, composicion: "100% Pol" },
-            { nombre: "GEN", precio: 50.63, ancho: 300, composicion: "100% PES" },
-            { nombre: "GINEBRA", precio: 40.70, ancho: 300, composicion: "100% Pes" },
-            { nombre: "GLAT", precio: 47.31, ancho: 315, composicion: "100% Pes Ignifugo" },
-            { nombre: "GORBEA", precio: 35.12, ancho: 300, composicion: "100%Pes" },
-            { nombre: "HAMLET", precio: 38.12, ancho: 280, composicion: "100% Pes" },
-            { nombre: "HANOVER", precio: 31.40, ancho: 140, composicion: "100% Pes" },
-            { nombre: "HYDRA", precio: 44.52, ancho: 280, composicion: "60% Pes 20% Co 20% PAN" },
-            { nombre: "IBOR", precio: 42.15, ancho: 140, composicion: "56% Alg 4% Li 12% Pol 28% Acr" },
-            { nombre: "IMA", precio: 59.08, ancho: 280, composicion: "70%CV-30%LI" },
-            { nombre: "INDIRA", precio: 38.12, ancho: 280, composicion: "100% Pes" },
-            { nombre: "JANIN", precio: 50.04, ancho: 300, composicion: "66%PES-34%CV" },
-            { nombre: "JIN", precio: 59.08, ancho: 280, composicion: "70%CV-30%LI" },
-            { nombre: "KALIA", precio: 38.12, ancho: 280, composicion: "100% Pes" },
-            { nombre: "KAMILLE", precio: 36.10, ancho: 305, composicion: "100% Pes" },
-            { nombre: "KATY", precio: 50.04, ancho: 300, composicion: "78%PES-22%LI" },
-            { nombre: "KEIKO", precio: 59.08, ancho: 280, composicion: "70%CV-30%LI" },
-            { nombre: "KEREN", precio: 35.13, ancho: 300, composicion: "100% Pes" },
-            { nombre: "KHAN", precio: 35.13, ancho: 290, composicion: "92% Pes 8% Cv" },
-            { nombre: "KIMI", precio: 59.08, ancho: 280, composicion: "70%CV-30%LI" },
-            { nombre: "KURVEN", precio: 122.75, ancho: 275, composicion: "100 % Li" },
-            { nombre: "LEGI", precio: 38.12, ancho: 280, composicion: "100% Pes" },
-            { nombre: "LIMENI", precio: 44.52, ancho: 280, composicion: "60% CV 25% Li 15% Pes" },
-            { nombre: "LINDAU", precio: 42.33, ancho: 140, composicion: "100% Pol" },
-            { nombre: "LINE", precio: 47.31, ancho: 315, composicion: "100% Pes Ignifugo" },
-            { nombre: "LINETTE BLACKOUT", precio: 66.08, ancho: 290, composicion: "Blackout" },
-            { nombre: "LINSE", precio: 61.66, ancho: 290, composicion: "60% CV 25% Li 15% Pes" },
-            { nombre: "LOCA", precio: 50.04, ancho: 280, composicion: "90%CV- 10%PES" },
-            { nombre: "LOGAN", precio: 31.35, ancho: 140, composicion: "100% Pes" },
-            { nombre: "LOIRA", precio: 49.65, ancho: 320, composicion: "100% Pol" },
-            { nombre: "LOUTROS", precio: 44.52, ancho: 280, composicion: "60% Pes 20% Co 20% PAN" },
-            { nombre: "LUBECA", precio: 42.33, ancho: 140, composicion: "100% Pol" },
-            { nombre: "LULI", precio: 50.04, ancho: 300, composicion: "100% PES" },
-            { nombre: "LUZZI", precio: 47.63, ancho: 300, composicion: "80% Pes 20% Li" },
-            { nombre: "MALADETA", precio: 36.23, ancho: 300, composicion: "100%Pes" },
-            { nombre: "MATI", precio: 38.12, ancho: 280, composicion: "100% Pes" },
-            { nombre: "MAVI", precio: 44.66, ancho: 300, composicion: "94% Pes 4% Co 2% Li" },
-            { nombre: "MEISSEN", precio: 42.33, ancho: 140, composicion: "100% Pol" },
-            { nombre: "MENTON", precio: 51.10, ancho: 300, composicion: "50% Li 50% Pes" },
-            { nombre: "MERON", precio: 41.11, ancho: 300, composicion: "70% Pol 30% Li" },
-            { nombre: "MESH", precio: 89.60, ancho: 300, composicion: "52% Li 48% Pes" },
-            { nombre: "MESQUIDA", precio: 45.27, ancho: 300, composicion: "60% Pol 40% Li" },
-            { nombre: "MIDORI", precio: 59.08, ancho: 280, composicion: "70%CV-30%LI" },
-            { nombre: "MIKA", precio: 59.08, ancho: 280, composicion: "70%CV-30%LI" },
-            { nombre: "MILAN BCO/CRUDO", precio: 45.68, ancho: 300, composicion: "60% Pes 40% Li" },
-            { nombre: "MOIRA", precio: 31.35, ancho: 140, composicion: "100% Pes" },
-            { nombre: "MONET", precio: 56.70, ancho: 300, composicion: "3% Li 97% Pes" },
-            { nombre: "MONSUL", precio: 41.11, ancho: 300, composicion: "90% Pol 10% Li" },
-            { nombre: "MOOT", precio: 60.38, ancho: 280, composicion: "50% Li 30% Co 20% Pes" },
-            { nombre: "MORITZ", precio: 36.57, ancho: 300, composicion: "50% Pes 50% Li" },
+            { nombre: "ASPEN BCO/CRUDO", precio: 43.70, ancho: 300, composicion: "50% Pes 50% Li" },
+            { nombre: "ASPEN LINO", precio: 45.45, ancho: 300, composicion: "50% Pes 50% Li" },
+            { nombre: "BAVAY", precio: 48.60, ancho: 300, composicion: "50% Pes 50% Li" },
+            { nombre: "BEGUR", precio: 43.50, ancho: 300, composicion: "60% Pes 40% Li" },
+            { nombre: "BIBLOS", precio: 27.52, ancho: 300, composicion: "80% Pes 20% Li" },
+            { nombre: "BLITZ", precio: 39.67, ancho: 300, composicion: "58% Pes 42% Li" },
+            { nombre: "BRERA", precio: 39.10, ancho: 300, composicion: "50% Pes 50% Li" },
+            { nombre: "ECLIPSE", precio: 31.87, ancho: 300, composicion: "65% Pes 35% Li" },
+            { nombre: "ELISE BCO/CRUDO", precio: 28.07, ancho: 300, composicion: "50% Pes 50% Li" },
+            { nombre: "ELISE LINO", precio: 31.43, ancho: 300, composicion: "50% Pes 50% Li" },
+            { nombre: "MILAN BCO/CRUDO", precio: 43.50, ancho: 300, composicion: "60% Pes 40% Li" },
+            { nombre: "MORITZ", precio: 35.75, ancho: 300, composicion: "50% Pes 50% Li" },
             { nombre: "MULHACEN", precio: 38.40, ancho: 300, composicion: "100%Pes" },
-            { nombre: "MULIAN", precio: 38.12, ancho: 280, composicion: "100% Pes" },
-            { nombre: "MUNICH", precio: 31.40, ancho: 140, composicion: "100% Pes" },
-            { nombre: "NAOKO", precio: 59.08, ancho: 280, composicion: "70%CV-30%LI" },
-            { nombre: "NAPOLES", precio: 41.58, ancho: 280, composicion: "40% Pes 30% Pan 30% Co" },
-            { nombre: "NARA", precio: 59.08, ancho: 280, composicion: "70%CV-30%LI" },
-            { nombre: "NAUPLIA", precio: 44.52, ancho: 280, composicion: "60% Pes 20% Co 20% PAN" },
-            { nombre: "NELKE", precio: 60.62, ancho: 290, composicion: "60% CV 25% Li 15% Pes" },
-            { nombre: "NEUTRA", precio: 33.40, ancho: 300, composicion: "50% Pes 50% Li" },
-            { nombre: "NEYLAN", precio: 35.13, ancho: 300, composicion: "100% Pes" },
-            { nombre: "NICE", precio: 34.24, ancho: 140, composicion: "100% Pes" },
-            { nombre: "NIKI", precio: 50.04, ancho: 280, composicion: "90%CV- 10%PES" },
-            { nombre: "NOGALES", precio: 51.35, ancho: 310, composicion: "100% Li" },
-            { nombre: "NOMI", precio: 54.04, ancho: 280, composicion: "70%CV-30%LI" },
-            { nombre: "OMEGA", precio: 33.26, ancho: 140, composicion: "100% Pol" },
-            { nombre: "ONDAS", precio: 52.70, ancho: 280, composicion: "65% Pes 35% Co" },
-            { nombre: "ONUR", precio: 46.89, ancho: 315, composicion: "53% Pan 47% Pes" },
-            { nombre: "OPERA", precio: 93.83, ancho: 310, composicion: "100% Li" },
-            { nombre: "ORZAN", precio: 44.43, ancho: 300, composicion: "70% Pol 30% Li" },
-            { nombre: "PAINE", precio: 47.60, ancho: 280, composicion: "100% Pes" },
-            { nombre: "PALOMA", precio: 45.37, ancho: 320, composicion: "35% Pol 65% Li" },
-            { nombre: "PANDORA", precio: 50.04, ancho: 300, composicion: "90%CV- 10%PES" },
-            { nombre: "PAPAGAYO", precio: 41.11, ancho: 300, composicion: "80% Pol 20% Li" },
-            { nombre: "PAPINGO", precio: 44.52, ancho: 280, composicion: "60% Pes 20% Co 20% PAN" },
-            { nombre: "PERDI", precio: 40.06, ancho: 310, composicion: "77%PAN-20%PES-3%PA" },
-            { nombre: "PLAIN", precio: 62.86, ancho: 280, composicion: "65% Li 25% Co 10% Pes" },
-            { nombre: "POINT", precio: 37.32, ancho: 140, composicion: "100% Pes" },
-            { nombre: "PROVENCAL AZUL", precio: 48.62, ancho: 280, composicion: "70% Alg 30% Pes" },
-            { nombre: "PROVENCAL GRIS", precio: 48.62, ancho: 280, composicion: "70% Alg 30% Pes" },
-            { nombre: "PROVENCAL ROJO", precio: 48.62, ancho: 280, composicion: "70% Alg 30% Pes" },
-            { nombre: "PUNKE", precio: 47.31, ancho: 315, composicion: "100% Pes Ignifugo" },
+            { nombre: "NEUTRA", precio: 31.15, ancho: 300, composicion: "50% Pes 50% Li" },
             { nombre: "RACK", precio: 25.34, ancho: 300, composicion: "100% Pes" },
-            { nombre: "RALPH BCO/CRUDO", precio: 68.40, ancho: 300, composicion: "50% Pes 50% Li" },
-            { nombre: "RALPH LINO", precio: 70.59, ancho: 300, composicion: "50% Pes 50% Li" },
-            { nombre: "RATISBONA", precio: 42.33, ancho: 140, composicion: "100% Pol" },
-            { nombre: "RAU", precio: 50.12, ancho: 280, composicion: "75% Co 25% Pes" },
-            { nombre: "REINA", precio: 74.94, ancho: 315, composicion: "94%PES- 6%CV" },
-            { nombre: "RETINO", precio: 44.52, ancho: 280, composicion: "60% Pes 20% Co 20% PAN" },
-            { nombre: "ROMA", precio: 41.58, ancho: 280, composicion: "40% Pes 30% Pan 30% Co" },
-            { nombre: "ROMBO", precio: 52.70, ancho: 280, composicion: "65% Pes 35% Co" },
-            { nombre: "ROMBUS", precio: 100.38, ancho: 290, composicion: "100 % Li" },
-            { nombre: "RUBINO", precio: 39.20, ancho: 300, composicion: "100% Pes" },
-            { nombre: "SALADA", precio: 44.43, ancho: 320, composicion: "60% Pol 40% Li" },
-            { nombre: "SAONA", precio: 41.11, ancho: 300, composicion: "80% Pol 20% Li" },
-            { nombre: "SAURA", precio: 41.11, ancho: 295, composicion: "85% Pol 15% Li" },
-            { nombre: "SCOTT", precio: 31.35, ancho: 140, composicion: "100% Pes" },
-            { nombre: "SELIN", precio: 35.13, ancho: 300, composicion: "80% Pes 20% Li" },
-            { nombre: "SHIELD", precio: 60.38, ancho: 280, composicion: "50% Li 30% Co 20% Pes" },
-            { nombre: "SISUCA", precio: 48.27, ancho: 310, composicion: "67%PAN-26%PES-7%PA" },
-            { nombre: "SMERALDO", precio: 40.93, ancho: 300, composicion: "100% Pes" },
-            { nombre: "SMOOTH", precio: 88.20, ancho: 280, composicion: "100 % Li" },
-            { nombre: "SOFT", precio: 54.68, ancho: 310, composicion: "77% Trev 23% Pes" },
-            { nombre: "SOTAVENTO", precio: 41.11, ancho: 315, composicion: "80% Pol 20% Li" },
-            { nombre: "STAR", precio: 48.56, ancho: 280, composicion: "50% Pes 50% Co" },
-            { nombre: "STICK", precio: 48.56, ancho: 280, composicion: "50% Pes 50% Co" },
-            { nombre: "STILO", precio: 68.65, ancho: 295, composicion: "80% Vis 20% Li" },
-            { nombre: "STUTGART", precio: 39.20, ancho: 140, composicion: "100% Pol" },
-            { nombre: "SWEET", precio: 25.34, ancho: 310, composicion: "100 % Pes ignifug" },
-            { nombre: "SYMI", precio: 44.52, ancho: 280, composicion: "60% Pes 20% Co 20% PAN" },
-            { nombre: "TANG", precio: 78.68, ancho: 290, composicion: "55% Li 30% Co 20% Pes" },
-            { nombre: "TEIDE", precio: 36.23, ancho: 300, composicion: "100%Pes" },
-            { nombre: "TERA", precio: 42.15, ancho: 140, composicion: "56% Alg 4% Li 12% Pol 28% Acr" },
-            { nombre: "TERESITAS", precio: 44.43, ancho: 320, composicion: "60% Pol 40% Li" },
-            { nombre: "TIM", precio: 57.26, ancho: 290, composicion: "65% Li 25% Co 10% Pes" },
-            { nombre: "TORTORA", precio: 45.89, ancho: 310, composicion: "60%PES-40%LI" },
-            { nombre: "TRAUBE", precio: 73.50, ancho: 290, composicion: "60% CV 25% Li 15% Pes" },
-            { nombre: "TRAUM", precio: 71.37, ancho: 290, composicion: "100% Li" },
-            { nombre: "TREVERIS", precio: 48.32, ancho: 140, composicion: "5% Li 95% Pes" },
-            { nombre: "VELLUTO", precio: 48.51, ancho: 280, composicion: "100% Pes" },
-            { nombre: "VENECIA", precio: 41.58, ancho: 280, composicion: "40% Pes 30% Pan 30% Co" },
-            { nombre: "XARCO", precio: 32.79, ancho: 350, composicion: "90% Pol 10% Li" },
-            { nombre: "YECLA 01-02-03", precio: 47.88, ancho: 300, composicion: "50% Pes 50% Li" },
-            { nombre: "YECLA 11-12-13", precio: 47.88, ancho: 300, composicion: "50% Pes 50% Li" },
-            { nombre: "YECLA 41-42-43", precio: 47.88, ancho: 310, composicion: "50% Pes 50% Li" },
-            { nombre: "YECLA 51-52-53", precio: 47.88, ancho: 300, composicion: "50% Pes 50% Li" },
-            { nombre: "ZAHARA", precio: 41.11, ancho: 300, composicion: "90% Pol 10% Li" }
+            { nombre: "SIESTA", precio: 39.27, ancho: 300, composicion: "60% Pes 40% Li" }
         ];
 
-        // TODOS LOS SISTEMAS
+        const TEJIDOS_TECNICOS = [
+            { nombre: "Screen 5%", tipo: "Screen", apertura: "5%", precio: 35.00 },
+            { nombre: "Screen 3%", tipo: "Screen", apertura: "3%", precio: 38.00 },
+            { nombre: "Screen 1%", tipo: "Screen", apertura: "1%", precio: 42.00 },
+            { nombre: "Blackout Total", tipo: "Blackout", apertura: "0%", precio: 45.00 },
+            { nombre: "Translúcido", tipo: "Translúcido", apertura: "50%", precio: 32.00 },
+            { nombre: "Opaco", tipo: "Opaco", apertura: "0%", precio: 40.00 }
+        ];
+
+        const DIAMETROS_TUBO = [
+            { diametro: "32mm", precioBase: 25.00, maxAncho: 150 },
+            { diametro: "40mm", precioBase: 35.00, maxAncho: 200 },
+            { diametro: "50mm", precioBase: 45.00, maxAncho: 300 },
+            { diametro: "60mm", precioBase: 60.00, maxAncho: 400 }
+        ];
+
+        const TIPOS_ACCIONAMIENTO = [
+            { nombre: "Cadena", precio: 15.00 },
+            { nombre: "Motorizado con mando", precio: 120.00 },
+            { nombre: "Motorizado con control remoto", precio: 150.00 },
+            { nombre: "Motorizado wifi", precio: 180.00 }
+        ];
+
         const SISTEMAS = {
             "Estor a Cadena - Paquetto": {75:52.20, 100:57.38, 125:67.80, 150:77.19, 175:79.18, 200:88.61, 225:103.04, 250:107.97, 275:117.27, 300:126.66},
             "Estor a Cadena - Plegable": {75:54.01, 100:59.91, 125:69.94, 150:82.26, 175:89.06, 200:94.02, 225:108.11, 250:116.51, 275:128.41, 300:136.81},
@@ -798,14 +790,9 @@
             "Guía Manual 1 Vía - Onda Perfecta": {100:23.10, 125:29.03, 150:34.41, 175:39.38, 200:44.74, 225:50.06, 250:56.44, 275:61.99, 300:67.70},
             "Guía Profesional Manual - Convencional": {100:40.99, 150:55.77, 200:69.05, 250:85.07, 300:99.30},
             "Guía Profesional Manual - Onda Perfecta": {100:43.15, 150:58.72, 200:72.68, 250:89.54, 300:104.54},
-            "Guía Profesional a Cordón - Convencional": {100:52.53, 150:67.45, 200:81.01, 250:97.34, 300:111.90},
-            "Guía Profesional a Cordón - Onda Perfecta": {100:55.30, 150:70.99, 200:85.27, 250:102.46, 300:117.80},
             "Barra Guía Cuadrada - Convencional": {100:65.77, 150:79.68, 200:93.59, 250:124.26, 300:138.18},
-            "Barra Guía Cuadrada - Onda Perfecta": {100:67.78, 150:82.70, 200:97.61, 250:129.29, 300:144.21},
             "Barra Guía Redonda 20mm - Convencional": {100:64.51, 150:78.17, 200:91.81, 250:121.89, 300:135.54},
-            "Barra Guía Redonda 20mm - Onda Perfecta": {100:66.49, 150:81.12, 200:95.75, 250:126.82, 300:141.46},
-            "Barra Guía Redonda 28mm - Convencional": {100:74.18, 150:85.98, 200:100.99, 250:134.08, 300:149.09},
-            "Barra Guía Redonda 28mm - Onda Perfecta": {100:76.46, 150:93.28, 200:105.32, 250:139.51, 300:155.60}
+            "Barra Guía Redonda 28mm - Convencional": {100:74.18, 150:85.98, 200:100.99, 250:134.08, 300:149.09}
         };
 
         const CONFECCION = {
@@ -815,8 +802,7 @@
             "cortina_fruncida": {100:43.25, 150:55.28, 200:67.29, 250:79.31, 300:91.33, 350:103.34},
             "cortina_plana": {100:31.24, 150:43.25, 200:55.28, 250:60.08, 300:66.09, 350:78.11},
             "cortina_ollados": {100:31.24, 150:43.25, 200:55.28, 250:60.08, 300:66.09, 350:78.11},
-            "cortina_triple_pliegue": {100:56.23, 150:71.86, 200:87.48, 250:103.11, 300:118.72, 350:134.34},
-            "cortina_palas": {100:43.25, 150:55.28, 200:67.29, 250:79.31, 300:91.33, 350:103.34}
+            "cortina_triple_pliegue": {100:56.23, 150:71.86, 200:87.48, 250:103.11, 300:118.72, 350:134.34}
         };
 
         const TIPOS_NOMBRE = {
@@ -826,19 +812,35 @@
             "cortina_fruncida": "Cortina Fruncida",
             "cortina_plana": "Cortina Plana",
             "cortina_ollados": "Cortina con Ollados",
-            "cortina_triple_pliegue": "Cortina Triple Pliegue",
-            "cortina_palas": "Cortina Palas"
+            "cortina_triple_pliegue": "Cortina Triple Pliegue"
         };
 
-        // Estado de la aplicación
         let itemsActuales = [];
-        let presupuestoActual = null;
+        let tipoCortinaSistema = 'tradicional';
 
-        // Inicializar
         document.addEventListener('DOMContentLoaded', function() {
             cargarSistemas();
+            cargarTejidosTecnicos();
+            cargarDiametrosTubo();
+            cargarTiposAccionamiento();
             cargarDashboard();
         });
+
+        function cambiarTipoCortina(tipo) {
+            tipoCortinaSistema = tipo;
+            document.getElementById('opt-tradicional').classList.remove('active');
+            document.getElementById('opt-tecnica').classList.remove('active');
+            
+            if (tipo === 'tradicional') {
+                document.getElementById('opt-tradicional').classList.add('active');
+                document.getElementById('form-tradicional').classList.remove('hidden');
+                document.getElementById('form-tecnico').classList.add('hidden');
+            } else {
+                document.getElementById('opt-tecnica').classList.add('active');
+                document.getElementById('form-tradicional').classList.add('hidden');
+                document.getElementById('form-tecnico').classList.remove('hidden');
+            }
+        }
 
         function cargarSistemas() {
             const select = document.getElementById('sistema');
@@ -850,67 +852,71 @@
             });
         }
 
-        // ========== FUNCIÓN MEJORADA PARA CALCULAR PRECIO DE SISTEMA ==========
+        function cargarTejidosTecnicos() {
+            const select = document.getElementById('tejido-tecnico');
+            TEJIDOS_TECNICOS.forEach(t => {
+                const option = document.createElement('option');
+                option.value = t.nombre;
+                option.textContent = `${t.nombre} - ${t.tipo} (Apertura ${t.apertura}) - ${t.precio}€/m²`;
+                select.appendChild(option);
+            });
+        }
+
+        function cargarDiametrosTubo() {
+            const select = document.getElementById('diametro-tubo');
+            DIAMETROS_TUBO.forEach(d => {
+                const option = document.createElement('option');
+                option.value = d.diametro;
+                option.textContent = `${d.diametro} - Max. ancho: ${d.maxAncho}cm - Base: ${d.precioBase}€`;
+                select.appendChild(option);
+            });
+        }
+
+        function cargarTiposAccionamiento() {
+            const select = document.getElementById('accionamiento');
+            TIPOS_ACCIONAMIENTO.forEach(a => {
+                const option = document.createElement('option');
+                option.value = a.nombre;
+                option.textContent = `${a.nombre} - ${a.precio}€`;
+                select.appendChild(option);
+            });
+        }
+
         function calcularPrecioSistema(ancho, sistemaNombre) {
             if (!sistemaNombre) return 0;
             const sistema = SISTEMAS[sistemaNombre];
             if (!sistema) return 0;
-            
-            // Obtener todos los rangos disponibles y ordenarlos de menor a mayor
             const rangos = Object.keys(sistema).map(r => parseInt(r)).sort((a, b) => a - b);
             const rangoMaximo = rangos[rangos.length - 1];
-            
-            // Si el ancho es mayor que el rango máximo disponible
             if (ancho > rangoMaximo) {
-                // Dividir ancho entre 2
                 const anchoMitad = ancho / 2;
-                
-                // Buscar el rango aplicable para el ancho dividido
                 const rangoParaMitad = rangos.find(r => anchoMitad <= r) || rangoMaximo;
-                
-                // Obtener el precio y multiplicar por 2
                 return (sistema[rangoParaMitad] || 0) * 2;
             }
-            
-            // Si el ancho está dentro de los rangos normales
-            // Buscar el primer rango que sea >= al ancho (rango superior más cercano)
             const rangoAplicable = rangos.find(r => ancho <= r);
-            
-            // Si existe un rango aplicable, usar ese precio
-            // Si no existe, usar el precio del rango más alto
-            const rangoFinal = rangoAplicable || rangoMaximo;
-            
-            return sistema[rangoFinal] || 0;
+            return sistema[rangoAplicable || rangoMaximo] || 0;
         }
 
-        // Buscador de tejidos
         function buscarTejido() {
             const searchInput = document.getElementById('tejido-search');
             const searchResults = document.getElementById('search-results');
             const query = searchInput.value.toLowerCase();
-
             if (query.length === 0) {
                 searchResults.classList.add('hidden');
                 return;
             }
-
-            const filtered = TEJIDOS.filter(t => 
-                t.nombre.toLowerCase().includes(query)
-            );
-
+            const filtered = TEJIDOS.filter(t => t.nombre.toLowerCase().includes(query));
             if (filtered.length === 0) {
                 searchResults.innerHTML = '<div class="search-result-item">No se encontraron tejidos</div>';
                 searchResults.classList.remove('hidden');
                 return;
             }
-
             searchResults.innerHTML = filtered.map(t => `
                 <div class="search-result-item" onclick="seleccionarTejido('${t.nombre}')">
                     <strong>${t.nombre}</strong><br>
                     <small style="color: #64748b;">${t.precio}€/ml - ${t.composicion}</small>
                 </div>
             `).join('');
-            
             searchResults.classList.remove('hidden');
         }
 
@@ -920,11 +926,13 @@
             document.getElementById('search-results').classList.add('hidden');
         }
 
-        // Cerrar resultados al hacer click fuera
         document.addEventListener('click', function(e) {
             const searchBox = document.querySelector('.search-box');
             if (searchBox && !searchBox.contains(e.target)) {
-                document.getElementById('search-results').classList.add('hidden');
+                const results = document.getElementById('search-results');
+                if (results) {
+                    results.classList.add('hidden');
+                }
             }
         });
 
@@ -932,7 +940,6 @@
             document.getElementById('dashboard-view').classList.add('hidden');
             document.getElementById('nuevo-view').classList.add('hidden');
             document.getElementById('detalle-view').classList.add('hidden');
-            
             if (vista === 'dashboard') {
                 document.getElementById('dashboard-view').classList.remove('hidden');
                 cargarDashboard();
@@ -953,47 +960,32 @@
             const dosPiezas = document.getElementById('dos-piezas').checked;
 
             if (!tipo || !ancho || !alto || !tejidoNombre) {
-                alert('Por favor completa todos los campos obligatorios (Tipo, Ancho, Alto y Tejido)');
+                alert('Por favor completa todos los campos obligatorios');
                 return;
             }
 
             const tejido = TEJIDOS.find(t => t.nombre === tejidoNombre);
-            
-            // Para tejido y confección se usa el ancho dividido si es 2 piezas
-            // Para el sistema se usa SIEMPRE el ancho original (completo)
             const anchoParaTejido = dosPiezas ? ancho / 2 : ancho;
-            const anchoParaSistema = ancho; // SIEMPRE el ancho completo
-
-            // Calcular metros de tejido
-            let multiplicador = 1;
             let tejidoMetros = 0;
             
             if (tipo === 'estor_paquetto' || tipo === 'estor_plegable') {
                 tejidoMetros = (anchoParaTejido + 40) / 100;
             } else if (tipo === 'cortina_onda_perfecta') {
-                multiplicador = 2.4;
-                tejidoMetros = (anchoParaTejido * multiplicador) / 100;
+                tejidoMetros = (anchoParaTejido * 2.4) / 100;
             } else if (tipo === 'cortina_ollados') {
-                multiplicador = 2.2;
-                tejidoMetros = (anchoParaTejido * multiplicador) / 100;
+                tejidoMetros = (anchoParaTejido * 2.2) / 100;
             } else if (tipo === 'cortina_plana') {
                 tejidoMetros = (anchoParaTejido * 1.4) / 100;
             } else if (tipo === 'cortina_fruncida') {
-                multiplicador = 2.5;
-                tejidoMetros = (anchoParaTejido * multiplicador) / 100;
+                tejidoMetros = (anchoParaTejido * 2.5) / 100;
             } else if (tipo === 'cortina_triple_pliegue') {
-                multiplicador = 2.7;
-                tejidoMetros = (anchoParaTejido * multiplicador) / 100;
-            } else if (tipo === 'cortina_palas') {
-                multiplicador = 2.6;
-                tejidoMetros = (anchoParaTejido * multiplicador) / 100;
+                tejidoMetros = (anchoParaTejido * 2.7) / 100;
             }
 
             const precioTejido = tejidoMetros * tejido.precio;
-
-            // Precio confección (usa ancho dividido si es 2 piezas)
             const confeccion = CONFECCION[tipo];
             let precioConfeccion = 0;
+            
             if (anchoParaTejido <= 100) precioConfeccion = confeccion[100];
             else if (anchoParaTejido <= 150) precioConfeccion = confeccion[150];
             else if (anchoParaTejido <= 200) precioConfeccion = confeccion[200];
@@ -1001,21 +993,16 @@
             else if (anchoParaTejido <= 300) precioConfeccion = confeccion[300];
             else precioConfeccion = confeccion[350] || confeccion[300];
 
-            // Precio sistema (usa la nueva función con lógica de división)
-            const precioSistema = calcularPrecioSistema(anchoParaSistema, sistemaNombre);
-
-            // Si es en 2 piezas, multiplicar el tejido y la confección por 2
+            const precioSistema = calcularPrecioSistema(ancho, sistemaNombre);
             const precioTejidoFinal = dosPiezas ? precioTejido * 2 : precioTejido;
             const precioConfeccionFinal = dosPiezas ? precioConfeccion * 2 : precioConfeccion;
-
             const precioTotal = precioTejidoFinal + precioConfeccionFinal + precioSistema;
 
             const item = {
                 id: Date.now(),
                 tipo,
-                descripcion: `${TIPOS_NOMBRE[tipo]} - ${tejidoNombre}`,
-                ancho,
-                alto,
+                descripcion: `${TIPOS_NOMBRE[tipo]} - ${tejidoNombre}${dosPiezas ? ' (2 piezas)' : ''}`,
+                ancho, alto,
                 tejido_nombre: tejidoNombre,
                 precio_total: precioTotal,
                 dos_piezas: dosPiezas,
@@ -1028,7 +1015,6 @@
             actualizarItems();
             actualizarResumen();
 
-            // Limpiar campos
             document.getElementById('tipo-cortina').value = '';
             document.getElementById('ancho').value = '';
             document.getElementById('alto').value = '';
@@ -1036,6 +1022,58 @@
             document.getElementById('tejido-search').value = '';
             document.getElementById('sistema').value = '';
             document.getElementById('dos-piezas').checked = false;
+        }
+
+        function agregarItemTecnico() {
+            const ancho = parseFloat(document.getElementById('ancho-tecnico').value);
+            const alto = parseFloat(document.getElementById('alto-tecnico').value);
+            const tejidoNombre = document.getElementById('tejido-tecnico').value;
+            const diametroNombre = document.getElementById('diametro-tubo').value;
+            const accionamientoNombre = document.getElementById('accionamiento').value;
+
+            if (!ancho || !alto || !tejidoNombre || !diametroNombre || !accionamientoNombre) {
+                alert('Por favor completa todos los campos obligatorios');
+                return;
+            }
+
+            const tejido = TEJIDOS_TECNICOS.find(t => t.nombre === tejidoNombre);
+            const tubo = DIAMETROS_TUBO.find(d => d.diametro === diametroNombre);
+            const accionamiento = TIPOS_ACCIONAMIENTO.find(a => a.nombre === accionamientoNombre);
+
+            if (ancho > tubo.maxAncho) {
+                alert(`El ancho máximo para tubo de ${diametroNombre} es ${tubo.maxAncho}cm`);
+                return;
+            }
+
+            const metrosCuadrados = (ancho * alto) / 10000;
+            const precioTejido = metrosCuadrados * tejido.precio;
+            const precioTubo = tubo.precioBase * (ancho / 100);
+            const precioAccionamiento = accionamiento.precio;
+            const precioInstalacion = 30.00;
+            const precioTotal = precioTejido + precioTubo + precioAccionamiento + precioInstalacion;
+
+            const item = {
+                id: Date.now(),
+                tipo: 'cortina_tecnica',
+                descripcion: `Cortina Técnica - ${tejido.nombre} - Tubo ${diametroNombre} - ${accionamiento.nombre}`,
+                ancho, alto,
+                tejido_nombre: tejido.nombre,
+                precio_total: precioTotal,
+                dos_piezas: false,
+                precio_tejido: precioTejido,
+                precio_confeccion: precioInstalacion,
+                precio_sistema: precioTubo + precioAccionamiento
+            };
+
+            itemsActuales.push(item);
+            actualizarItems();
+            actualizarResumen();
+
+            document.getElementById('ancho-tecnico').value = '';
+            document.getElementById('alto-tecnico').value = '';
+            document.getElementById('tejido-tecnico').value = '';
+            document.getElementById('diametro-tubo').value = '';
+            document.getElementById('accionamiento').value = '';
         }
 
         function eliminarItem(id) {
@@ -1047,15 +1085,12 @@
         function actualizarItems() {
             const lista = document.getElementById('items-list');
             const card = document.getElementById('items-card');
-            
             if (itemsActuales.length === 0) {
                 card.style.display = 'none';
                 return;
             }
-            
             card.style.display = 'block';
             lista.innerHTML = '';
-            
             itemsActuales.forEach((item, index) => {
                 const div = document.createElement('div');
                 div.className = 'item';
@@ -1063,9 +1098,6 @@
                     <div class="item-info">
                         <h4>#${index + 1} - ${item.descripcion}</h4>
                         <p>Medidas: ${item.ancho}cm x ${item.alto}cm ${item.dos_piezas ? '(2 piezas)' : ''}</p>
-                        <p style="font-size: 0.75rem; color: #64748b; margin-top: 0.25rem;">
-                            Tejido: ${item.precio_tejido.toFixed(2)}€ | Confección: ${item.precio_confeccion.toFixed(2)}€ | Sistema: ${item.precio_sistema.toFixed(2)}€
-                        </p>
                     </div>
                     <div class="item-price">${item.precio_total.toFixed(2)}€</div>
                     <button class="btn btn-danger" onclick="eliminarItem(${item.id})">🗑️</button>
@@ -1078,10 +1110,7 @@
             const totalItems = itemsActuales.length;
             const subtotal = itemsActuales.reduce((sum, item) => sum + item.precio_total, 0);
             const incluirInstalacion = document.getElementById('incluir-instalacion').checked;
-            
-            // Instalación es 50€ por cada item/cortina
             const instalacion = incluirInstalacion ? (50 * totalItems) : 0;
-            
             const subtotalConInstalacion = subtotal + instalacion;
             const iva = subtotalConInstalacion * 0.21;
             const total = subtotalConInstalacion + iva;
@@ -1091,10 +1120,8 @@
             document.getElementById('iva').textContent = iva.toFixed(2) + '€';
             document.getElementById('total').textContent = total.toFixed(2) + '€';
             
-            // Actualizar texto de instalación para mostrar el total
             if (totalItems > 0) {
-                document.getElementById('texto-instalacion').textContent = 
-                    `(+${instalacion.toFixed(2)}€ = 50€ x ${totalItems} cortinas)`;
+                document.getElementById('texto-instalacion').textContent = `(+${instalacion.toFixed(2)}€ = 50€ x ${totalItems} cortinas)`;
             } else {
                 document.getElementById('texto-instalacion').textContent = '(+50€ por cortina)';
             }
@@ -1102,12 +1129,10 @@
 
         function guardarPresupuesto() {
             const nombre = document.getElementById('cliente-nombre').value;
-            
             if (!nombre) {
                 alert('Por favor ingresa el nombre del cliente');
                 return;
             }
-
             if (itemsActuales.length === 0) {
                 alert('Agrega al menos un item al presupuesto');
                 return;
@@ -1115,10 +1140,7 @@
 
             const subtotal = itemsActuales.reduce((sum, item) => sum + item.precio_total, 0);
             const incluirInstalacion = document.getElementById('incluir-instalacion').checked;
-            
-            // Instalación es 50€ por cada item/cortina
             const instalacion = incluirInstalacion ? (50 * itemsActuales.length) : 0;
-            
             const total = (subtotal + instalacion) * 1.21;
 
             const presupuesto = {
@@ -1138,23 +1160,18 @@
                 instalacion_total: instalacion
             };
 
-            // Guardar en localStorage
             let presupuestos = JSON.parse(localStorage.getItem('presupuestos') || '[]');
             presupuestos.push(presupuesto);
             localStorage.setItem('presupuestos', JSON.stringify(presupuestos));
-
             alert('✅ Presupuesto guardado correctamente');
             mostrarVista('dashboard');
         }
 
         function cargarDashboard() {
             const presupuestos = JSON.parse(localStorage.getItem('presupuestos') || '[]');
-            
-            // Estadísticas
             document.getElementById('total-presupuestos').textContent = presupuestos.length;
             const totalImporte = presupuestos.reduce((sum, p) => sum + p.total_con_iva, 0);
             document.getElementById('total-importe').textContent = totalImporte.toFixed(0) + '€';
-            
             const esteMes = presupuestos.filter(p => {
                 const fecha = new Date(p.fecha);
                 const ahora = new Date();
@@ -1162,18 +1179,10 @@
             }).length;
             document.getElementById('total-mes').textContent = esteMes;
 
-            // Tabla
             const tbody = document.querySelector('#tabla-presupuestos tbody');
             tbody.innerHTML = '';
-            
             if (presupuestos.length === 0) {
-                tbody.innerHTML = `
-                    <tr>
-                        <td colspan="6" style="text-align: center; padding: 3rem; color: #64748b;">
-                            No hay presupuestos. ¡Crea el primero!
-                        </td>
-                    </tr>
-                `;
+                tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; padding: 3rem; color: #64748b;">No hay presupuestos. ¡Crea el primero!</td></tr>';
                 return;
             }
 
@@ -1186,9 +1195,7 @@
                     <td>${new Date(p.fecha).toLocaleDateString('es-ES')}</td>
                     <td>${p.items.length}</td>
                     <td style="text-align: right; font-weight: bold;">${p.total_con_iva.toFixed(2)}€</td>
-                    <td style="text-align: center;">
-                        <span class="badge badge-${p.estado}">${p.estado}</span>
-                    </td>
+                    <td style="text-align: center;"><span class="badge badge-${p.estado}">${p.estado}</span></td>
                 `;
                 tbody.appendChild(tr);
             });
@@ -1196,45 +1203,33 @@
 
         function verDetalle(id) {
             const presupuestos = JSON.parse(localStorage.getItem('presupuestos') || '[]');
-            const presupuesto = presupuestos.find(p => p.id === id);
-            
-            if (!presupuesto) return;
+            const p = presupuestos.find(pr => pr.id === id);
+            if (!p) return;
 
-            // Calcular instalación total (para presupuestos antiguos que no tengan este campo)
-            const instalacionTotal = presupuesto.instalacion_total || 
-                (presupuesto.incluir_instalacion ? (50 * presupuesto.items.length) : 0);
-
-            const content = document.getElementById('detalle-content');
-            content.innerHTML = `
-                <!-- AVISO DE PRESUPUESTO ORIENTATIVO -->
+            const instalacionTotal = p.instalacion_total || (p.incluir_instalacion ? (50 * p.items.length) : 0);
+            document.getElementById('detalle-content').innerHTML = `
                 <div class="aviso-orientativo">
                     <strong>⚠️ PRESUPUESTO ORIENTATIVO</strong>
-                    <p style="margin-top: 0.5rem; font-size: 0.9rem; color: #78716c;">
-                        Los precios y cantidades aquí indicados son aproximados y están sujetos a confirmación tras toma de medidas definitiva.
-                    </p>
+                    <p>Precios sujetos a confirmación tras toma de medidas definitiva.</p>
                 </div>
-
-                <div style="display: flex; justify-content: space-between; margin-bottom: 2rem; padding-bottom: 1rem; border-bottom: 2px solid #e2e8f0;">
+                <div style="display: flex; justify-content: space-between; margin-bottom: 1rem; padding: 1rem; border-bottom: 2px solid #e2e8f0;">
                     <div>
-                        <h2 style="color: #2563eb; margin-bottom: 0.5rem;">Canotex</h2>
-                        <p style="color: #64748b; font-size: 0.875rem;">Tel: 973235776</p>
-                        <p style="color: #64748b; font-size: 0.875rem;">info@canotex.es</p>
+                        <h2 style="color: #2563eb;">CANOTEX</h2>
+                        <p style="color: #64748b; font-size: 0.75rem;">Tel: 973235776 | info@canotex.es</p>
                     </div>
                     <div style="text-align: right;">
-                        <h2 style="color: #2563eb; margin-bottom: 0.5rem;">PRESUPUESTO</h2>
-                        <p style="color: #64748b;">Nº: ${presupuesto.numero}</p>
-                        <p style="color: #64748b;">Fecha: ${new Date(presupuesto.fecha).toLocaleDateString('es-ES')}</p>
+                        <h2 style="color: #2563eb;">PRESUPUESTO</h2>
+                        <p style="font-size: 0.75rem;">Nº: ${p.numero}</p>
+                        <p style="font-size: 0.75rem;">Fecha: ${new Date(p.fecha).toLocaleDateString('es-ES')}</p>
                     </div>
                 </div>
-
-                <div style="background: #f8fafc; padding: 1.5rem; border-radius: 8px; margin-bottom: 2rem;">
-                    <h3 style="margin-bottom: 1rem;">Cliente</h3>
-                    <p style="font-weight: bold; margin-bottom: 0.5rem;">${presupuesto.cliente_nombre}</p>
-                    ${presupuesto.cliente_telefono ? `<p style="color: #64748b; font-size: 0.875rem;">Tel: ${presupuesto.cliente_telefono}</p>` : ''}
-                    ${presupuesto.cliente_email ? `<p style="color: #64748b; font-size: 0.875rem;">Email: ${presupuesto.cliente_email}</p>` : ''}
-                    ${presupuesto.cliente_direccion ? `<p style="color: #64748b; font-size: 0.875rem;">${presupuesto.cliente_direccion}</p>` : ''}
+                ${p.cliente_nombre ? `
+                <div style="background: #f8fafc; padding: 1rem; border-radius: 8px; margin-bottom: 1rem;">
+                    <h3 style="font-size: 0.75rem; color: #64748b;">CLIENTE</h3>
+                    <p style="font-weight: 600;">${p.cliente_nombre}</p>
+                    ${p.cliente_telefono ? `<p style="font-size: 0.875rem;">${p.cliente_telefono}</p>` : ''}
                 </div>
-
+                ` : ''}
                 <h3 style="margin-bottom: 1rem;">Detalle del Presupuesto</h3>
                 <table class="tabla">
                     <thead>
@@ -1246,57 +1241,44 @@
                         </tr>
                     </thead>
                     <tbody>
-                        ${presupuesto.items.map((item, index) => `
+                        ${p.items.map((item, i) => `
                             <tr>
-                                <td>${index + 1}</td>
-                                <td>
-                                    <strong>${item.descripcion}</strong><br>
-                                    <small style="color: #64748b;">Tejido: ${item.tejido_nombre}</small>
-                                    ${item.dos_piezas ? '<br><small style="color: #2563eb;">En 2 piezas</small>' : ''}
-                                </td>
+                                <td>${i + 1}</td>
+                                <td>${item.descripcion}</td>
                                 <td>${item.ancho} x ${item.alto} cm</td>
-                                <td style="text-align: right; font-weight: bold;">${item.precio_total.toFixed(2)}€</td>
+                                <td style="text-align: right; font-weight: 600;">${item.precio_total.toFixed(2)}€</td>
                             </tr>
                         `).join('')}
                     </tbody>
                 </table>
-
-                <div style="display: flex; justify-content: flex-end; margin-top: 2rem;">
-                    <div style="width: 400px;">
-                        <div style="display: flex; justify-content: space-between; padding: 1rem 0; border-bottom: 1px solid #e2e8f0;">
-                            <span>Subtotal (sin IVA):</span>
-                            <strong>${(presupuesto.total_sin_iva - instalacionTotal).toFixed(2)}€</strong>
+                <div style="display: flex; justify-content: flex-end; margin-top: 1rem;">
+                    <div style="width: 18rem;">
+                        <div style="display: flex; justify-content: space-between; padding: 0.5rem 0; border-bottom: 1px solid #e2e8f0;">
+                            <span>Subtotal:</span>
+                            <strong>${(p.total_sin_iva - instalacionTotal).toFixed(2)}€</strong>
                         </div>
-                        ${presupuesto.incluir_instalacion ? `
-                        <div style="display: flex; justify-content: space-between; padding: 1rem 0; border-bottom: 1px solid #e2e8f0;">
-                            <span>Instalación (${presupuesto.items.length} x 50€):</span>
+                        ${p.incluir_instalacion ? `
+                        <div style="display: flex; justify-content: space-between; padding: 0.5rem 0; border-bottom: 1px solid #e2e8f0;">
+                            <span>Instalación:</span>
                             <strong>${instalacionTotal.toFixed(2)}€</strong>
                         </div>
                         ` : ''}
-                        <div style="display: flex; justify-content: space-between; padding: 1rem 0; border-bottom: 1px solid #e2e8f0;">
+                        <div style="display: flex; justify-content: space-between; padding: 0.5rem 0; border-bottom: 1px solid #e2e8f0;">
                             <span>IVA (21%):</span>
-                            <strong>${(presupuesto.total_sin_iva * 0.21).toFixed(2)}€</strong>
+                            <strong>${(p.total_sin_iva * 0.21).toFixed(2)}€</strong>
                         </div>
-                        <div style="display: flex; justify-content: space-between; padding: 1.5rem 0; background: #dbeafe; margin: 1rem -1rem 0; padding-left: 1rem; padding-right: 1rem; border-radius: 8px;">
-                            <span style="font-size: 1.25rem; font-weight: bold;">TOTAL:</span>
-                            <span style="font-size: 1.5rem; font-weight: bold; color: #2563eb;">${presupuesto.total_con_iva.toFixed(2)}€</span>
+                        <div style="display: flex; justify-content: space-between; padding: 1rem; background: #dbeafe; margin-top: 0.5rem; border-radius: 8px;">
+                            <span style="font-weight: bold;">TOTAL:</span>
+                            <span style="font-size: 1.5rem; font-weight: bold; color: #2563eb;">${p.total_con_iva.toFixed(2)}€</span>
                         </div>
                     </div>
                 </div>
-
-                ${presupuesto.notas ? `
-                    <div style="margin-top: 2rem; padding: 1rem; background: #fef3c7; border: 1px solid #fcd34d; border-radius: 8px;">
-                        <h4 style="margin-bottom: 0.5rem;">Notas:</h4>
-                        <p style="color: #78716c;">${presupuesto.notas}</p>
-                    </div>
-                ` : ''}
-
-                <div style="margin-top: 3rem; padding-top: 2rem; border-top: 1px solid #e2e8f0; text-align: center; color: #64748b; font-size: 0.75rem;">
-                    <p>Presupuesto válido por 30 días.</p>
+                ${p.notas ? `<div style="margin-top: 1rem; padding: 1rem; background: #fef3c7; border-radius: 8px;"><h4>Notas:</h4><p>${p.notas}</p></div>` : ''}
+                <div style="margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid #e2e8f0; text-align: center; font-size: 0.75rem; color: #64748b;">
+                    <p>Presupuesto válido por 30 días</p>
                     <p>Canotex Textil S.L. - C/ Penedés, 87 - 25005 Lleida</p>
                 </div>
             `;
-
             mostrarVista('detalle');
         }
 
