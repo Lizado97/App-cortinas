@@ -358,6 +358,48 @@
             -webkit-overflow-scrolling: touch;
         }
 
+        /* Selector de tipo de cortina */
+        .tipo-selector {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .tipo-option {
+            padding: 1.5rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+        }
+
+        .tipo-option:hover {
+            border-color: #cbd5e1;
+        }
+
+        .tipo-option.active {
+            border-color: #2563eb;
+            background: #dbeafe;
+        }
+
+        .tipo-option .icon {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .tipo-option .title {
+            font-weight: 600;
+            color: #1e293b;
+            margin-bottom: 0.25rem;
+        }
+
+        .tipo-option .desc {
+            font-size: 0.75rem;
+            color: #64748b;
+        }
+
         /* ======= RESPONSIVE MÓVIL ======= */
         @media (max-width: 768px) {
             .container {
@@ -500,7 +542,10 @@
                 padding: 0.1875rem 0.625rem;
             }
 
-            /* Detalle presupuesto móvil */
+            .tipo-selector {
+                grid-template-columns: 1fr;
+            }
+
             .detalle-header {
                 flex-direction: column !important;
                 gap: 1rem;
@@ -531,7 +576,6 @@
             }
         }
 
-        /* Extra small devices */
         @media (max-width: 480px) {
             .container {
                 padding: 0.75rem;
@@ -571,7 +615,6 @@
             }
         }
 
-        /* Landscape móvil */
         @media (max-width: 768px) and (orientation: landscape) {
             .header {
                 flex-direction: row;
@@ -587,7 +630,6 @@
             }
         }
 
-        /* Estilos de impresión optimizados */
         @media print {
             body {
                 background: white;
@@ -623,115 +665,24 @@
                 margin-bottom: 0.75rem;
             }
 
-            .aviso-orientativo strong {
-                font-size: 0.75rem;
-            }
-
-            .aviso-orientativo p {
-                font-size: 0.65rem;
-                margin-top: 0.2rem;
-            }
-
             .detalle-header {
                 padding: 0.75rem 1rem !important;
-            }
-
-            .detalle-header h2 {
-                font-size: 1.125rem !important;
-            }
-
-            .detalle-header p {
-                font-size: 0.75rem !important;
             }
 
             .detalle-content {
                 padding: 1rem !important;
             }
 
-            .cliente-info {
-                padding: 0.5rem !important;
-                margin-bottom: 0.75rem !important;
-            }
-
-            .cliente-info h3 {
-                font-size: 0.75rem !important;
-                margin-bottom: 0.25rem !important;
-            }
-
-            .cliente-info p {
-                font-size: 0.875rem !important;
-            }
-
-            .detalle-section h3 {
-                font-size: 0.875rem !important;
-                margin-bottom: 0.5rem !important;
-            }
-
             .tabla {
                 font-size: 0.75rem !important;
-                margin-top: 0.5rem !important;
             }
 
             .tabla th {
                 padding: 0.5rem !important;
-                font-size: 0.75rem !important;
             }
 
             .tabla td {
                 padding: 0.375rem 0.5rem !important;
-                font-size: 0.75rem !important;
-            }
-
-            .totales-container {
-                width: 16rem !important;
-                margin-top: 0.75rem !important;
-            }
-
-            .totales-linea {
-                padding: 0.375rem 0 !important;
-                font-size: 0.75rem !important;
-            }
-
-            .totales-linea span {
-                font-size: 0.75rem !important;
-            }
-
-            .total-final {
-                padding: 0.5rem 0.75rem !important;
-                margin-top: 0.5rem !important;
-            }
-
-            .total-final .label {
-                font-size: 0.875rem !important;
-            }
-
-            .total-final .amount {
-                font-size: 1.125rem !important;
-            }
-
-            .notas-section {
-                margin-top: 0.75rem !important;
-                padding: 0.5rem !important;
-            }
-
-            .notas-section h4 {
-                font-size: 0.875rem !important;
-                margin-bottom: 0.25rem !important;
-            }
-
-            .notas-section p {
-                font-size: 0.75rem !important;
-            }
-
-            .footer-info {
-                margin-top: 1rem !important;
-                padding-top: 0.5rem !important;
-                font-size: 0.625rem !important;
-            }
-
-            .footer-info p {
-                font-size: 0.625rem !important;
-                margin-top: 0.125rem !important;
             }
         }
     </style>
@@ -830,54 +781,108 @@
                     <!-- Calculadora -->
                     <div class="card">
                         <h2>🧮 Calculadora de Cortinas</h2>
-                        <div class="form-group">
-                            <label>Tipo de Cortina *</label>
-                            <select id="tipo-cortina">
-                                <option value="">Selecciona el tipo...</option>
-                                <option value="estor_paquetto">Estor Paquetto (sin varillas)</option>
-                                <option value="estor_plegable">Estor Plegable (con varillas)</option>
-                                <option value="cortina_onda_perfecta">Cortina Onda Perfecta</option>
-                                <option value="cortina_fruncida">Cortina Fruncida</option>
-                                <option value="cortina_plana">Cortina Plana sin Frunce</option>
-                                <option value="cortina_ollados">Cortina con Ollados</option>
-                                <option value="cortina_triple_pliegue">Cortina Triple Pliegue</option>
-                                <option value="cortina_palas">Cortina Palas</option>
-                            </select>
-                        </div>
-                        <div class="grid grid-2">
-                            <div class="form-group">
-                                <label>Ancho (cm) *</label>
-                                <input type="number" id="ancho" placeholder="200">
-                            </div>
-                            <div class="form-group">
-                                <label>Alto (cm) *</label>
-                                <input type="number" id="alto" placeholder="280">
-                            </div>
-                        </div>
                         
-                        <!-- Checkbox 2 piezas -->
-                        <div class="checkbox-container">
-                            <input type="checkbox" id="dos-piezas">
-                            <label for="dos-piezas">✂️ Cortina en 2 piezas (divide ancho÷2, multiplica confección x2)</label>
+                        <!-- Selector de tipo de cortina -->
+                        <div class="form-group">
+                            <label>Tipo de Sistema *</label>
+                            <div class="tipo-selector">
+                                <div class="tipo-option active" id="opt-tradicional" onclick="cambiarTipoCortina('tradicional')">
+                                    <div class="icon">🪟</div>
+                                    <div class="title">Cortinas Tradicionales</div>
+                                    <div class="desc">Estores, onda perfecta, fruncidas...</div>
+                                </div>
+                                <div class="tipo-option" id="opt-tecnica" onclick="cambiarTipoCortina('tecnica')">
+                                    <div class="icon">⚙</div>
+                                    <div class="title">Cortinas Técnicas</div>
+                                    <div class="desc">Enrollables, screen, blackout...</div>
+                                </div>
+                            </div>
                         </div>
 
-                        <div class="form-group">
-                            <label>Tejido * <small>(Buscar por nombre)</small></label>
-                            <div class="search-box">
-                                <input type="text" id="tejido-search" placeholder="Buscar tejido..." oninput="buscarTejido()">
-                                <div id="search-results" class="search-results hidden"></div>
+                        <!-- Formulario Tradicional -->
+                        <div id="form-tradicional">
+                            <div class="form-group">
+                                <label>Tipo de Cortina *</label>
+                                <select id="tipo-cortina">
+                                    <option value="">Selecciona el tipo...</option>
+                                    <option value="estor_paquetto">Estor Paquetto (sin varillas)</option>
+                                    <option value="estor_plegable">Estor Plegable (con varillas)</option>
+                                    <option value="cortina_onda_perfecta">Cortina Onda Perfecta</option>
+                                    <option value="cortina_fruncida">Cortina Fruncida</option>
+                                    <option value="cortina_plana">Cortina Plana sin Frunce</option>
+                                    <option value="cortina_ollados">Cortina con Ollados</option>
+                                    <option value="cortina_triple_pliegue">Cortina Triple Pliegue</option>
+                                </select>
                             </div>
-                            <input type="hidden" id="tejido">
+                            <div class="grid grid-2">
+                                <div class="form-group">
+                                    <label>Ancho (cm) *</label>
+                                    <input type="number" id="ancho" placeholder="200">
+                                </div>
+                                <div class="form-group">
+                                    <label>Alto (cm) *</label>
+                                    <input type="number" id="alto" placeholder="280">
+                                </div>
+                            </div>
+                            
+                            <div class="checkbox-container">
+                                <input type="checkbox" id="dos-piezas">
+                                <label for="dos-piezas">✂ Cortina en 2 piezas (divide ancho÷2, multiplica confección x2)</label>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Tejido * <small>(Buscar por nombre)</small></label>
+                                <div class="search-box">
+                                    <input type="text" id="tejido-search" placeholder="Buscar tejido..." oninput="buscarTejido()">
+                                    <div id="search-results" class="search-results hidden"></div>
+                                </div>
+                                <input type="hidden" id="tejido">
+                            </div>
+                            <div class="form-group">
+                                <label>Sistema de Instalación</label>
+                                <select id="sistema">
+                                    <option value="">Opcional - Selecciona el sistema...</option>
+                                </select>
+                            </div>
+                            <button class="btn btn-primary" onclick="agregarItem()" style="width: 100%;">
+                                ➕ Calcular y Agregar al Presupuesto
+                            </button>
                         </div>
-                        <div class="form-group">
-                            <label>Sistema de Instalación</label>
-                            <select id="sistema">
-                                <option value="">Opcional - Selecciona el sistema...</option>
-                            </select>
+
+                        <!-- Formulario Técnico -->
+                        <div id="form-tecnico" class="hidden">
+                            <div class="form-group">
+                                <label>Tipo de Tejido Técnico *</label>
+                                <select id="tejido-tecnico">
+                                    <option value="">Selecciona el tejido técnico...</option>
+                                </select>
+                            </div>
+                            <div class="grid grid-2">
+                                <div class="form-group">
+                                    <label>Ancho (cm) *</label>
+                                    <input type="number" id="ancho-tecnico" placeholder="200">
+                                </div>
+                                <div class="form-group">
+                                    <label>Alto (cm) *</label>
+                                    <input type="number" id="alto-tecnico" placeholder="250">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>Diámetro del Tubo *</label>
+                                <select id="diametro-tubo">
+                                    <option value="">Selecciona el diámetro del tubo...</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Tipo de Accionamiento *</label>
+                                <select id="accionamiento">
+                                    <option value="">Selecciona el accionamiento...</option>
+                                </select>
+                            </div>
+                            <button class="btn btn-primary" onclick="agregarItemTecnico()" style="width: 100%;">
+                                ➕ Calcular y Agregar al Presupuesto
+                            </button>
                         </div>
-                        <button class="btn btn-primary" onclick="agregarItem()" style="width: 100%;">
-                            ➕ Calcular y Agregar al Presupuesto
-                        </button>
                     </div>
 
                     <!-- Items agregados -->
@@ -908,7 +913,6 @@
                             <span id="subtotal">0.00€</span>
                         </div>
                         
-                        <!-- Checkbox instalación -->
                         <div class="checkbox-container" style="background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2);">
                             <input type="checkbox" id="incluir-instalacion" onchange="actualizarResumen()">
                             <label for="incluir-instalacion" style="color: white;">
@@ -944,7 +948,7 @@
                     <h1 style="display: inline;">Detalle del Presupuesto</h1>
                 </div>
                 <button class="btn btn-primary" onclick="window.print()">
-                    🖨️ Imprimir
+                    🖨 Imprimir
                 </button>
             </div>
 
@@ -955,7 +959,10 @@
     </div>
 
     <script>
-        // Datos de tarifas - TODOS LOS TEJIDOS
+        // Variable global para el tipo de cortina actual
+        let tipoCortinaSistema = 'tradicional';
+
+        // Datos de tarifas - TEJIDOS TRADICIONALES
         const TEJIDOS = [
             { nombre: "AALBORG 110-111-114", precio: 41.28, ancho: 300, composicion: "50% Pes 50% Li" },
             { nombre: "AALBORG 60-61-64", precio: 41.28, ancho: 300, composicion: "53% Pes 47% Li" },
@@ -980,7 +987,33 @@
             { nombre: "SIESTA", precio: 39.27, ancho: 300, composicion: "60% Pes 40% Li" }
         ];
 
-        // TODOS LOS SISTEMAS
+        // TEJIDOS TÉCNICOS
+        const TEJIDOS_TECNICOS = [
+            { nombre: "Screen 5%", tipo: "Screen", apertura: "5%", precio: 35.00 },
+            { nombre: "Screen 3%", tipo: "Screen", apertura: "3%", precio: 38.00 },
+            { nombre: "Screen 1%", tipo: "Screen", apertura: "1%", precio: 42.00 },
+            { nombre: "Blackout Total", tipo: "Blackout", apertura: "0%", precio: 45.00 },
+            { nombre: "Translúcido", tipo: "Translúcido", apertura: "50%", precio: 32.00 },
+            { nombre: "Opaco", tipo: "Opaco", apertura: "0%", precio: 40.00 }
+        ];
+
+        // DIÁMETROS DE TUBO
+        const DIAMETROS_TUBO = [
+            { diametro: "32mm", precioBase: 25.00, maxAncho: 150 },
+            { diametro: "40mm", precioBase: 35.00, maxAncho: 200 },
+            { diametro: "50mm", precioBase: 45.00, maxAncho: 300 },
+            { diametro: "60mm", precioBase: 60.00, maxAncho: 400 }
+        ];
+
+        // TIPOS DE ACCIONAMIENTO
+        const TIPOS_ACCIONAMIENTO = [
+            { nombre: "Cadena", precio: 15.00 },
+            { nombre: "Motorizado con mando", precio: 120.00 },
+            { nombre: "Motorizado con control remoto", precio: 150.00 },
+            { nombre: "Motorizado wifi", precio: 180.00 }
+        ];
+
+        // SISTEMAS TRADICIONALES
         const SISTEMAS = {
             "Estor a Cadena - Paquetto": {75:52.20, 100:57.38, 125:67.80, 150:77.19, 175:79.18, 200:88.61, 225:103.04, 250:107.97, 275:117.27, 300:126.66},
             "Estor a Cadena - Plegable": {75:54.01, 100:59.91, 125:69.94, 150:82.26, 175:89.06, 200:94.02, 225:108.11, 250:116.51, 275:128.41, 300:136.81},
@@ -1000,8 +1033,7 @@
             "cortina_fruncida": {100:43.25, 150:55.28, 200:67.29, 250:79.31, 300:91.33, 350:103.34},
             "cortina_plana": {100:31.24, 150:43.25, 200:55.28, 250:60.08, 300:66.09, 350:78.11},
             "cortina_ollados": {100:31.24, 150:43.25, 200:55.28, 250:60.08, 300:66.09, 350:78.11},
-            "cortina_triple_pliegue": {100:56.23, 150:71.86, 200:87.48, 250:103.11, 300:118.72, 350:134.34},
-            "cortina_palas": {100:43.25, 150:55.28, 200:67.29, 250:79.31, 300:91.33, 350:103.34}
+            "cortina_triple_pliegue": {100:56.23, 150:71.86, 200:87.48, 250:103.11, 300:118.72, 350:134.34}
         };
 
         const TIPOS_NOMBRE = {
@@ -1011,19 +1043,35 @@
             "cortina_fruncida": "Cortina Fruncida",
             "cortina_plana": "Cortina Plana",
             "cortina_ollados": "Cortina con Ollados",
-            "cortina_triple_pliegue": "Cortina Triple Pliegue",
-            "cortina_palas": "Cortina Palas"
+            "cortina_triple_pliegue": "Cortina Triple Pliegue"
         };
 
-        // Estado de la aplicación
         let itemsActuales = [];
-        let presupuestoActual = null;
 
-        // Inicializar
         document.addEventListener('DOMContentLoaded', function() {
             cargarSistemas();
+            cargarTejidosTecnicos();
+            cargarDiametrosTubo();
+            cargarTiposAccionamiento();
             cargarDashboard();
         });
+
+        function cambiarTipoCortina(tipo) {
+            tipoCortinaSistema = tipo;
+            
+            document.getElementById('opt-tradicional').classList.remove('active');
+            document.getElementById('opt-tecnica').classList.remove('active');
+            
+            if (tipo === 'tradicional') {
+                document.getElementById('opt-tradicional').classList.add('active');
+                document.getElementById('form-tradicional').classList.remove('hidden');
+                document.getElementById('form-tecnico').classList.add('hidden');
+            } else {
+                document.getElementById('opt-tecnica').classList.add('active');
+                document.getElementById('form-tradicional').classList.add('hidden');
+                document.getElementById('form-tecnico').classList.remove('hidden');
+            }
+        }
 
         function cargarSistemas() {
             const select = document.getElementById('sistema');
@@ -1031,6 +1079,36 @@
                 const option = document.createElement('option');
                 option.value = s;
                 option.textContent = s;
+                select.appendChild(option);
+            });
+        }
+
+        function cargarTejidosTecnicos() {
+            const select = document.getElementById('tejido-tecnico');
+            TEJIDOS_TECNICOS.forEach(t => {
+                const option = document.createElement('option');
+                option.value = t.nombre;
+                option.textContent = ${t.nombre} - ${t.tipo} (Apertura ${t.apertura}) - ${t.precio}€/m²;
+                select.appendChild(option);
+            });
+        }
+
+        function cargarDiametrosTubo() {
+            const select = document.getElementById('diametro-tubo');
+            DIAMETROS_TUBO.forEach(d => {
+                const option = document.createElement('option');
+                option.value = d.diametro;
+                option.textContent = ${d.diametro} - Max. ancho: ${d.maxAncho}cm - Base: ${d.precioBase}€;
+                select.appendChild(option);
+            });
+        }
+
+        function cargarTiposAccionamiento() {
+            const select = document.getElementById('accionamiento');
+            TIPOS_ACCIONAMIENTO.forEach(a => {
+                const option = document.createElement('option');
+                option.value = a.nombre;
+                option.textContent = ${a.nombre} - ${a.precio}€;
                 select.appendChild(option);
             });
         }
@@ -1151,9 +1229,6 @@
             } else if (tipo === 'cortina_triple_pliegue') {
                 multiplicador = 2.7;
                 tejidoMetros = (anchoParaTejido * multiplicador) / 100;
-            } else if (tipo === 'cortina_palas') {
-                multiplicador = 2.6;
-                tejidoMetros = (anchoParaTejido * multiplicador) / 100;
             }
 
             const precioTejido = tejidoMetros * tejido.precio;
@@ -1177,7 +1252,7 @@
             const item = {
                 id: Date.now(),
                 tipo,
-                descripcion: `${TIPOS_NOMBRE[tipo]} - ${tejidoNombre}`,
+                descripcion: ${TIPOS_NOMBRE[tipo]} - ${tejidoNombre}${dosPiezas ? ' (2 piezas)' : ''},
                 ancho,
                 alto,
                 tejido_nombre: tejidoNombre,
@@ -1199,6 +1274,59 @@
             document.getElementById('tejido-search').value = '';
             document.getElementById('sistema').value = '';
             document.getElementById('dos-piezas').checked = false;
+        }
+
+        function agregarItemTecnico() {
+            const ancho = parseFloat(document.getElementById('ancho-tecnico').value);
+            const alto = parseFloat(document.getElementById('alto-tecnico').value);
+            const tejidoNombre = document.getElementById('tejido-tecnico').value;
+            const diametroNombre = document.getElementById('diametro-tubo').value;
+            const accionamientoNombre = document.getElementById('accionamiento').value;
+
+            if (!ancho || !alto || !tejidoNombre || !diametroNombre || !accionamientoNombre) {
+                alert('Por favor completa todos los campos obligatorios');
+                return;
+            }
+
+            const tejido = TEJIDOS_TECNICOS.find(t => t.nombre === tejidoNombre);
+            const tubo = DIAMETROS_TUBO.find(d => d.diametro === diametroNombre);
+            const accionamiento = TIPOS_ACCIONAMIENTO.find(a => a.nombre === accionamientoNombre);
+
+            if (ancho > tubo.maxAncho) {
+                alert(El ancho máximo para tubo de ${diametroNombre} es ${tubo.maxAncho}cm);
+                return;
+            }
+
+            const metrosCuadrados = (ancho * alto) / 10000;
+            const precioTejido = metrosCuadrados * tejido.precio;
+            const precioTubo = tubo.precioBase * (ancho / 100);
+            const precioAccionamiento = accionamiento.precio;
+            const precioInstalacion = 30.00;
+            const precioTotal = precioTejido + precioTubo + precioAccionamiento + precioInstalacion;
+
+            const item = {
+                id: Date.now(),
+                tipo: 'cortina_tecnica',
+                descripcion: Cortina Técnica - ${tejido.nombre} - Tubo ${diametroNombre} - ${accionamiento.nombre},
+                ancho,
+                alto,
+                tejido_nombre: tejido.nombre,
+                precio_total: precioTotal,
+                dos_piezas: false,
+                precio_tejido: precioTejido,
+                precio_confeccion: precioInstalacion,
+                precio_sistema: precioTubo + precioAccionamiento
+            };
+
+            itemsActuales.push(item);
+            actualizarItems();
+            actualizarResumen();
+
+            document.getElementById('ancho-tecnico').value = '';
+            document.getElementById('alto-tecnico').value = '';
+            document.getElementById('tejido-tecnico').value = '';
+            document.getElementById('diametro-tubo').value = '';
+            document.getElementById('accionamiento').value = '';
         }
 
         function eliminarItem(id) {
@@ -1231,7 +1359,7 @@
                         </p>
                     </div>
                     <div class="item-price">${item.precio_total.toFixed(2)}€</div>
-                    <button class="btn btn-danger" onclick="eliminarItem(${item.id})">🗑️</button>
+                    <button class="btn btn-danger" onclick="eliminarItem(${item.id})">🗑</button>
                 `;
                 lista.appendChild(div);
             });
@@ -1255,7 +1383,7 @@
             
             if (totalItems > 0) {
                 document.getElementById('texto-instalacion').textContent = 
-                    `(+${instalacion.toFixed(2)}€ = 50€ x ${totalItems} cortinas)`;
+                    (+${instalacion.toFixed(2)}€ = 50€ x ${totalItems} cortinas);
             } else {
                 document.getElementById('texto-instalacion').textContent = '(+50€ por cortina)';
             }
@@ -1362,9 +1490,8 @@
 
             const content = document.getElementById('detalle-content');
             content.innerHTML = `
-                <!-- AVISO DE PRESUPUESTO ORIENTATIVO -->
                 <div class="aviso-orientativo">
-                    <strong>⚠️ PRESUPUESTO ORIENTATIVO</strong>
+                    <strong>⚠ PRESUPUESTO ORIENTATIVO</strong>
                     <p>Los precios y cantidades aquí indicados son aproximados y están sujetos a confirmación tras toma de medidas definitiva.</p>
                 </div>
 
@@ -1387,13 +1514,13 @@
                     <div class="cliente-info" style="background: #f8fafc; padding: 0.75rem 1rem; border-radius: 8px; margin-bottom: 1rem; border: 1px solid #e2e8f0;">
                         <h3 style="font-size: 0.75rem; font-weight: 600; color: #64748b; text-transform: uppercase; margin-bottom: 0.5rem;">Cliente</h3>
                         <p style="font-weight: 600; margin: 0; font-size: 0.875rem;">${presupuesto.cliente_nombre}</p>
-                        ${presupuesto.cliente_telefono ? `<p style="color: #64748b; font-size: 0.75rem; margin: 0.125rem 0 0 0;">Tel: ${presupuesto.cliente_telefono}</p>` : ''}
-                        ${presupuesto.cliente_email ? `<p style="color: #64748b; font-size: 0.75rem; margin: 0.125rem 0 0 0;">Email: ${presupuesto.cliente_email}</p>` : ''}
-                        ${presupuesto.cliente_direccion ? `<p style="color: #64748b; font-size: 0.75rem; margin: 0.125rem 0 0 0;">${presupuesto.cliente_direccion}</p>` : ''}
+                        ${presupuesto.cliente_telefono ? <p style="color: #64748b; font-size: 0.75rem; margin: 0.125rem 0 0 0;">Tel: ${presupuesto.cliente_telefono}</p> : ''}
+                        ${presupuesto.cliente_email ? <p style="color: #64748b; font-size: 0.75rem; margin: 0.125rem 0 0 0;">Email: ${presupuesto.cliente_email}</p> : ''}
+                        ${presupuesto.cliente_direccion ? <p style="color: #64748b; font-size: 0.75rem; margin: 0.125rem 0 0 0;">${presupuesto.cliente_direccion}</p> : ''}
                     </div>
                     ` : ''}
 
-                    <div class="detalle-section" style="margin-bottom: 1rem;">
+                    <div style="margin-bottom: 1rem;">
                         <h3 style="margin-bottom: 0.75rem; font-size: 0.875rem;">Detalle del Presupuesto</h3>
                         <div class="tabla-wrapper">
                             <table class="tabla" style="font-size: 0.875rem;">
@@ -1425,17 +1552,17 @@
 
                     <div style="display: flex; justify-content: flex-end; margin-top: 1rem;">
                         <div class="totales-container" style="width: 18rem;">
-                            <div class="totales-linea" style="display: flex; justify-content: space-between; padding: 0.5rem 0; border-bottom: 1px solid #e2e8f0;">
+                            <div style="display: flex; justify-content: space-between; padding: 0.5rem 0; border-bottom: 1px solid #e2e8f0;">
                                 <span style="color: #64748b; font-size: 0.875rem;">Subtotal (sin IVA):</span>
                                 <strong style="font-size: 0.875rem;">${(presupuesto.total_sin_iva - instalacionTotal).toFixed(2)}€</strong>
                             </div>
                             ${presupuesto.incluir_instalacion ? `
-                            <div class="totales-linea" style="display: flex; justify-content: space-between; padding: 0.5rem 0; border-bottom: 1px solid #e2e8f0;">
+                            <div style="display: flex; justify-content: space-between; padding: 0.5rem 0; border-bottom: 1px solid #e2e8f0;">
                                 <span style="color: #64748b; font-size: 0.875rem;">Instalación (${presupuesto.items.length} x 50€):</span>
                                 <strong style="font-size: 0.875rem;">${instalacionTotal.toFixed(2)}€</strong>
                             </div>
                             ` : ''}
-                            <div class="totales-linea" style="display: flex; justify-content: space-between; padding: 0.5rem 0; border-bottom: 1px solid #e2e8f0;">
+                            <div style="display: flex; justify-content: space-between; padding: 0.5rem 0; border-bottom: 1px solid #e2e8f0;">
                                 <span style="color: #64748b; font-size: 0.875rem;">IVA (21%):</span>
                                 <strong style="font-size: 0.875rem;">${(presupuesto.total_sin_iva * 0.21).toFixed(2)}€</strong>
                             </div>
@@ -1447,13 +1574,13 @@
                     </div>
 
                     ${presupuesto.notas ? `
-                        <div class="notas-section" style="margin-top: 1rem; padding: 0.75rem; background: #fef3c7; border: 1px solid #fcd34d; border-radius: 8px;">
+                        <div style="margin-top: 1rem; padding: 0.75rem; background: #fef3c7; border: 1px solid #fcd34d; border-radius: 8px;">
                             <h4 style="margin-bottom: 0.5rem; font-size: 0.875rem;">Notas:</h4>
                             <p style="color: #78716c; font-size: 0.75rem; margin: 0;">${presupuesto.notas}</p>
                         </div>
                     ` : ''}
 
-                    <div class="footer-info" style="margin-top: 1.5rem; padding-top: 0.75rem; border-top: 1px solid #e2e8f0; text-align: center; color: #64748b;">
+                    <div style="margin-top: 1.5rem; padding-top: 0.75rem; border-top: 1px solid #e2e8f0; text-align: center; color: #64748b;">
                         <p style="font-size: 0.625rem; margin: 0;">Presupuesto válido por 30 días.</p>
                         <p style="font-size: 0.625rem; margin: 0.25rem 0 0 0;">Canotex Textil S.L. - C/ Penedés, 87 - 25005 Lleida</p>
                     </div>
