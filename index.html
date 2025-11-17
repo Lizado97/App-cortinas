@@ -696,7 +696,7 @@
                         <div class="checkbox-container" style="background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2);">
                             <input type="checkbox" id="incluir-instalacion" onchange="actualizarResumen()">
                             <label for="incluir-instalacion" style="color: white;">
-                                Instalación <span id="texto-instalacion">(+50€ por cortina)</span>
+                                Instalación <span id="texto-instalacion">()</span>
                             </label>
                         </div>
 
@@ -1318,7 +1318,7 @@
             if (totalItems > 0) {
                 document.getElementById('texto-instalacion').textContent = `(+${instalacion.toFixed(2)})`;
             } else {
-                document.getElementById('texto-instalacion').textContent = '(+50€ por cortina)';
+                document.getElementById('texto-instalacion').textContent = '()';
             }
         }
 
