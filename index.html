@@ -962,6 +962,7 @@
             { nombre: "Motorizado wifi", precio: 180.00 }
         ];
 
+       // TODOS LOS SISTEMAS
         const SISTEMAS = {
             "Estor a Cadena - Paquetto": {75:52.20, 100:57.38, 125:67.80, 150:77.19, 175:79.18, 200:88.61, 225:103.04, 250:107.97, 275:117.27, 300:126.66},
             "Estor a Cadena - Plegable": {75:54.01, 100:59.91, 125:69.94, 150:82.26, 175:89.06, 200:94.02, 225:108.11, 250:116.51, 275:128.41, 300:136.81},
@@ -969,19 +970,25 @@
             "Guía Manual 1 Vía - Onda Perfecta": {100:23.10, 125:29.03, 150:34.41, 175:39.38, 200:44.74, 225:50.06, 250:56.44, 275:61.99, 300:67.70},
             "Guía Profesional Manual - Convencional": {100:40.99, 150:55.77, 200:69.05, 250:85.07, 300:99.30},
             "Guía Profesional Manual - Onda Perfecta": {100:43.15, 150:58.72, 200:72.68, 250:89.54, 300:104.54},
+            "Guía Profesional a Cordón - Convencional": {100:52.53, 150:67.45, 200:81.01, 250:97.34, 300:111.90},
+            "Guía Profesional a Cordón - Onda Perfecta": {100:55.30, 150:70.99, 200:85.27, 250:102.46, 300:117.80},
             "Barra Guía Cuadrada - Convencional": {100:65.77, 150:79.68, 200:93.59, 250:124.26, 300:138.18},
+            "Barra Guía Cuadrada - Onda Perfecta": {100:67.78, 150:82.70, 200:97.61, 250:129.29, 300:144.21},
             "Barra Guía Redonda 20mm - Convencional": {100:64.51, 150:78.17, 200:91.81, 250:121.89, 300:135.54},
-            "Barra Guía Redonda 28mm - Convencional": {100:74.18, 150:85.98, 200:100.99, 250:134.08, 300:149.09}
+            "Barra Guía Redonda 20mm - Onda Perfecta": {100:66.49, 150:81.12, 200:95.75, 250:126.82, 300:141.46},
+            "Barra Guía Redonda 28mm - Convencional": {100:74.18, 150:85.98, 200:100.99, 250:134.08, 300:149.09},
+            "Barra Guía Redonda 28mm - Onda Perfecta": {100:76.46, 150:93.28, 200:105.32, 250:139.51, 300:155.60}
         };
 
-        const CONFECCION = {
+            const CONFECCION = {
             "estor_paquetto": {100:60.08, 150:72.10, 200:84.12, 250:96.13, 300:120.17, 350:132.18},
             "estor_plegable": {100:72.10, 150:84.12, 200:96.13, 250:108.15, 300:126.17, 350:138.20},
             "cortina_onda_perfecta": {100:43.25, 150:55.28, 200:67.29, 250:79.31, 300:91.33, 350:103.34},
             "cortina_fruncida": {100:43.25, 150:55.28, 200:67.29, 250:79.31, 300:91.33, 350:103.34},
             "cortina_plana": {100:31.24, 150:43.25, 200:55.28, 250:60.08, 300:66.09, 350:78.11},
             "cortina_ollados": {100:31.24, 150:43.25, 200:55.28, 250:60.08, 300:66.09, 350:78.11},
-            "cortina_triple_pliegue": {100:56.23, 150:71.86, 200:87.48, 250:103.11, 300:118.72, 350:134.34}
+            "cortina_triple_pliegue": {100:56.23, 150:71.86, 200:87.48, 250:103.11, 300:118.72, 350:134.34},
+            "cortina_palas": {100:43.25, 150:55.28, 200:67.29, 250:79.31, 300:91.33, 350:103.34}
         };
 
         const TIPOS_NOMBRE = {
@@ -1147,20 +1154,26 @@
             const anchoParaTejido = dosPiezas ? ancho / 2 : ancho;
             let tejidoMetros = 0;
             
-            if (tipo === 'estor_paquetto' || tipo === 'estor_plegable') {
+           if (tipo === 'estor_paquetto' || tipo === 'estor_plegable') {
                 tejidoMetros = (anchoParaTejido + 40) / 100;
             } else if (tipo === 'cortina_onda_perfecta') {
-                tejidoMetros = (anchoParaTejido * 2.4) / 100;
+                multiplicador = 2.4;
+                tejidoMetros = (anchoParaTejido * multiplicador) / 100;
             } else if (tipo === 'cortina_ollados') {
-                tejidoMetros = (anchoParaTejido * 2.2) / 100;
+                multiplicador = 2.2;
+                tejidoMetros = (anchoParaTejido * multiplicador) / 100;
             } else if (tipo === 'cortina_plana') {
                 tejidoMetros = (anchoParaTejido * 1.4) / 100;
             } else if (tipo === 'cortina_fruncida') {
-                tejidoMetros = (anchoParaTejido * 2.5) / 100;
+                multiplicador = 2.5;
+                tejidoMetros = (anchoParaTejido * multiplicador) / 100;
             } else if (tipo === 'cortina_triple_pliegue') {
-                tejidoMetros = (anchoParaTejido * 2.7) / 100;
+                multiplicador = 2.7;
+                tejidoMetros = (anchoParaTejido * multiplicador) / 100;
+            } else if (tipo === 'cortina_palas') {
+                multiplicador = 2.6;
+                tejidoMetros = (anchoParaTejido * multiplicador) / 100;
             }
-
             const precioTejido = tejidoMetros * tejido.precio;
             const confeccion = CONFECCION[tipo];
             let precioConfeccion = 0;
