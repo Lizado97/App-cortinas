@@ -696,7 +696,7 @@
                         <div class="checkbox-container" style="background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2);">
                             <input type="checkbox" id="incluir-instalacion" onchange="actualizarResumen()">
                             <label for="incluir-instalacion" style="color: white;">
-                                Instalación <span id="texto-instalacion">(+50€ por cortina)</span>
+                                Instalación <span id="texto-instalacion"></span>
                             </label>
                         </div>
 
@@ -1244,7 +1244,7 @@
             const precioTejido = metrosCuadrados * tejido.precio;
             const precioTubo = tubo.precioBase * (ancho / 100);
             const precioAccionamiento = accionamiento.precio;
-            const precioInstalacion = 30.00;
+            const precioInstalacion = 50.00;
             const precioTotal = precioTejido + precioTubo + precioAccionamiento + precioInstalacion;
 
             const item = {
@@ -1305,7 +1305,7 @@
             const totalItems = itemsActuales.length;
             const subtotal = itemsActuales.reduce((sum, item) => sum + item.precio_total, 0);
             const incluirInstalacion = document.getElementById('incluir-instalacion').checked;
-            const instalacion = incluirInstalacion ? (50 * totalItems) : 0;
+            const instalacion = incluirInstalacion ?  : 0;
             const subtotalConInstalacion = subtotal + instalacion;
             const iva = subtotalConInstalacion * 0.21;
             const total = subtotalConInstalacion + iva;
@@ -1316,7 +1316,7 @@
             document.getElementById('total').textContent = total.toFixed(2) + '€';
             
             if (totalItems > 0) {
-                document.getElementById('texto-instalacion').textContent = `(+${instalacion.toFixed(2)}€ = 50€ x ${totalItems} cortinas)`;
+                document.getElementById('texto-instalacion').textContent = `(+${instalacion.toFixed(2)})`;
             } else {
                 document.getElementById('texto-instalacion').textContent = '(+50€ por cortina)';
             }
