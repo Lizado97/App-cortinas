@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+    <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
@@ -240,16 +240,6 @@
             color: #475569;
         }
 
-        .badge-enviado {
-            background: #dbeafe;
-            color: #1e40af;
-        }
-
-        .badge-aceptado {
-            background: #dcfce7;
-            color: #166534;
-        }
-
         .stats {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -281,9 +271,10 @@
             align-items: center;
             gap: 0.75rem;
             padding: 1rem;
-            background: #dbeafe;
+            background: white;
             border-radius: 8px;
-            margin-bottom: 1rem;
+            margin-top: 1rem;
+            border: 1px solid #e2e8f0;
         }
 
         .checkbox-container input[type="checkbox"] {
@@ -358,46 +349,64 @@
             -webkit-overflow-scrolling: touch;
         }
 
-        .tipo-selector {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 1rem;
-            margin-bottom: 2rem;
-        }
-
-        .tipo-option {
+        .step-box {
             padding: 1.5rem;
-            border: 2px solid #e2e8f0;
             border-radius: 12px;
-            cursor: pointer;
-            transition: all 0.3s;
-            text-align: center;
+            border: 2px solid;
+            margin-bottom: 1.5rem;
         }
 
-        .tipo-option:hover {
-            border-color: #cbd5e1;
-            background: #f8fafc;
+        .step-blue {
+            background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+            border-color: #3b82f6;
         }
 
-        .tipo-option.active {
-            border-color: #2563eb;
-            background: #dbeafe;
+        .step-purple {
+            background: linear-gradient(135deg, #f3e8ff 0%, #e9d5ff 100%);
+            border-color: #a855f7;
         }
 
-        .tipo-option .icon {
-            font-size: 2rem;
-            margin-bottom: 0.5rem;
+        .step-amber {
+            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+            border-color: #f59e0b;
         }
 
-        .tipo-option .title {
-            font-weight: 600;
+        .step-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .step-number {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 1.25rem;
+            flex-shrink: 0;
+        }
+
+        .step-blue .step-number {
+            background: #2563eb;
+        }
+
+        .step-purple .step-number {
+            background: #9333ea;
+        }
+
+        .step-amber .step-number {
+            background: #f59e0b;
+        }
+
+        .step-title {
+            font-size: 1.25rem;
+            font-weight: 700;
             color: #1e293b;
-            margin-bottom: 0.25rem;
-        }
-
-        .tipo-option .desc {
-            font-size: 0.75rem;
-            color: #64748b;
         }
 
         @media (max-width: 768px) {
@@ -432,10 +441,6 @@
             }
 
             .stats {
-                grid-template-columns: 1fr;
-            }
-
-            .tipo-selector {
                 grid-template-columns: 1fr;
             }
 
@@ -512,7 +517,7 @@
                                 <th>Fecha</th>
                                 <th>Items</th>
                                 <th style="text-align: right;">Total</th>
-                                <th style="text-align: center;">Estado</th>
+                                <th style="text-align: center;">Acción</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -565,38 +570,47 @@
                     <div class="card">
                         <h2>🧮 Calculadora de Cortinas</h2>
                         
-                        <div class="form-group">
-                            <label>Tipo de Sistema *</label>
-                            <div class="tipo-selector">
-                                <div class="tipo-option active" id="opt-tradicional" onclick="cambiarTipoCortina('tradicional')">
-                                    <div class="icon">🪟</div>
-                                    <div class="title">Cortinas Tradicionales</div>
-                                    <div class="desc">Estores, onda perfecta, fruncidas...</div>
-                                </div>
-                                <div class="tipo-option" id="opt-tecnica" onclick="cambiarTipoCortina('tecnica')">
-                                    <div class="icon">⚙️</div>
-                                    <div class="title">Cortinas Técnicas</div>
-                                    <div class="desc">Enrollables, screen, blackout...</div>
-                                </div>
+                        <!-- Sección 1: Tipo y Tejido -->
+                        <div class="step-box step-blue">
+                            <div class="step-header">
+                                <div class="step-number">1</div>
+                                <div class="step-title">Tipo y Tejido</div>
                             </div>
-                        </div>
-
-                        <!-- Formulario Tradicional -->
-                        <div id="form-tradicional">
+                            
                             <div class="form-group">
                                 <label>Tipo de Cortina *</label>
                                 <select id="tipo-cortina">
-                                  <option value="">Selecciona el tipo...</option>
-                                <option value="estor_paquetto">Estor Paquetto (sin varillas)</option>
-                                <option value="estor_plegable">Estor Plegable (con varillas)</option>
-                                <option value="cortina_onda_perfecta">Cortina Onda Perfecta</option>
-                                <option value="cortina_fruncida">Cortina Fruncida</option>
-                                <option value="cortina_plana">Cortina Plana sin Frunce</option>
-                                <option value="cortina_ollados">Cortina con Ollados</option>
-                                <option value="cortina_triple_pliegue">Cortina Triple Pliegue</option>
-                                <option value="cortina_palas">Cortina Palas</option>
+                                    <option value="">Selecciona el tipo...</option>
+                                    <option value="estor_paquetto">Estor Paquetto (sin varillas)</option>
+                                    <option value="estor_plegable">Estor Plegable (con varillas)</option>
+                                    <option value="cortina_onda_perfecta">Cortina Onda Perfecta</option>
+                                    <option value="cortina_fruncida">Cortina Fruncida</option>
+                                    <option value="cortina_plana">Cortina Plana sin Frunce</option>
+                                    <option value="cortina_ollados">Cortina con Ollados</option>
+                                    <option value="cortina_triple_pliegue">Cortina Triple Pliegue</option>
+                                    <option value="cortina_palas">Cortina Palas</option>
+                                    <option value="cortina_plana_doble">Cortina Plana Doble Tejido</option>
+                                    <option value="cortina_plegones">Cortina Plegones</option>
                                 </select>
                             </div>
+                            
+                            <div class="form-group">
+                                <label>Tejido * <small>(Buscar por nombre)</small></label>
+                                <div class="search-box">
+                                    <input type="text" id="tejido-search" placeholder="Buscar tejido..." oninput="buscarTejido()">
+                                    <div id="search-results" class="search-results hidden"></div>
+                                </div>
+                                <input type="hidden" id="tejido">
+                            </div>
+                        </div>
+
+                        <!-- Sección 2: Medidas -->
+                        <div class="step-box step-purple">
+                            <div class="step-header">
+                                <div class="step-number">2</div>
+                                <div class="step-title">📏 Medidas</div>
+                            </div>
+                            
                             <div class="grid grid-2">
                                 <div class="form-group">
                                     <label>Ancho (cm) *</label>
@@ -610,62 +624,49 @@
                             
                             <div class="checkbox-container">
                                 <input type="checkbox" id="dos-piezas">
-                                <label for="dos-piezas">✂️ Cortina en 2 piezas </label>
+                                <label for="dos-piezas">✂️ Dividir en 2 piezas</label>
                             </div>
-
-                            <div class="form-group">
-                                <label>Tejido * <small>(Buscar por nombre)</small></label>
-                                <div class="search-box">
-                                    <input type="text" id="tejido-search" placeholder="Buscar tejido..." oninput="buscarTejido()">
-                                    <div id="search-results" class="search-results hidden"></div>
-                                </div>
-                                <input type="hidden" id="tejido">
-                            </div>
-                            <div class="form-group">
-                                <label>Sistema de Instalación</label>
-                                <select id="sistema">
-                                    <option value="">Opcional - Selecciona el sistema...</option>
-                                </select>
-                            </div>
-                            <button class="btn btn-primary" onclick="agregarItem()" style="width: 100%;">
-                                ➕ Calcular y Agregar al Presupuesto
-                            </button>
                         </div>
 
-                        <!-- Formulario Técnico -->
-                        <div id="form-tecnico" class="hidden">
+                        <!-- Sección 3: Sistema -->
+                        <div class="step-box step-amber">
+                            <div class="step-header">
+                                <div class="step-number">3</div>
+                                <div class="step-title">Sistema de Instalación</div>
+                            </div>
+                            
                             <div class="form-group">
-                                <label>Tipo de Tejido Técnico *</label>
-                                <select id="tejido-tecnico">
-                                    <option value="">Selecciona el tejido técnico...</option>
+                                <label>Sistema (opcional)</label>
+                                <select id="sistema" onchange="mostrarOpcionesBarras()">
+                                    <option value="">Sin sistema</option>
                                 </select>
                             </div>
-                            <div class="grid grid-2">
-                                <div class="form-group">
-                                    <label>Ancho (cm) *</label>
-                                    <input type="number" id="ancho-tecnico" placeholder="200">
+                            
+                            <!-- Opciones adicionales para barras -->
+                            <div id="opciones-barras" style="display: none;">
+                                <div class="form-group" id="diametro-container">
+                                    <label>Diámetro</label>
+                                    <select id="diametro-barra">
+                                        <option value="">Selecciona...</option>
+                                        <option value="20">20mm</option>
+                                        <option value="28">28mm</option>
+                                    </select>
                                 </div>
                                 <div class="form-group">
-                                    <label>Alto (cm) *</label>
-                                    <input type="number" id="alto-tecnico" placeholder="250">
+                                    <label>Medida</label>
+                                    <select id="medida-barra">
+                                        <option value="">Selecciona...</option>
+                                        <option value="150">150cm</option>
+                                        <option value="200">200cm</option>
+                                        <option value="250">250cm</option>
+                                        <option value="300">300cm</option>
+                                    </select>
                                 </div>
                             </div>
-                            <div class="form-group">
-                                <label>Diámetro del Tubo *</label>
-                                <select id="diametro-tubo">
-                                    <option value="">Selecciona el diámetro...</option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label>Tipo de Accionamiento *</label>
-                                <select id="accionamiento">
-                                    <option value="">Selecciona el accionamiento...</option>
-                                </select>
-                            </div>
-                            <button class="btn btn-primary" onclick="agregarItemTecnico()" style="width: 100%;">
-                                ➕ Calcular y Agregar al Presupuesto
+
+                           <button class="btn btn-primary" onclick="agregarItem()" style="width: 100%; padding: 1rem; font-size: 1.1rem;">
+                            <span id="btn-texto">➕ Calcular y Agregar al Presupuesto</span>
                             </button>
-                        </div>
                     </div>
 
                     <div class="card" id="items-card" style="display: none;">
@@ -692,14 +693,10 @@
                             <span>Subtotal (sin IVA):</span>
                             <span id="subtotal">0.00€</span>
                         </div>
-                        
-                        <div class="checkbox-container" style="background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2);">
-                            <input type="checkbox" id="incluir-instalacion" onchange="actualizarResumen()">
-                            <label for="incluir-instalacion" style="color: white;">
-                                Instalación <span id="texto-instalacion">()</span>
-                            </label>
+                        <div class="resumen-linea" id="instalacion-line" style="display: none;">
+                            <span>Instalación:</span>
+                            <span id="instalacion-precio">0.00€</span>
                         </div>
-
                         <div class="resumen-linea">
                             <span>IVA (21%):</span>
                             <span id="iva">0.00€</span>
@@ -737,8 +734,7 @@
     </div>
 
     <script>
-       // TODOS LOS TEJIDOS ACTUALIZADOS DEL PDF 2025 (sin BAJA ni FIN EXIST.)
-        const TEJIDOS = [
+            const TEJIDOS = [
             { nombre: "AALBORG 60-61-64", precio: 57.68, ancho: 300, composicion: "53% Pes 47% Li" },
             { nombre: "AALBORG 90-91-94", precio: 57.68, ancho: 300, composicion: "57% Pes 43% Li" },
             { nombre: "ABI", precio: 35.13, ancho: 300, composicion: "100% Pes" },
@@ -939,49 +935,40 @@
             { nombre: "ZAHARA", precio: 41.11, ancho: 300, composicion: "90% Pol 10% Li" }
         ];
 
+      const SISTEMAS = {
+    "Estor a Cadena - Paquetto": {75:52.20, 100:57.38, 125:67.80, 150:77.19, 175:79.18, 200:88.61, 225:103.04, 250:107.97, 275:117.27, 300:126.66},
+    "Estor a Cadena - Plegable": {75:54.01, 100:59.91, 125:69.94, 150:82.26, 175:89.06, 200:94.02, 225:108.11, 250:116.51, 275:128.41, 300:136.81},
+    "Guía Manual 1 Vía - Convencional": {100:10.17, 125:12.86, 150:15.01, 175:16.74, 200:18.87, 225:20.95, 250:24.10, 275:26.42, 300:28.90},
+    "Guía Manual 1 Vía - Onda Perfecta": {100:23.10, 125:29.03, 150:34.41, 175:39.38, 200:44.74, 225:50.06, 250:56.44, 275:61.99, 300:67.70},
+    "Guía Profesional Manual - Convencional": {100:40.99, 150:55.77, 200:69.05, 250:85.07, 300:99.30},
+    "Guía Profesional Manual - Onda Perfecta": {100:43.15, 150:58.72, 200:72.68, 250:89.54, 300:104.54},
+    "Guía Profesional a Cordón - Convencional": {100:52.53, 150:67.45, 200:81.01, 250:97.34, 300:111.90},
+    "Guía Profesional a Cordón - Onda Perfecta": {100:55.30, 150:70.99, 200:85.27, 250:102.46, 300:117.80},
+    "Barra Guía Cuadrada - Convencional": {100:65.77, 150:79.68, 200:93.59, 250:124.26, 300:138.18},
+    "Barra Guía Cuadrada - Onda Perfecta": {100:67.78, 150:82.70, 200:97.61, 250:129.29, 300:144.21},
+    "Barra Guía Redonda 20mm - Convencional": {100:64.51, 150:78.17, 200:91.81, 250:121.89, 300:135.54},
+    "Barra Guía Redonda 20mm - Onda Perfecta": {100:66.49, 150:81.12, 200:95.75, 250:126.82, 300:141.46},
+    "Barra Guía Redonda 28mm - Convencional": {100:74.18, 150:85.98, 200:100.99, 250:134.08, 300:149.09},
+    "Barra Guía Redonda 28mm - Onda Perfecta": {100:76.46, 150:93.28, 200:105.32, 250:139.51, 300:155.60},
+    "Barra Forja Negra": "forja",
+    "Barra Forja Blanca": "forja",
+    "Barra Óxido": "forja",
+    "Barra Acero": "forja",
+    "Barra Oro Viejo": "forja",
+    "Barra Cuadrada con Anillas": "forja"
+};
 
-        const TEJIDOS_TECNICOS = [
-            { nombre: "Screen 5%", tipo: "Screen", apertura: "5%", precio: 35.00 },
-            { nombre: "Screen 3%", tipo: "Screen", apertura: "3%", precio: 38.00 },
-            { nombre: "Screen 1%", tipo: "Screen", apertura: "1%", precio: 42.00 },
-            { nombre: "Blackout Total", tipo: "Blackout", apertura: "0%", precio: 45.00 },
-            { nombre: "Translúcido", tipo: "Translúcido", apertura: "50%", precio: 32.00 },
-            { nombre: "Opaco", tipo: "Opaco", apertura: "0%", precio: 40.00 }
-        ];
+// Precios de barras según nombre, diámetro y medida
+const PRECIOS_BARRAS = {
+    "Barra Forja Negra": { "20": {150:66.96, 200:71.27, 250:95.72}, "28": {150:132.24, 200:144.75, 250:150.07} },
+    "Barra Forja Blanca": { "20": {150:66.96, 200:71.27, 250:95.72}, "28": {150:132.24, 200:144.75, 250:150.07} },
+    "Barra Óxido": { "20": {150:66.96, 200:71.27, 250:95.72}, "28": {150:132.24, 200:144.75, 250:150.07} },
+    "Barra Acero": { "20": {150:64.66, 200:69.02, 250:93.47}, "28": {150:134.49, 200:147.00, 250:152.33} },
+    "Barra Oro Viejo": { "20": {150:76.36, 200:87.71, 250:99.68}, "28": {150:138.10, 200:150.61, 250:155.94} },
+    "Barra Cuadrada con Anillas": { "único": {150:99.18, 200:108.32, 250:151.10, 300:176.21} }
+};
 
-        const DIAMETROS_TUBO = [
-            { diametro: "32mm", precioBase: 25.00, maxAncho: 150 },
-            { diametro: "40mm", precioBase: 35.00, maxAncho: 200 },
-            { diametro: "50mm", precioBase: 45.00, maxAncho: 300 },
-            { diametro: "60mm", precioBase: 60.00, maxAncho: 400 }
-        ];
-
-        const TIPOS_ACCIONAMIENTO = [
-            { nombre: "Cadena", precio: 15.00 },
-            { nombre: "Motorizado con mando", precio: 120.00 },
-            { nombre: "Motorizado con control remoto", precio: 150.00 },
-            { nombre: "Motorizado wifi", precio: 180.00 }
-        ];
-
-       // TODOS LOS SISTEMAS
-        const SISTEMAS = {
-            "Estor a Cadena - Paquetto": {75:52.20, 100:57.38, 125:67.80, 150:77.19, 175:79.18, 200:88.61, 225:103.04, 250:107.97, 275:117.27, 300:126.66},
-            "Estor a Cadena - Plegable": {75:54.01, 100:59.91, 125:69.94, 150:82.26, 175:89.06, 200:94.02, 225:108.11, 250:116.51, 275:128.41, 300:136.81},
-            "Guía Manual 1 Vía - Convencional": {100:10.17, 125:12.86, 150:15.01, 175:16.74, 200:18.87, 225:20.95, 250:24.10, 275:26.42, 300:28.90},
-            "Guía Manual 1 Vía - Onda Perfecta": {100:23.10, 125:29.03, 150:34.41, 175:39.38, 200:44.74, 225:50.06, 250:56.44, 275:61.99, 300:67.70},
-            "Guía Profesional Manual - Convencional": {100:40.99, 150:55.77, 200:69.05, 250:85.07, 300:99.30},
-            "Guía Profesional Manual - Onda Perfecta": {100:43.15, 150:58.72, 200:72.68, 250:89.54, 300:104.54},
-            "Guía Profesional a Cordón - Convencional": {100:52.53, 150:67.45, 200:81.01, 250:97.34, 300:111.90},
-            "Guía Profesional a Cordón - Onda Perfecta": {100:55.30, 150:70.99, 200:85.27, 250:102.46, 300:117.80},
-            "Barra Guía Cuadrada - Convencional": {100:65.77, 150:79.68, 200:93.59, 250:124.26, 300:138.18},
-            "Barra Guía Cuadrada - Onda Perfecta": {100:67.78, 150:82.70, 200:97.61, 250:129.29, 300:144.21},
-            "Barra Guía Redonda 20mm - Convencional": {100:64.51, 150:78.17, 200:91.81, 250:121.89, 300:135.54},
-            "Barra Guía Redonda 20mm - Onda Perfecta": {100:66.49, 150:81.12, 200:95.75, 250:126.82, 300:141.46},
-            "Barra Guía Redonda 28mm - Convencional": {100:74.18, 150:85.98, 200:100.99, 250:134.08, 300:149.09},
-            "Barra Guía Redonda 28mm - Onda Perfecta": {100:76.46, 150:93.28, 200:105.32, 250:139.51, 300:155.60}
-        };
-
-            const CONFECCION = {
+        const CONFECCION = {
             "estor_paquetto": {100:60.08, 150:72.10, 200:84.12, 250:96.13, 300:120.17, 350:132.18},
             "estor_plegable": {100:72.10, 150:84.12, 200:96.13, 250:108.15, 300:126.17, 350:138.20},
             "cortina_onda_perfecta": {100:43.25, 150:55.28, 200:67.29, 250:79.31, 300:91.33, 350:103.34},
@@ -990,6 +977,8 @@
             "cortina_ollados": {100:31.24, 150:43.25, 200:55.28, 250:60.08, 300:66.09, 350:78.11},
             "cortina_triple_pliegue": {100:56.23, 150:71.86, 200:87.48, 250:103.11, 300:118.72, 350:134.34},
             "cortina_palas": {100:43.25, 150:55.28, 200:67.29, 250:79.31, 300:91.33, 350:103.34}
+            "cortina_plana_doble": {100:31.24, 150:43.25, 200:55.28, 250:60.08, 300:66.09, 350:78.11},
+            "cortina_plegones": {100:43.25, 150:55.28, 200:67.29, 250:79.31, 300:91.33, 350:103.34}
         };
 
         const TIPOS_NOMBRE = {
@@ -1001,90 +990,130 @@
             "cortina_ollados": "Cortina con Ollados",
             "cortina_triple_pliegue": "Cortina Triple Pliegue",
             "cortina_palas": "Cortina Palas"
+            "cortina_plana_doble": "Cortina Plana Doble Tejido",
+            "cortina_plegones": "Cortina Plegones"
         };
 
-
         let itemsActuales = [];
-        let tipoCortinaSistema = 'tradicional';
+        let editandoItemId = null;
 
         document.addEventListener('DOMContentLoaded', function() {
             cargarSistemas();
-            cargarTejidosTecnicos();
-            cargarDiametrosTubo();
-            cargarTiposAccionamiento();
             cargarDashboard();
         });
 
-        function cambiarTipoCortina(tipo) {
-            tipoCortinaSistema = tipo;
-            document.getElementById('opt-tradicional').classList.remove('active');
-            document.getElementById('opt-tecnica').classList.remove('active');
-            
-            if (tipo === 'tradicional') {
-                document.getElementById('opt-tradicional').classList.add('active');
-                document.getElementById('form-tradicional').classList.remove('hidden');
-                document.getElementById('form-tecnico').classList.add('hidden');
-            } else {
-                document.getElementById('opt-tecnica').classList.add('active');
-                document.getElementById('form-tradicional').classList.add('hidden');
-                document.getElementById('form-tecnico').classList.remove('hidden');
-            }
-        }
-
-        function cargarSistemas() {
-            const select = document.getElementById('sistema');
-            Object.keys(SISTEMAS).forEach(s => {
-                const option = document.createElement('option');
-                option.value = s;
-                option.textContent = s;
-                select.appendChild(option);
-            });
-        }
-
-        function cargarTejidosTecnicos() {
-            const select = document.getElementById('tejido-tecnico');
-            TEJIDOS_TECNICOS.forEach(t => {
-                const option = document.createElement('option');
-                option.value = t.nombre;
-                option.textContent = `${t.nombre} - ${t.tipo} (Apertura ${t.apertura}) - ${t.precio}€/m²`;
-                select.appendChild(option);
-            });
-        }
-
-        function cargarDiametrosTubo() {
-            const select = document.getElementById('diametro-tubo');
-            DIAMETROS_TUBO.forEach(d => {
-                const option = document.createElement('option');
-                option.value = d.diametro;
-                option.textContent = `${d.diametro} - Max. ancho: ${d.maxAncho}cm - Base: ${d.precioBase}€`;
-                select.appendChild(option);
-            });
-        }
-
-        function cargarTiposAccionamiento() {
-            const select = document.getElementById('accionamiento');
-            TIPOS_ACCIONAMIENTO.forEach(a => {
-                const option = document.createElement('option');
-                option.value = a.nombre;
-                option.textContent = `${a.nombre} - ${a.precio}€`;
-                select.appendChild(option);
-            });
-        }
+                     function cargarSistemas() {
+                    const select = document.getElementById('tipo-cortina');
+                    select.addEventListener('change', filtrarSistemasPorTipo);
+                }
+                
+                function filtrarSistemasPorTipo() {
+                    const tipo = document.getElementById('tipo-cortina').value;
+                    const selectSistema = document.getElementById('sistema');
+                    selectSistema.innerHTML = '<option value="">Sin sistema</option>';
+                    
+                    let sistemasPermitidos = [];
+                    
+                    if (tipo === 'estor_paquetto' || tipo === 'estor_plegable') {
+                        sistemasPermitidos = Object.keys(SISTEMAS).filter(s => s.includes('Estor a Cadena'));
+                    } else if (tipo === 'cortina_ollados') {
+                        sistemasPermitidos = Object.keys(SISTEMAS).filter(s => SISTEMAS[s] === 'forja');
+                    } else if (tipo === 'cortina_onda_perfecta') {
+                        sistemasPermitidos = Object.keys(SISTEMAS).filter(s => s.includes('Onda Perfecta'));
+                    } else if (tipo === 'cortina_fruncida' || tipo === 'cortina_palas' || tipo === 'cortina_triple_pliegue' || 
+                               tipo === 'cortina_plana' || tipo === 'cortina_plana_doble' || tipo === 'cortina_plegones') {
+                        sistemasPermitidos = Object.keys(SISTEMAS).filter(s => s.includes('Convencional') || SISTEMAS[s] === 'forja');
+                    }
+                    
+                    sistemasPermitidos.forEach(s => {
+                        const option = document.createElement('option');
+                        option.value = s;
+                        option.textContent = s;
+                        selectSistema.appendChild(option);
+                    });
+                }
+                
+                function mostrarOpcionesBarras() {
+                    const sistema = document.getElementById('sistema').value;
+                    const opcionesBarras = document.getElementById('opciones-barras');
+                    const diametroContainer = document.getElementById('diametro-container');
+                    const selectMedida = document.getElementById('medida-barra');
+                    
+                    if (SISTEMAS[sistema] === 'forja') {
+                        opcionesBarras.style.display = 'block';
+                        
+                        // Mostrar/ocultar diámetro según si es "Barra Cuadrada con Anillas"
+                        if (sistema === 'Barra Cuadrada con Anillas') {
+                            diametroContainer.style.display = 'none';
+                            document.getElementById('diametro-barra').value = 'único';
+                            // Añadir opción 300cm
+                            if (!selectMedida.querySelector('[value="300"]')) {
+                                const opt300 = document.createElement('option');
+                                opt300.value = '300';
+                                opt300.textContent = '300cm';
+                                selectMedida.appendChild(opt300);
+                            }
+                        } else {
+                            diametroContainer.style.display = 'block';
+                            document.getElementById('diametro-barra').value = '';
+                            // Quitar opción 300cm si existe
+                            const opt300 = selectMedida.querySelector('[value="300"]');
+                            if (opt300) opt300.remove();
+                        }
+                    } else {
+                        opcionesBarras.style.display = 'none';
+                        document.getElementById('diametro-barra').value = '';
+                        document.getElementById('medida-barra').value = '';
+                    }
+                }
 
         function calcularPrecioSistema(ancho, sistemaNombre) {
             if (!sistemaNombre) return 0;
+            
+            // Si es barra de forja
+            if (SISTEMAS[sistemaNombre] === 'forja') {
+                const diametro = document.getElementById('diametro-barra').value;
+                const medida = parseInt(document.getElementById('medida-barra').value);
+                
+                if (!medida) {
+                    alert('Por favor selecciona el diámetro y medida de la barra');
+                    return 0;
+                }
+                
+                const preciosBarra = PRECIOS_BARRAS[sistemaNombre];
+                if (!preciosBarra) return 0;
+                
+                const preciosPorDiametro = preciosBarra[diametro] || preciosBarra['único'];
+                if (!preciosPorDiametro) return 0;
+                
+                const precio = preciosPorDiametro[medida] || 0;
+                
+                // Si el ancho supera 250cm, multiplicar por 2
+                if (ancho > 250) {
+                    return precio * 2;
+                }
+                
+                return precio;
+            }
+            
+            // Lógica normal para otros sistemas
             const sistema = SISTEMAS[sistemaNombre];
             if (!sistema) return 0;
+            
             const rangos = Object.keys(sistema).map(r => parseInt(r)).sort((a, b) => a - b);
             const rangoMaximo = rangos[rangos.length - 1];
+            
             if (ancho > rangoMaximo) {
                 const anchoMitad = ancho / 2;
                 const rangoParaMitad = rangos.find(r => anchoMitad <= r) || rangoMaximo;
                 return (sistema[rangoParaMitad] || 0) * 2;
             }
+            
             const rangoAplicable = rangos.find(r => ancho <= r);
             return sistema[rangoAplicable || rangoMaximo] || 0;
         }
+
+
 
         function buscarTejido() {
             const searchInput = document.getElementById('tejido-search');
@@ -1157,26 +1186,27 @@
             const anchoParaTejido = dosPiezas ? ancho / 2 : ancho;
             let tejidoMetros = 0;
             
-           if (tipo === 'estor_paquetto' || tipo === 'estor_plegable') {
+            if (tipo === 'estor_paquetto' || tipo === 'estor_plegable') {
                 tejidoMetros = (anchoParaTejido + 40) / 100;
             } else if (tipo === 'cortina_onda_perfecta') {
-                multiplicador = 2.4;
-                tejidoMetros = (anchoParaTejido * multiplicador) / 100;
+                tejidoMetros = (anchoParaTejido * 2.4) / 100;
             } else if (tipo === 'cortina_ollados') {
-                multiplicador = 2.2;
-                tejidoMetros = (anchoParaTejido * multiplicador) / 100;
+                tejidoMetros = (anchoParaTejido * 2.2) / 100;
             } else if (tipo === 'cortina_plana') {
                 tejidoMetros = (anchoParaTejido * 1.4) / 100;
             } else if (tipo === 'cortina_fruncida') {
-                multiplicador = 2.5;
-                tejidoMetros = (anchoParaTejido * multiplicador) / 100;
+                tejidoMetros = (anchoParaTejido * 2.5) / 100;
             } else if (tipo === 'cortina_triple_pliegue') {
-                multiplicador = 2.7;
-                tejidoMetros = (anchoParaTejido * multiplicador) / 100;
+                tejidoMetros = (anchoParaTejido * 2.7) / 100;
             } else if (tipo === 'cortina_palas') {
-                multiplicador = 2.6;
-                tejidoMetros = (anchoParaTejido * multiplicador) / 100;
+                tejidoMetros = (anchoParaTejido * 2.6) / 100;
+            } else if (tipo === 'cortina_plana_doble') {
+                tejidoMetros = (anchoParaTejido * 2) / 100;
+            } else if (tipo === 'cortina_plegones') {
+                tejidoMetros = (anchoParaTejido * 2.6) / 100;
             }
+
+             tejidoMetros = Math.round(tejidoMetros * 100) / 100;
             const precioTejido = tejidoMetros * tejido.precio;
             const confeccion = CONFECCION[tipo];
             let precioConfeccion = 0;
@@ -1188,23 +1218,61 @@
             else if (anchoParaTejido <= 300) precioConfeccion = confeccion[300];
             else precioConfeccion = confeccion[350] || confeccion[300];
 
-            const precioSistema = calcularPrecioSistema(ancho, sistemaNombre);
-            const precioTejidoFinal = dosPiezas ? precioTejido * 2 : precioTejido;
-            const precioConfeccionFinal = dosPiezas ? precioConfeccion * 2 : precioConfeccion;
-            const precioTotal = precioTejidoFinal + precioConfeccionFinal + precioSistema;
-
+           
+         const precioSistema = calcularPrecioSistema(ancho, sistemaNombre);
+        const precioTejidoFinal = dosPiezas ? precioTejido * 2 : precioTejido;
+        const precioConfeccionFinal = dosPiezas ? precioConfeccion * 2 : precioConfeccion;
+        
+        let precioOllados = 0;
+        
+        if (tipo === 'cortina_ollados') {
+        
+            // ❗ Usamos SIEMPRE el ancho total, no el ancho dividido
+            const tejidoCm = ancho * 2.2; 
+        
+            let numOllados = Math.floor(tejidoCm / 15);
+        
+            // Aplicar nuevas reglas:
+            if (numOllados % 2 === 0) {
+                numOllados += 2;  // si es par → +2
+            } else {
+                numOllados += 3;  // si es impar → +3
+            }
+        
+            precioOllados = numOllados * 5.5;
+        }
+        
+        
+        const precioInstalacion = document.getElementById('incluir-instalacion').checked ? 50 : 0;
+        const precioTotal = precioTejidoFinal + precioConfeccionFinal + precioSistema + precioOllados + precioInstalacion;
+                    
+                      let sistemaNombreCompleto = sistemaNombre || 'Sin sistema';
+            if (SISTEMAS[sistemaNombre] === 'forja') {
+                const diametro = document.getElementById('diametro-barra').value;
+                const medida = document.getElementById('medida-barra').value;
+                if (sistemaNombre !== 'Barra Cuadrada con Anillas') {
+                    sistemaNombreCompleto = `${sistemaNombre} ${diametro}mm - ${medida}cm`;
+                } else {
+                    sistemaNombreCompleto = `${sistemaNombre} - ${medida}cm`;
+                }
+            }
+            
             const item = {
-                id: Date.now(),
+                id: editandoItemId || Date.now(),
                 tipo,
                 descripcion: `${TIPOS_NOMBRE[tipo]} - ${tejidoNombre}${dosPiezas ? ' (2 piezas)' : ''}`,
                 ancho, alto,
                 tejido_nombre: tejidoNombre,
+                sistema_nombre: sistemaNombreCompleto,
                 precio_total: precioTotal,
-                dos_piezas: dosPiezas,
-                precio_tejido: precioTejidoFinal,
-                precio_confeccion: precioConfeccionFinal,
-                precio_sistema: precioSistema
+                dos_piezas: dosPiezas
             };
+            if (editandoItemId) {
+                const index = itemsActuales.findIndex(i => i.id === editandoItemId);
+                    itemsActuales[index] = item;
+                    editandoItemId = null;
+                document.getElementById('btn-texto').textContent = '➕ Calcular y Agregar al Presupuesto';
+                } else
 
             itemsActuales.push(item);
             actualizarItems();
@@ -1219,63 +1287,28 @@
             document.getElementById('dos-piezas').checked = false;
         }
 
-        function agregarItemTecnico() {
-            const ancho = parseFloat(document.getElementById('ancho-tecnico').value);
-            const alto = parseFloat(document.getElementById('alto-tecnico').value);
-            const tejidoNombre = document.getElementById('tejido-tecnico').value;
-            const diametroNombre = document.getElementById('diametro-tubo').value;
-            const accionamientoNombre = document.getElementById('accionamiento').value;
-
-            if (!ancho || !alto || !tejidoNombre || !diametroNombre || !accionamientoNombre) {
-                alert('Por favor completa todos los campos obligatorios');
-                return;
-            }
-
-            const tejido = TEJIDOS_TECNICOS.find(t => t.nombre === tejidoNombre);
-            const tubo = DIAMETROS_TUBO.find(d => d.diametro === diametroNombre);
-            const accionamiento = TIPOS_ACCIONAMIENTO.find(a => a.nombre === accionamientoNombre);
-
-            if (ancho > tubo.maxAncho) {
-                alert(`El ancho máximo para tubo de ${diametroNombre} es ${tubo.maxAncho}cm`);
-                return;
-            }
-
-            const metrosCuadrados = (ancho * alto) / 10000;
-            const precioTejido = metrosCuadrados * tejido.precio;
-            const precioTubo = tubo.precioBase * (ancho / 100);
-            const precioAccionamiento = accionamiento.precio;
-            const precioInstalacion = 50.00;
-            const precioTotal = precioTejido + precioTubo + precioAccionamiento + precioInstalacion;
-
-            const item = {
-                id: Date.now(),
-                tipo: 'cortina_tecnica',
-                descripcion: `Cortina Técnica - ${tejido.nombre} - Tubo ${diametroNombre} - ${accionamiento.nombre}`,
-                ancho, alto,
-                tejido_nombre: tejido.nombre,
-                precio_total: precioTotal,
-                dos_piezas: false,
-                precio_tejido: precioTejido,
-                precio_confeccion: precioInstalacion,
-                precio_sistema: precioTubo + precioAccionamiento
-            };
-
-            itemsActuales.push(item);
-            actualizarItems();
-            actualizarResumen();
-
-            document.getElementById('ancho-tecnico').value = '';
-            document.getElementById('alto-tecnico').value = '';
-            document.getElementById('tejido-tecnico').value = '';
-            document.getElementById('diametro-tubo').value = '';
-            document.getElementById('accionamiento').value = '';
-        }
-
         function eliminarItem(id) {
             itemsActuales = itemsActuales.filter(item => item.id !== id);
             actualizarItems();
             actualizarResumen();
         }
+        
+        function editarItem(id) {
+    const item = itemsActuales.find(i => i.id === id);
+    if (!item) return;
+    
+    document.getElementById('tipo-cortina').value = item.tipo;
+    document.getElementById('ancho').value = item.ancho;
+    document.getElementById('alto').value = item.alto;
+    document.getElementById('tejido').value = item.tejido_nombre;
+    document.getElementById('tejido-search').value = item.tejido_nombre;
+    document.getElementById('sistema').value = item.sistema_nombre === 'Sin sistema' ? '' : item.sistema_nombre;
+    document.getElementById('dos-piezas').checked = item.dos_piezas;
+    document.getElementById('btn-texto').textContent = '✏️ Actualizar Item';
+    
+    editandoItemId = id;
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
 
         function actualizarItems() {
             const lista = document.getElementById('items-list');
@@ -1292,35 +1325,32 @@
                 div.innerHTML = `
                     <div class="item-info">
                         <h4>#${index + 1} - ${item.descripcion}</h4>
-                        <p>Medidas: ${item.ancho}cm x ${item.alto}cm ${item.dos_piezas ? '(2 piezas)' : ''}</p>
+                        <p>Medidas: ${item.ancho}cm x ${item.alto}cm | Sistema: ${item.sistema_nombre}</p>
                     </div>
+                   <div style="display: flex; gap: 0.5rem; align-items: center;">
                     <div class="item-price">${item.precio_total.toFixed(2)}€</div>
-                    <button class="btn btn-danger" onclick="eliminarItem(${item.id})">🗑️</button>
+                      <button class="btn" onclick="editarItem(${item.id})" style="background: #f59e0b; color: white; padding: 0.5rem 1rem;">✏️ Editar</button>
+                      <button class="btn btn-danger" onclick="eliminarItem(${item.id})">🗑️</button>
+                    </div>
                 `;
                 lista.appendChild(div);
             });
         }
 
-        function actualizarResumen() {
-            const totalItems = itemsActuales.length;
-            const subtotal = itemsActuales.reduce((sum, item) => sum + item.precio_total, 0);
-            const incluirInstalacion = document.getElementById('incluir-instalacion').checked;
-            const instalacion = incluirInstalacion ?(50 * totalItems): 0;
-            const subtotalConInstalacion = subtotal + instalacion;
-            const iva = subtotalConInstalacion * 0.21;
-            const total = subtotalConInstalacion + iva;
+      function actualizarResumen() {
+    const totalItems = itemsActuales.length;
+    const subtotal = itemsActuales.reduce((sum, item) => sum + item.precio_total, 0);
+    const incluirInstalacion = document.getElementById('incluir-instalacion').checked;
+    const instalacion = incluirInstalacion ? (50 * totalItems) : 0;
+    const subtotalConInstalacion = subtotal + instalacion;
+    const iva = subtotalConInstalacion * 0.21;
+    const total = subtotalConInstalacion + iva;
 
-            document.getElementById('total-items').textContent = totalItems;
-            document.getElementById('subtotal').textContent = subtotal.toFixed(2) + '€';
-            document.getElementById('iva').textContent = iva.toFixed(2) + '€';
-            document.getElementById('total').textContent = total.toFixed(2) + '€';
-            
-            if (totalItems > 0) {
-                document.getElementById('texto-instalacion').textContent = ``;
-            } else {
-                document.getElementById('texto-instalacion').textContent = '';
-            }
-        }
+    document.getElementById('total-items').textContent = totalItems;
+    document.getElementById('subtotal').textContent = subtotalConInstalacion.toFixed(2) + '€';
+    document.getElementById('iva').textContent = iva.toFixed(2) + '€';
+    document.getElementById('total').textContent = total.toFixed(2) + '€';
+}
 
         function guardarPresupuesto() {
             const nombre = document.getElementById('cliente-nombre').value;
@@ -1333,27 +1363,23 @@
                 return;
             }
 
-            const subtotal = itemsActuales.reduce((sum, item) => sum + item.precio_total, 0);
-            const incluirInstalacion = document.getElementById('incluir-instalacion').checked;
-            const instalacion = incluirInstalacion ? (50 * itemsActuales.length) : 0;
-            const total = (subtotal + instalacion) * 1.21;
+           const subtotal = itemsActuales.reduce((sum, item) => sum + item.precio_total, 0);
+           const total = subtotal * 1.21;
 
             const presupuesto = {
-                id: Date.now().toString(),
-                numero: 'P-' + Date.now(),
-                cliente_nombre: nombre,
-                cliente_telefono: document.getElementById('cliente-telefono').value,
-                cliente_email: document.getElementById('cliente-email').value,
-                cliente_direccion: document.getElementById('cliente-direccion').value,
-                fecha: new Date().toISOString().split('T')[0],
-                items: itemsActuales,
-                total_sin_iva: subtotal + instalacion,
-                total_con_iva: total,
-                estado: 'borrador',
-                notas: document.getElementById('notas').value,
-                incluir_instalacion: incluirInstalacion,
-                instalacion_total: instalacion
-            };
+    id: Date.now().toString(),
+    numero: String(JSON.parse(localStorage.getItem('presupuestos') || '[]').length + 1).padStart(4, '0'),
+    cliente_nombre: nombre,
+    cliente_telefono: document.getElementById('cliente-telefono').value,
+    cliente_email: document.getElementById('cliente-email').value,
+    cliente_direccion: document.getElementById('cliente-direccion').value,
+    fecha: new Date().toISOString().split('T')[0],
+    items: itemsActuales,
+    total_sin_iva: subtotal,
+    total_con_iva: total,
+    estado: 'borrador',
+    notas: document.getElementById('notas').value
+};
 
             let presupuestos = JSON.parse(localStorage.getItem('presupuestos') || '[]');
             presupuestos.push(presupuesto);
@@ -1390,18 +1416,30 @@
                     <td>${new Date(p.fecha).toLocaleDateString('es-ES')}</td>
                     <td>${p.items.length}</td>
                     <td style="text-align: right; font-weight: bold;">${p.total_con_iva.toFixed(2)}€</td>
-                    <td style="text-align: center;"><span class="badge badge-${p.estado}">${p.estado}</span></td>
+                    <td style="text-align: center;">
+                    <button class="btn btn-danger" onclick="eliminarPresupuesto('${p.id}', event)" style="padding: 0.5rem 1rem;">🗑️ Eliminar</button>
+                    </td>
                 `;
                 tbody.appendChild(tr);
             });
         }
+
+        function eliminarPresupuesto(id, event) {
+    event.stopPropagation();
+    if (confirm('¿Estás seguro de eliminar este presupuesto?')) {
+        let presupuestos = JSON.parse(localStorage.getItem('presupuestos') || '[]');
+        presupuestos = presupuestos.filter(p => p.id !== id);
+        localStorage.setItem('presupuestos', JSON.stringify(presupuestos));
+        cargarDashboard();
+    }
+}
 
         function verDetalle(id) {
             const presupuestos = JSON.parse(localStorage.getItem('presupuestos') || '[]');
             const p = presupuestos.find(pr => pr.id === id);
             if (!p) return;
 
-            const instalacionTotal = p.instalacion_total || (p.incluir_instalacion ? (50 * p.items.length) : 0);
+           
             document.getElementById('detalle-content').innerHTML = `
                 <div class="aviso-orientativo">
                     <strong>⚠️ PRESUPUESTO ORIENTATIVO</strong>
@@ -1432,6 +1470,7 @@
                             <th>#</th>
                             <th>Descripción</th>
                             <th>Medidas</th>
+                            <th>Sistema</th>
                             <th style="text-align: right;">Precio</th>
                         </tr>
                     </thead>
@@ -1441,6 +1480,7 @@
                                 <td>${i + 1}</td>
                                 <td>${item.descripcion}</td>
                                 <td>${item.ancho} x ${item.alto} cm</td>
+                                <td>${item.sistema_nombre || 'Sin sistema'}</td>
                                 <td style="text-align: right; font-weight: 600;">${item.precio_total.toFixed(2)}€</td>
                             </tr>
                         `).join('')}
@@ -1448,16 +1488,11 @@
                 </table>
                 <div style="display: flex; justify-content: flex-end; margin-top: 1rem;">
                     <div style="width: 18rem;">
-                        <div style="display: flex; justify-content: space-between; padding: 0.5rem 0; border-bottom: 1px solid #e2e8f0;">
+                       <div style="display: flex; justify-content: space-between; padding: 0.5rem 0; border-bottom: 1px solid #e2e8f0;">
                             <span>Subtotal:</span>
-                            <strong>${(p.total_sin_iva - instalacionTotal).toFixed(2)}€</strong>
+                            <strong>${p.total_sin_iva.toFixed(2)}€</strong>
                         </div>
-                        ${p.incluir_instalacion ? `
-                        <div style="display: flex; justify-content: space-between; padding: 0.5rem 0; border-bottom: 1px solid #e2e8f0;">
-                            <span>Instalación:</span>
-                            <strong>${instalacionTotal.toFixed(2)}€</strong>
-                        </div>
-                        ` : ''}
+                        
                         <div style="display: flex; justify-content: space-between; padding: 0.5rem 0; border-bottom: 1px solid #e2e8f0;">
                             <span>IVA (21%):</span>
                             <strong>${(p.total_sin_iva * 0.21).toFixed(2)}€</strong>
@@ -1484,6 +1519,7 @@
             document.getElementById('cliente-direccion').value = '';
             document.getElementById('notas').value = '';
             document.getElementById('incluir-instalacion').checked = false;
+            document.getElementById('btn-texto').textContent = '➕ Calcular y Agregar al Presupuesto';
             itemsActuales = [];
             actualizarItems();
             actualizarResumen();
