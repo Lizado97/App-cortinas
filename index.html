@@ -569,256 +569,257 @@
 
                     <div class="card">
 
-                        <h2>🧮 Calculadora de Cortinas</h2>
-                        
-                        <!-- Selector Tradicionales vs Técnicas -->
-                        <div style="display: flex; gap: 1rem; margin-bottom: 2rem;">
-                            <button id="btn-tradicionales" type="button" class="btn btn-primary" onclick="cambiarCategoria('tradicionales')" style="flex: 1;">
-                                🪟 Cortinas Tradicionales
-                            </button>
-                            <button id="btn-tecnicas" type="button" class="btn btn-secondary" onclick="cambiarCategoria('tecnicas')" style="flex: 1;">
-                                ⚙️ Cortinas Técnicas
-                            </button>
-                        </div>
-                        
-                        <!-- ========== FORMULARIO TRADICIONALES ========== -->
-                        <div id="form-tradicionales">
-                            <!-- Sección 1: Tipo y Tejido -->
-                            <div class="step-box step-blue">
-                                <div class="step-header">
-                                    <div class="step-number">1</div>
-                                    <div class="step-title">Tipo y Tejido</div>
-                                </div>
-                                
-                                <div class="form-group">
-                                    <label>Tipo de Cortina *</label>
-                                    <select id="tipo-cortina">
-                                        <option value="">Selecciona el tipo...</option>
-                                        <option value="estor_paquetto">Estor Paquetto (sin varillas)</option>
-                                        <option value="estor_plegable">Estor Plegable (con varillas)</option>
-                                        <option value="cortina_onda_perfecta">Cortina Onda Perfecta</option>
-                                        <option value="cortina_fruncida">Cortina Fruncida</option>
-                                        <option value="cortina_plana">Cortina Plana sin Frunce</option>
-                                        <option value="cortina_ollados">Cortina con Ollados</option>
-                                        <option value="cortina_triple_pliegue">Cortina Triple Pliegue</option>
-                                        <option value="cortina_palas">Cortina Palas</option>
-                                        <option value="cortina_plana_doble">Cortina Plana Doble Tejido</option>
-                                        <option value="cortina_plegones">Cortina Plegones</option>
-                                    </select>
-                                </div>
-                                
-                                <div class="form-group">
-                                    <label>Tejido * <small>(Buscar por nombre)</small></label>
-                                    <div class="search-box">
-                                        <input type="text" id="tejido-search" placeholder="Buscar tejido..." oninput="buscarTejido()">
-                                        <div id="search-results" class="search-results hidden"></div>
-                                    </div>
-                                    <input type="hidden" id="tejido">
-                                </div>
-                            </div>
-                        
-                            <!-- Sección 2: Medidas -->
-                            <div class="step-box step-purple">
-                                <div class="step-header">
-                                    <div class="step-number">2</div>
-                                    <div class="step-title">📏 Medidas</div>
-                                </div>
-                                
-                                <div class="grid grid-2">
-                                    <div class="form-group">
-                                        <label>Ancho (cm) *</label>
-                                        <input type="number" id="ancho" placeholder="200">
-                                    </div>
-                                    <div class="form-group">
-                                        <label>Alto (cm) *</label>
-                                        <input type="number" id="alto" placeholder="280">
-                                    </div>
-                                </div>
-                                
-                                <div class="checkbox-container">
-                                    <input type="checkbox" id="dos-piezas">
-                                    <label for="dos-piezas">✂️ Dividir en 2 piezas</label>
-                                </div>
-                            </div>
-                        
-                            <!-- Sección 3: Sistema -->
-                            <div class="step-box step-amber">
-                                <div class="step-header">
-                                    <div class="step-number">3</div>
-                                    <div class="step-title">Sistema de Instalación</div>
-                                </div>
-                                
-                                <div class="form-group">
-                                    <label>Sistema (opcional)</label>
-                                    <select id="sistema" onchange="mostrarOpcionesBarras()">
-                                        <option value="">Sin sistema</option>
-                                        <option value="barras">Barras</option>
-                                    </select>
-                                </div>
-                                
-                                <div id="opciones-barras" style="display: none;">
-                                    <div class="form-group" id="diametro-container">
-                                        <label>Diámetro</label>
-                                        <select id="diametro-barra">
-                                            <option value="">Selecciona...</option>
-                                            <option value="20">20mm</option>
-                                            <option value="28">28mm</option>
-                                        </select>
-                                    </div>
-                                    <div class="form-group">
-                                        <label>Medida</label>
-                                        <select id="medida-barra">
-                                            <option value="">Selecciona...</option>
-                                            <option value="150">150cm</option>
-                                            <option value="200">200cm</option>
-                                            <option value="250">250cm</option>
-                                            <option value="300">300cm</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                
-                                <div class="checkbox-container">
-                                    <input type="checkbox" id="incluir-instalacion" onchange="actualizarResumen()">
-                                    <label for="incluir-instalacion">🔧 Incluir instalación</label>
-                                </div>
-                            </div>
-                            
-                            <button class="btn btn-primary" onclick="agregarItem()" style="width: 100%; padding: 1rem; font-size: 1.1rem;">
-                                <span id="btn-texto">➕ Calcular y Agregar al Presupuesto</span>
-                            </button>
-                        </div>
-                        
-                                             <!-- ========== FORMULARIO TÉCNICAS ========== -->
-                        <div id="form-tecnicas" style="display: none;">
-                            <!-- Selector Enrollable / Vertical -->
-                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 2rem;">
-                                <button id="btn-enrollable" type="button" class="btn btn-primary" onclick="cambiarTipoTecnica('enrollable')">
-                                    📜 Enrollable
-                                </button>
-                                <button id="btn-vertical" type="button" class="btn btn-secondary" onclick="cambiarTipoTecnica('vertical')">
-                                    ▦ Vertical
-                                </button>
-                            </div>
-                        
-                            <!-- ENROLLABLE -->
-                            <div id="form-enrollable">
-                                <!-- PASO 1: Tejido y Medidas -->
-                                <div class="step-box" style="background: linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%); border-color: #22c55e;">
-                                    <div class="step-header">
-                                        <div class="step-number" style="background: #22c55e;">1</div>
-                                        <div class="step-title">Tejido y Medidas</div>
-                                    </div>
-                                    
-                                    <div class="form-group">
-                                        <label>Tipo de Tejido *</label>
-                                        <select id="tejido-enrollable" onchange="actualizarPrecioEnrollable()">
-                                            <option value="">Selecciona...</option>
-                                            <option value="THECNIC BASIC">THECNIC BASIC</option>
-                                            <option value="EFFECTO">EFFECTO / SUPREM / HYBRID / SUPER / VOLGA / NEBULA / TAMESIS</option>
-                                            <option value="MEGA SOMBRA">MEGA SOMBRA / LIENA</option>
-                                            <option value="LINEN">LINEN</option>
-                                            <option value="LIBERTY">LIBERTY (Alba/Bursa/Otoman) / CAPRI / SICORIS / GENTLEMAN</option>
-                                            <option value="MALLA SARGA">MALLA SARGA / SCREEN CERO</option>
-                                            <option value="DECOR STYLE">DECOR STYLE</option>
-                                            <option value="DECOR LINE">DECOR LINE</option>
-                                            <option value="RIN">RIN / ORINOCO / FEROE</option>
-                                            <option value="AMAZONAS">AMAZONAS / DANUBIO</option>
-                                            <option value="BLACK OUT">BLACK OUT / OPAC</option>
-                                        </select>
-                                    </div>
-                                    
-                                    <div class="grid grid-2">
-                                        <div class="form-group">
-                                            <label>Ancho (cm) *</label>
-                                            <input type="number" id="ancho-enrollable" placeholder="100" onchange="actualizarPrecioEnrollable()">
-                                        </div>
-                                        <div class="form-group">
-                                            <label>Alto (cm) *</label>
-                                            <input type="number" id="alto-enrollable" placeholder="120" onchange="actualizarPrecioEnrollable()">
-                                        </div>
-                                    </div>
-                                </div>
-                        
-                                <!-- PASO 2: Diámetro y Configuración -->
-                                <div class="step-box" style="background: linear-gradient(135deg, #ddd6fe 0%, #c4b5fd 100%); border-color: #a855f7;">
-                                    <div class="step-header">
-                                        <div class="step-number" style="background: #a855f7;">2</div>
-                                        <div class="step-title">⚙️ Diámetro y Configuración</div>
-                                    </div>
-                                    
-                                    <div class="checkbox-container" style="background: #fef3c7; border: 2px solid #f59e0b;">
-                                        <input type="checkbox" id="motorizado-enrollable" onchange="actualizarDiametrosDisponibles()">
-                                        <label for="motorizado-enrollable">🔌 <strong>MOTORIZADO (Somfy)</strong></label>
-                                    </div>
-                                    
-                                    <div class="form-group" style="margin-top: 1rem;">
-                                        <label>Diámetro del Tubo *</label>
-                                        <select id="diametro-enrollable" onchange="actualizarPrecioEnrollable()">
-                                            <option value="">Selecciona...</option>
-                                            <option value="32">Tubo Ø32mm (Manual)</option>
-                                            <option value="43">Tubo Ø43mm (Manual)</option>
-                                            <option value="58">Tubo Ø58mm (Manual)</option>
-                                        </select>
-                                    </div>
-                                    
-                                    <div class="grid grid-2">
-                                        <div class="form-group">
-                                            <label>Posición del Mando</label>
-                                            <select id="mando-enrollable">
-                                                <option value="izquierda">⬅️ Izquierda</option>
-                                                <option value="derecha">➡️ Derecha</option>
-                                            </select>
-                                        </div>
-                                        <div class="form-group">
-                                            <label>Dirección de Enrollado</label>
-                                            <select id="direccion-enrollable">
-                                                <option value="interior">🏠 Interior</option>
-                                                <option value="exterior">🌤️ Exterior</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-                        
-                                <!-- PASO 3: Accesorios e Instalación -->
-                                <div class="step-box" style="background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%); border-color: #f59e0b;">
-                                    <div class="step-header">
-                                        <div class="step-number" style="background: #f59e0b;">3</div>
-                                        <div class="step-title">🔧 Accesorios e Instalación</div>
-                                    </div>
-                                    
-                                    <div class="form-group">
-                                        <label>Accesorios Opcionales</label>
-                                        <div id="accesorios-enrollable-list" style="max-height: 250px; overflow-y: auto; border: 1px solid #cbd5e1; border-radius: 8px; padding: 0.5rem;">
-                                            <!-- Se llena dinámicamente -->
-                                        </div>
-                                    </div>
-                                    
-                                    <div class="checkbox-container">
-                                        <input type="checkbox" id="instalacion-enrollable" onchange="actualizarPrecioEnrollable()">
-                                        <label for="instalacion-enrollable">🔧 Incluir instalación (+50€)</label>
-                                    </div>
-                                    
-                                    <div style="background: white; padding: 1.5rem; border-radius: 12px; margin-top: 1rem; border: 3px solid #22c55e;">
-                                        <div style="display: flex; justify-content: space-between; font-size: 1.5rem; font-weight: bold;">
-                                            <span style="color: #1e293b;">PRECIO TOTAL:</span>
-                                            <span id="precio-enrollable-preview" style="color: #22c55e;">0.00€</span>
-                                        </div>
-                                    </div>
-                                </div>
-                                
-                                <button class="btn btn-primary" onclick="agregarItemEnrollable()" style="width: 100%; padding: 1rem; font-size: 1.1rem; background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);">
-                                    ➕ Agregar Enrollable al Presupuesto
-                                </button>
-                            </div>
-                        
-                            <!-- VERTICAL (pendiente) -->
-                            <div id="form-vertical" style="display: none;">
-                                <div class="step-box" style="background: #f0fdf4; border-color: #22c55e; text-align: center; padding: 3rem;">
-                                    <h3 style="color: #15803d;">🚧 Cortinas Verticales</h3>
-                                    <p style="color: #64748b; margin-top: 1rem;">Próximamente...</p>
-                                </div>
-                            </div>
-                        </div>
+                     <h2>🧮 Calculadora de Cortinas</h2>
+
+<!-- Selector Tradicionales / Técnicas -->
+<div style="display: flex; gap: 1rem; margin-bottom: 2rem;">
+    <button id="btn-tradicionales" type="button" class="btn btn-primary" onclick="cambiarCategoria('tradicionales')" style="flex: 1;">
+        🪟 Cortinas Tradicionales
+    </button>
+    <button id="btn-tecnicas" type="button" class="btn btn-secondary" onclick="cambiarCategoria('tecnicas')" style="flex: 1;">
+        ⚙️ Cortinas Técnicas
+    </button>
+</div>
+
+<!-- ========== FORMULARIO TRADICIONALES ========== -->
+<div id="form-tradicionales">
+    <!-- TODO TU CÓDIGO ORIGINAL DE TRADICIONALES (los 3 step-box) -->
+    <!-- Sección 1: Tipo y Tejido -->
+    <div class="step-box step-blue">
+        <div class="step-header">
+            <div class="step-number">1</div>
+            <div class="step-title">Tipo y Tejido</div>
+        </div>
+        
+        <div class="form-group">
+            <label>Tipo de Cortina *</label>
+            <select id="tipo-cortina">
+                <option value="">Selecciona el tipo...</option>
+                <option value="estor_paquetto">Estor Paquetto (sin varillas)</option>
+                <option value="estor_plegable">Estor Plegable (con varillas)</option>
+                <option value="cortina_onda_perfecta">Cortina Onda Perfecta</option>
+                <option value="cortina_fruncida">Cortina Fruncida</option>
+                <option value="cortina_plana">Cortina Plana sin Frunce</option>
+                <option value="cortina_ollados">Cortina con Ollados</option>
+                <option value="cortina_triple_pliegue">Cortina Triple Pliegue</option>
+                <option value="cortina_palas">Cortina Palas</option>
+                <option value="cortina_plana_doble">Cortina Plana Doble Tejido</option>
+                <option value="cortina_plegones">Cortina Plegones</option>
+            </select>
+        </div>
+        
+        <div class="form-group">
+            <label>Tejido * <small>(Buscar por nombre)</small></label>
+            <div class="search-box">
+                <input type="text" id="tejido-search" placeholder="Buscar tejido..." oninput="buscarTejido()">
+                <div id="search-results" class="search-results hidden"></div>
+            </div>
+            <input type="hidden" id="tejido">
+        </div>
+    </div>
+
+    <!-- Sección 2: Medidas -->
+    <div class="step-box step-purple">
+        <div class="step-header">
+            <div class="step-number">2</div>
+            <div class="step-title">📏 Medidas</div>
+        </div>
+        
+        <div class="grid grid-2">
+            <div class="form-group">
+                <label>Ancho (cm) *</label>
+                <input type="number" id="ancho" placeholder="200">
+            </div>
+            <div class="form-group">
+                <label>Alto (cm) *</label>
+                <input type="number" id="alto" placeholder="280">
+            </div>
+        </div>
+        
+        <div class="checkbox-container">
+            <input type="checkbox" id="dos-piezas">
+            <label for="dos-piezas">✂️ Dividir en 2 piezas</label>
+        </div>
+    </div>
+
+    <!-- Sección 3: Sistema -->
+    <div class="step-box step-amber">
+        <div class="step-header">
+            <div class="step-number">3</div>
+            <div class="step-title">Sistema de Instalación</div>
+        </div>
+        
+        <div class="form-group">
+            <label>Sistema (opcional)</label>
+            <select id="sistema" onchange="mostrarOpcionesBarras()">
+                <option value="">Sin sistema</option>
+                <option value="barras">Barras</option>
+            </select>
+        </div>
+        
+        <div id="opciones-barras" style="display: none;">
+            <div class="form-group" id="diametro-container">
+                <label>Diámetro</label>
+                <select id="diametro-barra">
+                    <option value="">Selecciona...</option>
+                    <option value="20">20mm</option>
+                    <option value="28">28mm</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Medida</label>
+                <select id="medida-barra">
+                    <option value="">Selecciona...</option>
+                    <option value="150">150cm</option>
+                    <option value="200">200cm</option>
+                    <option value="250">250cm</option>
+                    <option value="300">300cm</option>
+                </select>
+            </div>
+        </div>
+        
+        <div class="checkbox-container">
+            <input type="checkbox" id="incluir-instalacion" onchange="actualizarResumen()">
+            <label for="incluir-instalacion">🔧 Incluir instalación</label>
+        </div>
+    </div>
+    
+    <button class="btn btn-primary" onclick="agregarItem()" style="width: 100%; padding: 1rem; font-size: 1.1rem;">
+        <span id="btn-texto">➕ Calcular y Agregar al Presupuesto</span>
+    </button>
+</div>
+
+<!-- ========== FORMULARIO TÉCNICAS ========== -->
+<div id="form-tecnicas" style="display: none;">
+    <!-- Selector Enrollable / Vertical -->
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 2rem;">
+        <button id="btn-enrollable" type="button" class="btn btn-primary" onclick="cambiarTipoTecnica('enrollable')">
+            📜 Enrollable
+        </button>
+        <button id="btn-vertical" type="button" class="btn btn-secondary" onclick="cambiarTipoTecnica('vertical')">
+            ▦ Vertical
+        </button>
+    </div>
+
+    <!-- ENROLLABLE -->
+    <div id="form-enrollable">
+        <!-- PASO 1: Tejido y Medidas -->
+        <div class="step-box" style="background: linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%); border-color: #22c55e;">
+            <div class="step-header">
+                <div class="step-number" style="background: #22c55e;">1</div>
+                <div class="step-title">Tejido y Medidas</div>
+            </div>
+            
+            <div class="form-group">
+                <label>Tipo de Tejido *</label>
+                <select id="tejido-enrollable" onchange="actualizarPrecioEnrollable()">
+                    <option value="">Selecciona...</option>
+                    <option value="THECNIC BASIC">THECNIC BASIC</option>
+                    <option value="EFFECTO">EFFECTO / SUPREM / HYBRID / SUPER / VOLGA / NEBULA / TAMESIS</option>
+                    <option value="MEGA SOMBRA">MEGA SOMBRA / LIENA</option>
+                    <option value="LINEN">LINEN</option>
+                    <option value="LIBERTY">LIBERTY (Alba/Bursa/Otoman) / CAPRI / SICORIS / GENTLEMAN</option>
+                    <option value="MALLA SARGA">MALLA SARGA / SCREEN CERO</option>
+                    <option value="DECOR STYLE">DECOR STYLE</option>
+                    <option value="DECOR LINE">DECOR LINE</option>
+                    <option value="RIN">RIN / ORINOCO / FEROE</option>
+                    <option value="AMAZONAS">AMAZONAS / DANUBIO</option>
+                    <option value="BLACK OUT">BLACK OUT / OPAC</option>
+                </select>
+            </div>
+            
+            <div class="grid grid-2">
+                <div class="form-group">
+                    <label>Ancho (cm) *</label>
+                    <input type="number" id="ancho-enrollable" placeholder="100" onchange="actualizarPrecioEnrollable()">
+                </div>
+                <div class="form-group">
+                    <label>Alto (cm) *</label>
+                    <input type="number" id="alto-enrollable" placeholder="120" onchange="actualizarPrecioEnrollable()">
+                </div>
+            </div>
+        </div>
+
+        <!-- PASO 2: Diámetro y Configuración -->
+        <div class="step-box" style="background: linear-gradient(135deg, #ddd6fe 0%, #c4b5fd 100%); border-color: #a855f7;">
+            <div class="step-header">
+                <div class="step-number" style="background: #a855f7;">2</div>
+                <div class="step-title">⚙️ Diámetro y Configuración</div>
+            </div>
+            
+            <div class="checkbox-container" style="background: #fef3c7; border: 2px solid #f59e0b;">
+                <input type="checkbox" id="motorizado-enrollable" onchange="actualizarDiametrosDisponibles()">
+                <label for="motorizado-enrollable">🔌 <strong>MOTORIZADO (Somfy)</strong></label>
+            </div>
+            
+            <div class="form-group" style="margin-top: 1rem;">
+                <label>Diámetro del Tubo *</label>
+                <select id="diametro-enrollable" onchange="actualizarPrecioEnrollable()">
+                    <option value="">Selecciona...</option>
+                    <option value="32">Tubo Ø32mm (Manual)</option>
+                    <option value="43">Tubo Ø43mm (Manual)</option>
+                    <option value="58">Tubo Ø58mm (Manual)</option>
+                </select>
+            </div>
+            
+            <div class="grid grid-2">
+                <div class="form-group">
+                    <label>Posición del Mando</label>
+                    <select id="mando-enrollable">
+                        <option value="izquierda">⬅️ Izquierda</option>
+                        <option value="derecha">➡️ Derecha</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Dirección de Enrollado</label>
+                    <select id="direccion-enrollable">
+                        <option value="interior">🏠 Interior</option>
+                        <option value="exterior">🌤️ Exterior</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- PASO 3: Accesorios e Instalación -->
+        <div class="step-box" style="background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%); border-color: #f59e0b;">
+            <div class="step-header">
+                <div class="step-number" style="background: #f59e0b;">3</div>
+                <div class="step-title">🔧 Accesorios e Instalación</div>
+            </div>
+            
+            <div class="form-group">
+                <label>Accesorios Opcionales</label>
+                <div id="accesorios-enrollable-list" style="max-height: 250px; overflow-y: auto; border: 1px solid #cbd5e1; border-radius: 8px; padding: 0.5rem;">
+                    <!-- Se llena dinámicamente -->
+                </div>
+            </div>
+            
+            <div class="checkbox-container">
+                <input type="checkbox" id="instalacion-enrollable" onchange="actualizarPrecioEnrollable()">
+                <label for="instalacion-enrollable">🔧 Incluir instalación (+50€)</label>
+            </div>
+            
+            <div style="background: white; padding: 1.5rem; border-radius: 12px; margin-top: 1rem; border: 3px solid #22c55e;">
+                <div style="display: flex; justify-content: space-between; font-size: 1.5rem; font-weight: bold;">
+                    <span style="color: #1e293b;">PRECIO TOTAL:</span>
+                    <span id="precio-enrollable-preview" style="color: #22c55e;">0.00€</span>
+                </div>
+            </div>
+        </div>
+        
+        <button class="btn btn-primary" onclick="agregarItemEnrollable()" style="width: 100%; padding: 1rem; font-size: 1.1rem; background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);">
+            ➕ Agregar Enrollable al Presupuesto
+        </button>
+    </div>
+
+    <!-- VERTICAL (pendiente) -->
+    <div id="form-vertical" style="display: none;">
+        <div class="step-box" style="background: #f0fdf4; border-color: #22c55e; text-align: center; padding: 3rem;">
+            <h3 style="color: #15803d;">🚧 Cortinas Verticales</h3>
+            <p style="color: #64748b; margin-top: 1rem;">Próximamente...</p>
+        </div>
+    </div>
+</div>
 
                     <div class="card" id="items-card" style="display: none;">
                         <h2>Items del Presupuesto</h2>
@@ -1087,36 +1088,37 @@
         ];
         
         
-             //   const TEJIDOS_ENROLLABLES = [
-        //    { nombre: "THECNIC BASIC", categoria: "simply32" },
-      //      { nombre: "EFFECTO Cristal-Fantasia", categoria: "simply32" },
-    //        { nombre: "SUPREM Helios", categoria: "simply32" },
-  //          { nombre: "HYBRID Zafiro", categoria: "simply32" },
-//            { nombre: "SUPER Nilo", categoria: "simply32" },
-            //{ nombre: "VOLGA", categoria: "simply32" },
-          //  { nombre: "NEBULA", categoria: "simply32" },
-        //    { nombre: "TAMESIS", categoria: "simply32" },
-      //      { nombre: "MEGA SOMBRA", categoria: "simply32" },
-    //        { nombre: "LIENA", categoria: "simply32" },
-  //          { nombre: "LINEN", categoria: "simply32" },
-//            { nombre: "LIBERTY Alba", categoria: "simply32" },
-           // { nombre: "LIBERTY Bursa", categoria: "simply32" },
-         //   { nombre: "LIBERTY Otoman", categoria: "simply32" },
-       //     { nombre: "CAPRI", categoria: "simply32" },
-     //       { nombre: "SICORIS", categoria: "simply32" },
-  ///          { nombre: "GENTLEMAN Dark", categoria: "simply32" },
-//            { nombre: "MALLA SARGA", categoria: "simply32" },
-            //{ nombre: "SCREEN CERO", categoria: "simply32" },
-          //  { nombre: "DECOR STYLE", categoria: "simply32" },
-        //    { nombre: "DECOR LINE", categoria: "simply32" },
-      //      { nombre: "RIN", categoria: "simply32" },
-    //        { nombre: "ORINOCO", categoria: "simply32" },
-  //          { nombre: "FEROE", categoria: "simply32" },
-//            { nombre: "AMAZONAS", categoria: "simply32" },
-            //{ nombre: "DANUBIO", categoria: "simply32" },
-            //{ nombre: "BLACK OUT", categoria: "simply32" },
-          //  { nombre: "OPAC", categoria: "simply32" }
-        ];
+         const TEJIDOS_ENROLLABLES = [
+    "THECNIC BASIC",
+    "EFFECTO Cristal-Fantasia",
+    "SUPREM Helios",
+    "HYBRID Zafiro",
+    "SUPER Nilo",
+    "VOLGA",
+    "NEBULA",
+    "TAMESIS",
+    "MEGA SOMBRA",
+    "LIENA",
+    "LINEN",
+    "LIBERTY Alba",
+    "LIBERTY Bursa",
+    "LIBERTY Otoman",
+    "CAPRI",
+    "SICORIS",
+    "GENTLEMAN Dark",
+    "MALLA SARGA",
+    "SCREEN CERO",
+    "DECOR STYLE",
+    "DECOR LINE",
+    "RIN",
+    "ORINOCO",
+    "FEROE",
+    "AMAZONAS",
+    "DANUBIO",
+    "BLACK OUT",
+    "OPAC"
+];
+
         
                    // SISTEMA SIMPLY Ø32 (MANUAL)
             const ENROLLABLE_32_MANUAL = {
