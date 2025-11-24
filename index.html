@@ -1983,6 +1983,17 @@ function mostrarOpcionesBarras() {
                 accesoriosEnrollablesSeleccionados = [];
                 actualizarDiametrosDisponibles();
                 document.getElementById('precio-enrollable-preview').textContent = '0.00€';
+                document.addEventListener('DOMContentLoaded', () => {
+    // Asegura que el form enrollable comienza oculto
+    const formEnr = document.getElementById('form-enrollable');
+    if (formEnr) formEnr.style.display = 'none';
+
+    // Carga diámetros y accesorios iniciales
+    if (typeof actualizarDiametrosDisponibles === 'function') {
+        actualizarDiametrosDisponibles();
+    }
+});
+
             }
     </script>
 </body>
