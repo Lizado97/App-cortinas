@@ -568,112 +568,258 @@
                     </div>
 
                     <div class="card">
+
                         <h2>🧮 Calculadora de Cortinas</h2>
                         
-                        <!-- Sección 1: Tipo y Tejido -->
-                        <div class="step-box step-blue">
-                            <div class="step-header">
-                                <div class="step-number">1</div>
-                                <div class="step-title">Tipo y Tejido</div>
-                            </div>
-                            
-                            <div class="form-group">
-                                <label>Tipo de Cortina *</label>
-                                <select id="tipo-cortina">
-                                    <option value="">Selecciona el tipo...</option>
-                                    <option value="estor_paquetto">Estor Paquetto (sin varillas)</option>
-                                    <option value="estor_plegable">Estor Plegable (con varillas)</option>
-                                    <option value="cortina_onda_perfecta">Cortina Onda Perfecta</option>
-                                    <option value="cortina_fruncida">Cortina Fruncida</option>
-                                    <option value="cortina_plana">Cortina Plana sin Frunce</option>
-                                    <option value="cortina_ollados">Cortina con Ollados</option>
-                                    <option value="cortina_triple_pliegue">Cortina Triple Pliegue</option>
-                                    <option value="cortina_palas">Cortina Palas</option>
-                                    <option value="cortina_plana_doble">Cortina Plana Doble Tejido</option>
-                                    <option value="cortina_plegones">Cortina Plegones</option>
-
-                                </select>
-                            </div>
-                            
-                            <div class="form-group">
-                                <label>Tejido * <small>(Buscar por nombre)</small></label>
-                                <div class="search-box">
-                                    <input type="text" id="tejido-search" placeholder="Buscar tejido..." oninput="buscarTejido()">
-                                    <div id="search-results" class="search-results hidden"></div>
-                                </div>
-                                <input type="hidden" id="tejido">
-                            </div>
-                        </div>
-
-                        <!-- Sección 2: Medidas -->
-                        <div class="step-box step-purple">
-                            <div class="step-header">
-                                <div class="step-number">2</div>
-                                <div class="step-title">📏 Medidas</div>
-                            </div>
-                            
-                            <div class="grid grid-2">
-                                <div class="form-group">
-                                    <label>Ancho (cm) *</label>
-                                    <input type="number" id="ancho" placeholder="200">
-                                </div>
-                                <div class="form-group">
-                                    <label>Alto (cm) *</label>
-                                    <input type="number" id="alto" placeholder="280">
-                                </div>
-                            </div>
-                            
-                            <div class="checkbox-container">
-                                <input type="checkbox" id="dos-piezas">
-                                <label for="dos-piezas">✂️ Dividir en 2 piezas</label>
-                            </div>
-                        </div>
-
-                        <!-- Sección 3: Sistema -->
-                     <div class="step-box step-amber">
-                            <div class="step-header">
-                                <div class="step-number">3</div>
-                                <div class="step-title">Sistema de Instalación</div>
-                            </div>
-                            
-                            <div class="form-group">
-                                <label>Sistema (opcional)</label>
-                               <select id="sistema" onchange="mostrarOpcionesBarras()">
-                                    <option value="">Sin sistema</option>
-                                    <option value="barras">Barras</option>
-                                </select>
-                            </div>
-                          <!-- Opciones adicionales para barras -->
-                            <div id="opciones-barras" style="display: none;">
-                                <div class="form-group" id="diametro-container">
-                                    <label>Diámetro</label>
-                                    <select id="diametro-barra">
-                                        <option value="">Selecciona...</option>
-                                        <option value="20">20mm</option>
-                                        <option value="28">28mm</option>
-                                    </select>
-                                </div>
-                                <div class="form-group">
-                                    <label>Medida</label>
-                                    <select id="medida-barra">
-                                        <option value="">Selecciona...</option>
-                                        <option value="150">150cm</option>
-                                        <option value="200">200cm</option>
-                                        <option value="250">250cm</option>
-                                        <option value="300">300cm</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="checkbox-container">
-                                <input type="checkbox" id="incluir-instalacion" onchange="actualizarResumen()">
-                                <label for="incluir-instalacion">🔧 Incluir instalación</label>
-                            </div>
-
-                            </div>
-                           
-                           <button class="btn btn-primary" onclick="agregarItem()" style="width: 100%; padding: 1rem; font-size: 1.1rem;">
-                            <span id="btn-texto">➕ Calcular y Agregar al Presupuesto</span>
+                        <!-- Selector Tradicionales vs Técnicas -->
+                        <div style="display: flex; gap: 1rem; margin-bottom: 2rem;">
+                            <button id="btn-tradicionales" type="button" class="btn btn-primary" onclick="cambiarCategoria('tradicionales')" style="flex: 1;">
+                                🪟 Cortinas Tradicionales
                             </button>
+                            <button id="btn-tecnicas" type="button" class="btn btn-secondary" onclick="cambiarCategoria('tecnicas')" style="flex: 1;">
+                                ⚙️ Cortinas Técnicas
+                            </button>
+                        </div>
+                        
+                        <!-- ========== FORMULARIO TRADICIONALES ========== -->
+                        <div id="form-tradicionales">
+                            <!-- Sección 1: Tipo y Tejido -->
+                            <div class="step-box step-blue">
+                                <div class="step-header">
+                                    <div class="step-number">1</div>
+                                    <div class="step-title">Tipo y Tejido</div>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label>Tipo de Cortina *</label>
+                                    <select id="tipo-cortina">
+                                        <option value="">Selecciona el tipo...</option>
+                                        <option value="estor_paquetto">Estor Paquetto (sin varillas)</option>
+                                        <option value="estor_plegable">Estor Plegable (con varillas)</option>
+                                        <option value="cortina_onda_perfecta">Cortina Onda Perfecta</option>
+                                        <option value="cortina_fruncida">Cortina Fruncida</option>
+                                        <option value="cortina_plana">Cortina Plana sin Frunce</option>
+                                        <option value="cortina_ollados">Cortina con Ollados</option>
+                                        <option value="cortina_triple_pliegue">Cortina Triple Pliegue</option>
+                                        <option value="cortina_palas">Cortina Palas</option>
+                                        <option value="cortina_plana_doble">Cortina Plana Doble Tejido</option>
+                                        <option value="cortina_plegones">Cortina Plegones</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label>Tejido * <small>(Buscar por nombre)</small></label>
+                                    <div class="search-box">
+                                        <input type="text" id="tejido-search" placeholder="Buscar tejido..." oninput="buscarTejido()">
+                                        <div id="search-results" class="search-results hidden"></div>
+                                    </div>
+                                    <input type="hidden" id="tejido">
+                                </div>
+                            </div>
+                        
+                            <!-- Sección 2: Medidas -->
+                            <div class="step-box step-purple">
+                                <div class="step-header">
+                                    <div class="step-number">2</div>
+                                    <div class="step-title">📏 Medidas</div>
+                                </div>
+                                
+                                <div class="grid grid-2">
+                                    <div class="form-group">
+                                        <label>Ancho (cm) *</label>
+                                        <input type="number" id="ancho" placeholder="200">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Alto (cm) *</label>
+                                        <input type="number" id="alto" placeholder="280">
+                                    </div>
+                                </div>
+                                
+                                <div class="checkbox-container">
+                                    <input type="checkbox" id="dos-piezas">
+                                    <label for="dos-piezas">✂️ Dividir en 2 piezas</label>
+                                </div>
+                            </div>
+                        
+                            <!-- Sección 3: Sistema -->
+                            <div class="step-box step-amber">
+                                <div class="step-header">
+                                    <div class="step-number">3</div>
+                                    <div class="step-title">Sistema de Instalación</div>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label>Sistema (opcional)</label>
+                                    <select id="sistema" onchange="mostrarOpcionesBarras()">
+                                        <option value="">Sin sistema</option>
+                                        <option value="barras">Barras</option>
+                                    </select>
+                                </div>
+                                
+                                <div id="opciones-barras" style="display: none;">
+                                    <div class="form-group" id="diametro-container">
+                                        <label>Diámetro</label>
+                                        <select id="diametro-barra">
+                                            <option value="">Selecciona...</option>
+                                            <option value="20">20mm</option>
+                                            <option value="28">28mm</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Medida</label>
+                                        <select id="medida-barra">
+                                            <option value="">Selecciona...</option>
+                                            <option value="150">150cm</option>
+                                            <option value="200">200cm</option>
+                                            <option value="250">250cm</option>
+                                            <option value="300">300cm</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                
+                                <div class="checkbox-container">
+                                    <input type="checkbox" id="incluir-instalacion" onchange="actualizarResumen()">
+                                    <label for="incluir-instalacion">🔧 Incluir instalación</label>
+                                </div>
+                            </div>
+                            
+                            <button class="btn btn-primary" onclick="agregarItem()" style="width: 100%; padding: 1rem; font-size: 1.1rem;">
+                                <span id="btn-texto">➕ Calcular y Agregar al Presupuesto</span>
+                            </button>
+                        </div>
+                        
+                        <!-- ========== FORMULARIO TÉCNICAS ========== -->
+                        <div id="form-tecnicas" style="display: none;">
+                            <!-- Selector Enrollable vs Vertical -->
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 2rem;">
+                                <button id="btn-enrollable" type="button" class="btn btn-primary" onclick="cambiarTipoTecnica('enrollable')" style="width: 100%;">
+                                    📜 Enrollable
+                                </button>
+                                <button id="btn-vertical" type="button" class="btn btn-secondary" onclick="cambiarTipoTecnica('vertical')" style="width: 100%;">
+                                    ▦ Vertical
+                                </button>
+                            </div>
+                        
+                            <!-- ENROLLABLE -->
+                            <div id="form-enrollable">
+                                <!-- Paso 1: Tejido y Medidas -->
+                                <div class="step-box" style="background: linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%); border-color: #22c55e;">
+                                    <div class="step-header">
+                                        <div class="step-number" style="background: #22c55e;">1</div>
+                                        <div class="step-title">Tejido y Medidas</div>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label>Tipo de Tejido *</label>
+                                        <select id="tejido-enrollable" onchange="actualizarPrecioEnrollable()">
+                                            <option value="">Selecciona...</option>
+                                            <option value="THECNIC BASIC">THECNIC BASIC</option>
+                                            <option value="LINEN">LINEN</option>
+                                            <option value="BLACK OUT">BLACK OUT / OPAC</option>
+                                            <option value="EFFECTO">EFFECTO / SUPREM / HYBRID / SUPER / VOLGA / NEBULA / TAMESIS</option>
+                                            <option value="MEGA SOMBRA">MEGA SOMBRA / LIENA</option>
+                                            <option value="LIBERTY">LIBERTY (Alba/Bursa/Otoman) / CAPRI / SICORIS / GENTLEMAN</option>
+                                            <option value="MALLA SARGA">MALLA SARGA / SCREEN CERO</option>
+                                            <option value="DECOR STYLE">DECOR STYLE</option>
+                                            <option value="DECOR LINE">DECOR LINE</option>
+                                            <option value="RIN">RIN / ORINOCO / FEROE</option>
+                                            <option value="AMAZONAS">AMAZONAS / DANUBIO</option>
+                                        </select>
+                                    </div>
+                                    
+                                    <div class="grid grid-2">
+                                        <div class="form-group">
+                                            <label>Ancho (cm) *</label>
+                                            <input type="number" id="ancho-enrollable" placeholder="100" onchange="actualizarPrecioEnrollable()">
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Alto (cm) *</label>
+                                            <input type="number" id="alto-enrollable" placeholder="120" onchange="actualizarPrecioEnrollable()">
+                                        </div>
+                                    </div>
+                                </div>
+                        
+                                <!-- Paso 2: Diámetro y Configuración -->
+                                <div class="step-box" style="background: linear-gradient(135deg, #ddd6fe 0%, #c4b5fd 100%); border-color: #a855f7;">
+                                    <div class="step-header">
+                                        <div class="step-number" style="background: #a855f7;">2</div>
+                                        <div class="step-title">⚙️ Diámetro y Configuración</div>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label>Diámetro del Sistema *</label>
+                                        <select id="diametro-enrollable" onchange="actualizarPrecioEnrollable()">
+                                            <option value="">Selecciona...</option>
+                                            <option value="70">70 cm (Ancho hasta 70cm)</option>
+                                            <option value="90">90 cm (Ancho hasta 90cm)</option>
+                                            <option value="110">110 cm (Ancho hasta 110cm)</option>
+                                            <option value="130">130 cm (Ancho hasta 130cm)</option>
+                                            <option value="160">160 cm (Ancho hasta 160cm)</option>
+                                        </select>
+                                    </div>
+                                    
+                                    <div class="grid grid-2">
+                                        <div class="form-group">
+                                            <label>Posición del Mando</label>
+                                            <select id="mando-enrollable">
+                                                <option value="izquierda">⬅️ Izquierda</option>
+                                                <option value="derecha">➡️ Derecha</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Dirección de Enrollado</label>
+                                            <select id="direccion-enrollable">
+                                                <option value="interior">🏠 Interior</option>
+                                                <option value="exterior">🌤️ Exterior</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                        
+                                <!-- Paso 3: Accesorios e Instalación -->
+                                <div class="step-box" style="background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%); border-color: #f59e0b;">
+                                    <div class="step-header">
+                                        <div class="step-number" style="background: #f59e0b;">3</div>
+                                        <div class="step-title">🔧 Accesorios e Instalación</div>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label>Accesorios Opcionales</label>
+                                        <div id="accesorios-list" style="max-height: 200px; overflow-y: auto; border: 1px solid #cbd5e1; border-radius: 6px; padding: 0.5rem;">
+                                            <!-- Se llenará dinámicamente -->
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="checkbox-container">
+                                        <input type="checkbox" id="instalacion-enrollable" onchange="actualizarPrecioEnrollable()">
+                                        <label for="instalacion-enrollable">🔧 Incluir instalación (+50€)</label>
+                                    </div>
+                                    
+                                    <div style="background: white; padding: 1rem; border-radius: 8px; margin-top: 1rem;">
+                                        <div style="display: flex; justify-content: space-between; font-size: 1.25rem; font-weight: bold; color: #1e293b;">
+                                            <span>Precio Total:</span>
+                                            <span id="precio-enrollable-preview" style="color: #22c55e;">0.00€</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <button class="btn btn-primary" onclick="agregarItemEnrollable()" style="width: 100%; padding: 1rem; font-size: 1.1rem; background: #22c55e;">
+                                    ➕ Agregar Enrollable al Presupuesto
+                                </button>
+                            </div>
+                        
+                            <!-- VERTICAL (placeholder) -->
+                            <div id="form-vertical" style="display: none;">
+                                <div class="step-box" style="background: #f0fdf4; border-color: #22c55e; text-align: center; padding: 3rem;">
+                                    <h3 style="color: #15803d; margin-bottom: 1rem;">🚧 Cortinas Verticales</h3>
+                                    <p style="color: #64748b;">Funcionalidad pendiente de implementar</p>
+                                </div>
+                            </div>
+                        </div>
+                                
+                                <button class="btn btn-primary" onclick="agregarItemTecnico()" style="width: 100%; padding: 1rem; background: #22c55e;">
+                                    ➕ Agregar Cortina Técnica
+                                </button>
                     </div>
 
                     <div class="card" id="items-card" style="display: none;">
@@ -940,6 +1086,76 @@
             { nombre: "YECLA 41-42-43", precio: 47.88, ancho: 310, composicion: "50% Pes 50% Li" },
             { nombre: "YECLA 51-52-53", precio: 47.88, ancho: 300, composicion: "50% Pes 50% Li" },
             { nombre: "ZAHARA", precio: 41.11, ancho: 300, composicion: "90% Pol 10% Li" }
+        ];
+        
+        
+                const TEJIDOS_ENROLLABLES = [
+            { nombre: "THECNIC BASIC", categoria: "simply32" },
+            { nombre: "EFFECTO Cristal-Fantasia", categoria: "simply32" },
+            { nombre: "SUPREM Helios", categoria: "simply32" },
+            { nombre: "HYBRID Zafiro", categoria: "simply32" },
+            { nombre: "SUPER Nilo", categoria: "simply32" },
+            { nombre: "VOLGA", categoria: "simply32" },
+            { nombre: "NEBULA", categoria: "simply32" },
+            { nombre: "TAMESIS", categoria: "simply32" },
+            { nombre: "MEGA SOMBRA", categoria: "simply32" },
+            { nombre: "LIENA", categoria: "simply32" },
+            { nombre: "LINEN", categoria: "simply32" },
+            { nombre: "LIBERTY Alba", categoria: "simply32" },
+            { nombre: "LIBERTY Bursa", categoria: "simply32" },
+            { nombre: "LIBERTY Otoman", categoria: "simply32" },
+            { nombre: "CAPRI", categoria: "simply32" },
+            { nombre: "SICORIS", categoria: "simply32" },
+            { nombre: "GENTLEMAN Dark", categoria: "simply32" },
+            { nombre: "MALLA SARGA", categoria: "simply32" },
+            { nombre: "SCREEN CERO", categoria: "simply32" },
+            { nombre: "DECOR STYLE", categoria: "simply32" },
+            { nombre: "DECOR LINE", categoria: "simply32" },
+            { nombre: "RIN", categoria: "simply32" },
+            { nombre: "ORINOCO", categoria: "simply32" },
+            { nombre: "FEROE", categoria: "simply32" },
+            { nombre: "AMAZONAS", categoria: "simply32" },
+            { nombre: "DANUBIO", categoria: "simply32" },
+            { nombre: "BLACK OUT", categoria: "simply32" },
+            { nombre: "OPAC", categoria: "simply32" }
+        ];
+        
+        const PRECIOS_ENROLLABLES = {
+            "THECNIC BASIC": {
+                70: {100:99.54, 120:103.13, 140:106.72, 160:110.31, 180:113.90, 200:117.49, 220:121.08, 240:124.67},
+                90: {100:111.39, 120:116.00, 140:120.62, 160:125.23, 180:129.85, 200:134.46, 220:139.08, 240:143.70},
+                110: {100:119.44, 120:125.08, 140:130.72, 160:136.36, 180:142.00, 200:147.64, 220:153.29, 240:158.93},
+                130: {100:129.39, 120:136.05, 140:142.72, 160:149.39, 180:156.05, 200:162.72, 220:169.39, 240:176.05},
+                160: {100:144.31, 120:152.52, 140:160.72, 160:168.93, 180:177.13, 200:185.34, 220:193.54, 240:201.75}
+            },
+            "LINEN": {
+                70: {100:118.25, 120:123.72, 140:129.18, 160:134.65, 180:140.11, 200:145.58, 220:151.04, 240:156.50},
+                90: {100:134.21, 120:141.23, 140:148.26, 160:155.28, 180:162.31, 200:169.34, 220:176.36, 240:183.39},
+                110: {100:145.77, 120:154.36, 140:162.94, 160:171.53, 180:180.12, 200:188.71, 220:197.29, 240:205.88},
+                130: {100:159.53, 120:169.68, 140:179.83, 160:189.97, 180:200.12, 200:210.27, 220:220.42, 240:230.57},
+                160: {100:180.17, 120:192.66, 140:205.15, 160:217.64, 180:230.13, 200:242.62, 220:255.11, 240:267.60}
+            },
+            "BLACK OUT": {
+                70: {100:106.86, 120:111.67, 140:116.49, 160:121.30, 180:126.11, 200:130.92, 220:135.73, 240:140.54},
+                90: {100:120.80, 120:126.99, 140:133.17, 160:139.36, 180:145.54, 200:151.73, 220:157.91, 240:164.10},
+                110: {100:130.95, 120:138.51, 140:146.06, 160:153.62, 180:161.18, 200:168.74, 220:176.30, 240:183.86},
+                130: {100:142.99, 120:151.92, 140:160.85, 160:169.79, 180:178.72, 200:187.65, 220:196.59, 240:205.52},
+                160: {100:161.05, 120:172.04, 140:183.04, 160:194.03, 180:205.03, 200:216.02, 220:227.02, 240:238.01}
+            }
+        };
+        
+        const ACCESORIOS_ENROLLABLES = [
+            { nombre: "Cadena Metálica Inox (metro lineal)", precio: 4.35 },
+            { nombre: "Cadena Transparente (metro lineal)", precio: 1.86 },
+            { nombre: "Anillo Cadena Metálica", precio: 19.89 },
+            { nombre: "Anillo Cadena Transparente", precio: 8.39 },
+            { nombre: "Escuadra 100mm Aluminio", precio: 5.59 },
+            { nombre: "Escuadra 150mm Aluminio", precio: 8.08 },
+            { nombre: "Escuadra 190mm Aluminio", precio: 9.01 },
+            { nombre: "Escuadra Extensible 11-16cm", precio: 7.44 },
+            { nombre: "Escuadra Extensible 16-24cm", precio: 8.06 },
+            { nombre: "Soporte Rápido", precio: 11.19 },
+            { nombre: "Protección Infantil para Cadena", precio: 3.10 }
         ];
 
        const SISTEMAS = {
@@ -1534,6 +1750,162 @@ function mostrarOpcionesBarras() {
             itemsActuales = [];
             actualizarItems();
             actualizarResumen();
+        }
+
+
+                  // ========== FUNCIONES CORTINAS TÉCNICAS ==========
+        
+        function cambiarCategoria(categoria) {
+            const btnTrad = document.getElementById('btn-tradicionales');
+            const btnTec = document.getElementById('btn-tecnicas');
+            const formTrad = document.getElementById('form-tradicionales');
+            const formTec = document.getElementById('form-tecnicas');
+            
+            if (categoria === 'tradicionales') {
+                btnTrad.className = 'btn btn-primary';
+                btnTec.className = 'btn btn-secondary';
+                formTrad.style.display = 'block';
+                formTec.style.display = 'none';
+            } else {
+                btnTrad.className = 'btn btn-secondary';
+                btnTec.className = 'btn btn-primary';
+                formTrad.style.display = 'none';
+                formTec.style.display = 'block';
+                cargarAccesorios();
+            }
+        }
+        
+        function cambiarTipoTecnica(tipo) {
+            const btnEnroll = document.getElementById('btn-enrollable');
+            const btnVert = document.getElementById('btn-vertical');
+            const formEnroll = document.getElementById('form-enrollable');
+            const formVert = document.getElementById('form-vertical');
+            
+            if (tipo === 'enrollable') {
+                btnEnroll.className = 'btn btn-primary';
+                btnVert.className = 'btn btn-secondary';
+                formEnroll.style.display = 'block';
+                formVert.style.display = 'none';
+            } else {
+                btnEnroll.className = 'btn btn-secondary';
+                btnVert.className = 'btn btn-primary';
+                formEnroll.style.display = 'none';
+                formVert.style.display = 'block';
+            }
+        }
+        
+        let accesoriosSeleccionados = [];
+        
+        function cargarAccesorios() {
+            const lista = document.getElementById('accesorios-list');
+            if (!lista) return;
+            
+            lista.innerHTML = ACCESORIOS_ENROLLABLES.map((acc, idx) => `
+                <div class="checkbox-container" style="margin: 0.5rem 0; padding: 0.75rem;">
+                    <input type="checkbox" id="acc-${idx}" onchange="toggleAccesorio(${idx})">
+                    <label for="acc-${idx}" style="flex: 1;">${acc.nombre}</label>
+                    <span style="font-weight: bold; color: #2563eb;">${acc.precio}€</span>
+                </div>
+            `).join('');
+        }
+        
+        function toggleAccesorio(idx) {
+            const checkbox = document.getElementById(`acc-${idx}`);
+            if (checkbox.checked) {
+                accesoriosSeleccionados.push(ACCESORIOS_ENROLLABLES[idx]);
+            } else {
+                accesoriosSeleccionados = accesoriosSeleccionados.filter(a => a.nombre !== ACCESORIOS_ENROLLABLES[idx].nombre);
+            }
+            actualizarPrecioEnrollable();
+        }
+        
+        function actualizarPrecioEnrollable() {
+            const tejido = document.getElementById('tejido-enrollable').value;
+            const ancho = parseInt(document.getElementById('ancho-enrollable').value);
+            const alto = parseInt(document.getElementById('alto-enrollable').value);
+            const diametro = document.getElementById('diametro-enrollable').value;
+            const instalacion = document.getElementById('instalacion-enrollable').checked;
+            
+            if (!tejido || !ancho || !alto || !diametro) {
+                document.getElementById('precio-enrollable-preview').textContent = '0.00€';
+                return;
+            }
+            
+            const precios = PRECIOS_ENROLLABLES[tejido];
+            if (!precios || !precios[diametro]) {
+                document.getElementById('precio-enrollable-preview').textContent = '0.00€';
+                return;
+            }
+            
+            // Encontrar el rango de alto más cercano
+            const altosDisponibles = Object.keys(precios[diametro]).map(h => parseInt(h)).sort((a, b) => a - b);
+            const altoAplicable = altosDisponibles.find(h => alto <= h) || altosDisponibles[altosDisponibles.length - 1];
+            
+            let precioBase = precios[diametro][altoAplicable] || 0;
+            
+            // Sumar accesorios
+            const precioAccesorios = accesoriosSeleccionados.reduce((sum, acc) => sum + acc.precio, 0);
+            
+            // Sumar instalación
+            const precioInstalacion = instalacion ? 50 : 0;
+            
+            const precioTotal = precioBase + precioAccesorios + precioInstalacion;
+            
+            document.getElementById('precio-enrollable-preview').textContent = precioTotal.toFixed(2) + '€';
+        }
+        
+        function agregarItemEnrollable() {
+            const tejido = document.getElementById('tejido-enrollable').value;
+            const ancho = parseInt(document.getElementById('ancho-enrollable').value);
+            const alto = parseInt(document.getElementById('alto-enrollable').value);
+            const diametro = document.getElementById('diametro-enrollable').value;
+            const mando = document.getElementById('mando-enrollable').value;
+            const direccion = document.getElementById('direccion-enrollable').value;
+            const instalacion = document.getElementById('instalacion-enrollable').checked;
+            
+            if (!tejido || !ancho || !alto || !diametro) {
+                alert('Por favor completa todos los campos obligatorios');
+                return;
+            }
+            
+            const precios = PRECIOS_ENROLLABLES[tejido];
+            const altosDisponibles = Object.keys(precios[diametro]).map(h => parseInt(h)).sort((a, b) => a - b);
+            const altoAplicable = altosDisponibles.find(h => alto <= h) || altosDisponibles[altosDisponibles.length - 1];
+            
+            let precioBase = precios[diametro][altoAplicable] || 0;
+            const precioAccesorios = accesoriosSeleccionados.reduce((sum, acc) => sum + acc.precio, 0);
+            const precioInstalacion = instalacion ? 50 : 0;
+            const precioTotal = precioBase + precioAccesorios + precioInstalacion;
+            
+            const accesoriosTexto = accesoriosSeleccionados.length > 0 
+                ? ' + ' + accesoriosSeleccionados.map(a => a.nombre).join(', ')
+                : '';
+            
+            const item = {
+                id: Date.now(),
+                tipo: 'enrollable_tecnico',
+                descripcion: `Enrollable ${tejido} (Ø${diametro}cm) - Mando: ${mando}, ${direccion}${accesoriosTexto}`,
+                ancho,
+                alto,
+                tejido_nombre: tejido,
+                sistema_nombre: `Enrollable Ø${diametro}cm - ${mando} - ${direccion}`,
+                precio_total: precioTotal,
+                dos_piezas: false
+            };
+            
+            itemsActuales.push(item);
+            actualizarItems();
+            actualizarResumen();
+            
+            // Limpiar formulario
+            document.getElementById('tejido-enrollable').value = '';
+            document.getElementById('ancho-enrollable').value = '';
+            document.getElementById('alto-enrollable').value = '';
+            document.getElementById('diametro-enrollable').value = '';
+            document.getElementById('instalacion-enrollable').checked = false;
+            accesoriosSeleccionados = [];
+            cargarAccesorios();
+            document.getElementById('precio-enrollable-preview').textContent = '0.00€';
         }
     </script>
 </body>
