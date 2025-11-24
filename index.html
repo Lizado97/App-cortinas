@@ -591,6 +591,7 @@
                                     <option value="cortina_palas">Cortina Palas</option>
                                     <option value="cortina_plana_doble">Cortina Plana Doble Tejido</option>
                                     <option value="cortina_plegones">Cortina Plegones</option>
+
                                 </select>
                             </div>
                             
@@ -629,7 +630,7 @@
                         </div>
 
                         <!-- Sección 3: Sistema -->
-                        <div class="step-box step-amber">
+                     <div class="step-box step-amber">
                             <div class="step-header">
                                 <div class="step-number">3</div>
                                 <div class="step-title">Sistema de Instalación</div>
@@ -637,12 +638,12 @@
                             
                             <div class="form-group">
                                 <label>Sistema (opcional)</label>
-                                <select id="sistema" onchange="mostrarOpcionesBarras()">
+                               <select id="sistema" onchange="mostrarOpcionesBarras()">
                                     <option value="">Sin sistema</option>
+                                    <option value="barras">Barras</option>
                                 </select>
                             </div>
-                            
-                            <!-- Opciones adicionales para barras -->
+                          <!-- Opciones adicionales para barras -->
                             <div id="opciones-barras" style="display: none;">
                                 <div class="form-group" id="diametro-container">
                                     <label>Diámetro</label>
@@ -663,7 +664,13 @@
                                     </select>
                                 </div>
                             </div>
+                            <div class="checkbox-container">
+                                <input type="checkbox" id="incluir-instalacion" onchange="actualizarResumen()">
+                                <label for="incluir-instalacion">🔧 Incluir instalación</label>
+                            </div>
 
+                            </div>
+                           
                            <button class="btn btn-primary" onclick="agregarItem()" style="width: 100%; padding: 1rem; font-size: 1.1rem;">
                             <span id="btn-texto">➕ Calcular y Agregar al Presupuesto</span>
                             </button>
@@ -935,7 +942,7 @@
             { nombre: "ZAHARA", precio: 41.11, ancho: 300, composicion: "90% Pol 10% Li" }
         ];
 
-      const SISTEMAS = {
+       const SISTEMAS = {
     "Estor a Cadena - Paquetto": {75:52.20, 100:57.38, 125:67.80, 150:77.19, 175:79.18, 200:88.61, 225:103.04, 250:107.97, 275:117.27, 300:126.66},
     "Estor a Cadena - Plegable": {75:54.01, 100:59.91, 125:69.94, 150:82.26, 175:89.06, 200:94.02, 225:108.11, 250:116.51, 275:128.41, 300:136.81},
     "Guía Manual 1 Vía - Convencional": {100:10.17, 125:12.86, 150:15.01, 175:16.74, 200:18.87, 225:20.95, 250:24.10, 275:26.42, 300:28.90},
@@ -992,6 +999,7 @@ const PRECIOS_BARRAS = {
             "cortina_palas": "Cortina Palas",
             "cortina_plana_doble": "Cortina Plana Doble Tejido",
             "cortina_plegones": "Cortina Plegones"
+
         };
 
         let itemsActuales = [];
@@ -1002,117 +1010,116 @@ const PRECIOS_BARRAS = {
             cargarDashboard();
         });
 
-                     function cargarSistemas() {
-                    const select = document.getElementById('tipo-cortina');
-                    select.addEventListener('change', filtrarSistemasPorTipo);
-                }
-                
-                function filtrarSistemasPorTipo() {
-                    const tipo = document.getElementById('tipo-cortina').value;
-                    const selectSistema = document.getElementById('sistema');
-                    selectSistema.innerHTML = '<option value="">Sin sistema</option>';
-                    
-                    let sistemasPermitidos = [];
-                    
-                    if (tipo === 'estor_paquetto' || tipo === 'estor_plegable') {
-                        sistemasPermitidos = Object.keys(SISTEMAS).filter(s => s.includes('Estor a Cadena'));
-                    } else if (tipo === 'cortina_ollados') {
-                        sistemasPermitidos = Object.keys(SISTEMAS).filter(s => SISTEMAS[s] === 'forja');
-                    } else if (tipo === 'cortina_onda_perfecta') {
-                        sistemasPermitidos = Object.keys(SISTEMAS).filter(s => s.includes('Onda Perfecta'));
-                    } else if (tipo === 'cortina_fruncida' || tipo === 'cortina_palas' || tipo === 'cortina_triple_pliegue' || 
-                               tipo === 'cortina_plana' || tipo === 'cortina_plana_doble' || tipo === 'cortina_plegones') {
-                        sistemasPermitidos = Object.keys(SISTEMAS).filter(s => s.includes('Convencional') || SISTEMAS[s] === 'forja');
-                    }
-                    
-                    sistemasPermitidos.forEach(s => {
-                        const option = document.createElement('option');
-                        option.value = s;
-                        option.textContent = s;
-                        selectSistema.appendChild(option);
-                    });
-                }
-                
-                function mostrarOpcionesBarras() {
-                    const sistema = document.getElementById('sistema').value;
-                    const opcionesBarras = document.getElementById('opciones-barras');
-                    const diametroContainer = document.getElementById('diametro-container');
-                    const selectMedida = document.getElementById('medida-barra');
-                    
-                    if (SISTEMAS[sistema] === 'forja') {
-                        opcionesBarras.style.display = 'block';
-                        
-                        // Mostrar/ocultar diámetro según si es "Barra Cuadrada con Anillas"
-                        if (sistema === 'Barra Cuadrada con Anillas') {
-                            diametroContainer.style.display = 'none';
-                            document.getElementById('diametro-barra').value = 'único';
-                            // Añadir opción 300cm
-                            if (!selectMedida.querySelector('[value="300"]')) {
-                                const opt300 = document.createElement('option');
-                                opt300.value = '300';
-                                opt300.textContent = '300cm';
-                                selectMedida.appendChild(opt300);
-                            }
-                        } else {
-                            diametroContainer.style.display = 'block';
-                            document.getElementById('diametro-barra').value = '';
-                            // Quitar opción 300cm si existe
-                            const opt300 = selectMedida.querySelector('[value="300"]');
-                            if (opt300) opt300.remove();
-                        }
-                    } else {
-                        opcionesBarras.style.display = 'none';
-                        document.getElementById('diametro-barra').value = '';
-                        document.getElementById('medida-barra').value = '';
-                    }
-                }
+        function cargarSistemas() {
+    const select = document.getElementById('tipo-cortina');
+    select.addEventListener('change', filtrarSistemasPorTipo);
+}
 
-        function calcularPrecioSistema(ancho, sistemaNombre) {
-            if (!sistemaNombre) return 0;
-            
-            // Si es barra de forja
-            if (SISTEMAS[sistemaNombre] === 'forja') {
-                const diametro = document.getElementById('diametro-barra').value;
-                const medida = parseInt(document.getElementById('medida-barra').value);
-                
-                if (!medida) {
-                    alert('Por favor selecciona el diámetro y medida de la barra');
-                    return 0;
-                }
-                
-                const preciosBarra = PRECIOS_BARRAS[sistemaNombre];
-                if (!preciosBarra) return 0;
-                
-                const preciosPorDiametro = preciosBarra[diametro] || preciosBarra['único'];
-                if (!preciosPorDiametro) return 0;
-                
-                const precio = preciosPorDiametro[medida] || 0;
-                
-                // Si el ancho supera 250cm, multiplicar por 2
-                if (ancho > 250) {
-                    return precio * 2;
-                }
-                
-                return precio;
+function filtrarSistemasPorTipo() {
+    const tipo = document.getElementById('tipo-cortina').value;
+    const selectSistema = document.getElementById('sistema');
+    selectSistema.innerHTML = '<option value="">Sin sistema</option>';
+    
+    let sistemasPermitidos = [];
+    
+    if (tipo === 'estor_paquetto' || tipo === 'estor_plegable') {
+        sistemasPermitidos = Object.keys(SISTEMAS).filter(s => s.includes('Estor a Cadena'));
+    } else if (tipo === 'cortina_ollados') {
+        sistemasPermitidos = Object.keys(SISTEMAS).filter(s => SISTEMAS[s] === 'forja');
+    } else if (tipo === 'cortina_onda_perfecta') {
+        sistemasPermitidos = Object.keys(SISTEMAS).filter(s => s.includes('Onda Perfecta'));
+    } else if (tipo === 'cortina_fruncida' || tipo === 'cortina_palas' || tipo === 'cortina_triple_pliegue' || 
+               tipo === 'cortina_plana' || tipo === 'cortina_plana_doble' || tipo === 'cortina_plegones') {
+        sistemasPermitidos = Object.keys(SISTEMAS).filter(s => s.includes('Convencional') || SISTEMAS[s] === 'forja');
+    }
+    
+    sistemasPermitidos.forEach(s => {
+        const option = document.createElement('option');
+        option.value = s;
+        option.textContent = s;
+        selectSistema.appendChild(option);
+    });
+}
+
+function mostrarOpcionesBarras() {
+    const sistema = document.getElementById('sistema').value;
+    const opcionesBarras = document.getElementById('opciones-barras');
+    const diametroContainer = document.getElementById('diametro-container');
+    const selectMedida = document.getElementById('medida-barra');
+    
+    if (SISTEMAS[sistema] === 'forja') {
+        opcionesBarras.style.display = 'block';
+        
+        // Mostrar/ocultar diámetro según si es "Barra Cuadrada con Anillas"
+        if (sistema === 'Barra Cuadrada con Anillas') {
+            diametroContainer.style.display = 'none';
+            document.getElementById('diametro-barra').value = 'único';
+            // Añadir opción 300cm
+            if (!selectMedida.querySelector('[value="300"]')) {
+                const opt300 = document.createElement('option');
+                opt300.value = '300';
+                opt300.textContent = '300cm';
+                selectMedida.appendChild(opt300);
             }
-            
-            // Lógica normal para otros sistemas
-            const sistema = SISTEMAS[sistemaNombre];
-            if (!sistema) return 0;
-            
-            const rangos = Object.keys(sistema).map(r => parseInt(r)).sort((a, b) => a - b);
-            const rangoMaximo = rangos[rangos.length - 1];
-            
-            if (ancho > rangoMaximo) {
-                const anchoMitad = ancho / 2;
-                const rangoParaMitad = rangos.find(r => anchoMitad <= r) || rangoMaximo;
-                return (sistema[rangoParaMitad] || 0) * 2;
-            }
-            
-            const rangoAplicable = rangos.find(r => ancho <= r);
-            return sistema[rangoAplicable || rangoMaximo] || 0;
+        } else {
+            diametroContainer.style.display = 'block';
+            document.getElementById('diametro-barra').value = '';
+            // Quitar opción 300cm si existe
+            const opt300 = selectMedida.querySelector('[value="300"]');
+            if (opt300) opt300.remove();
         }
+    } else {
+        opcionesBarras.style.display = 'none';
+        document.getElementById('diametro-barra').value = '';
+        document.getElementById('medida-barra').value = '';
+    }
+}
 
+    function calcularPrecioSistema(ancho, sistemaNombre) {
+    if (!sistemaNombre) return 0;
+    
+    // Si es barra de forja
+    if (SISTEMAS[sistemaNombre] === 'forja') {
+        const diametro = document.getElementById('diametro-barra').value;
+        const medida = parseInt(document.getElementById('medida-barra').value);
+        
+        if (!medida) {
+            alert('Por favor selecciona el diámetro y medida de la barra');
+            return 0;
+        }
+        
+        const preciosBarra = PRECIOS_BARRAS[sistemaNombre];
+        if (!preciosBarra) return 0;
+        
+        const preciosPorDiametro = preciosBarra[diametro] || preciosBarra['único'];
+        if (!preciosPorDiametro) return 0;
+        
+        const precio = preciosPorDiametro[medida] || 0;
+        
+        // Si el ancho supera 250cm, multiplicar por 2
+        if (ancho > 250) {
+            return precio * 2;
+        }
+        
+        return precio;
+    }
+    
+    // Lógica normal para otros sistemas
+    const sistema = SISTEMAS[sistemaNombre];
+    if (!sistema) return 0;
+    
+    const rangos = Object.keys(sistema).map(r => parseInt(r)).sort((a, b) => a - b);
+    const rangoMaximo = rangos[rangos.length - 1];
+    
+    if (ancho > rangoMaximo) {
+        const anchoMitad = ancho / 2;
+        const rangoParaMitad = rangos.find(r => anchoMitad <= r) || rangoMaximo;
+        return (sistema[rangoParaMitad] || 0) * 2;
+    }
+    
+    const rangoAplicable = rangos.find(r => ancho <= r);
+    return sistema[rangoAplicable || rangoMaximo] || 0;
+}
 
 
         function buscarTejido() {
@@ -1170,122 +1177,127 @@ const PRECIOS_BARRAS = {
         }
 
         function agregarItem() {
-            const tipo = document.getElementById('tipo-cortina').value;
-            const ancho = parseFloat(document.getElementById('ancho').value);
-            const alto = parseFloat(document.getElementById('alto').value);
-            const tejidoNombre = document.getElementById('tejido').value;
-            const sistemaNombre = document.getElementById('sistema').value;
-            const dosPiezas = document.getElementById('dos-piezas').checked;
+    const tipo = document.getElementById('tipo-cortina').value;
+    const ancho = parseFloat(document.getElementById('ancho').value);
+    const alto = parseFloat(document.getElementById('alto').value);
+    const tejidoNombre = document.getElementById('tejido').value;
+    const sistemaNombre = document.getElementById('sistema').value;  // ← FALTABA ESTO
+    
+    let sistemaNombreCompleto = sistemaNombre || 'Sin sistema';
 
-            if (!tipo || !ancho || !alto || !tejidoNombre) {
-                alert('Por favor completa todos los campos obligatorios');
-                return;
-            }
+    // Si el sistema existe y es tipo forja
+    if (sistemaNombre && SISTEMAS[sistemaNombre] === 'forja') {
+        const diametro = document.getElementById('diametro-barra').value;
+        const medida = document.getElementById('medida-barra').value;
 
-            const tejido = TEJIDOS.find(t => t.nombre === tejidoNombre);
-            const anchoParaTejido = dosPiezas ? ancho / 2 : ancho;
-            let tejidoMetros = 0;
-            
-            if (tipo === 'estor_paquetto' || tipo === 'estor_plegable') {
-                tejidoMetros = (anchoParaTejido + 40) / 100;
-            } else if (tipo === 'cortina_onda_perfecta') {
-                tejidoMetros = (anchoParaTejido * 2.4) / 100;
-            } else if (tipo === 'cortina_ollados') {
-                tejidoMetros = (anchoParaTejido * 2.2) / 100;
-            } else if (tipo === 'cortina_plana') {
-                tejidoMetros = (anchoParaTejido * 1.4) / 100;
-            } else if (tipo === 'cortina_fruncida') {
-                tejidoMetros = (anchoParaTejido * 2.5) / 100;
-            } else if (tipo === 'cortina_triple_pliegue') {
-                tejidoMetros = (anchoParaTejido * 2.7) / 100;
-            } else if (tipo === 'cortina_palas') {
-                tejidoMetros = (anchoParaTejido * 2.6) / 100;
-            } else if (tipo === 'cortina_plana_doble') {
-                tejidoMetros = (anchoParaTejido * 2) / 100;
-            } else if (tipo === 'cortina_plegones') {
-                tejidoMetros = (anchoParaTejido * 2.6) / 100;
-            }
-
-             tejidoMetros = Math.round(tejidoMetros * 100) / 100;
-            const precioTejido = tejidoMetros * tejido.precio;
-            const confeccion = CONFECCION[tipo];
-            let precioConfeccion = 0;
-            
-            if (anchoParaTejido <= 100) precioConfeccion = confeccion[100];
-            else if (anchoParaTejido <= 150) precioConfeccion = confeccion[150];
-            else if (anchoParaTejido <= 200) precioConfeccion = confeccion[200];
-            else if (anchoParaTejido <= 250) precioConfeccion = confeccion[250];
-            else if (anchoParaTejido <= 300) precioConfeccion = confeccion[300];
-            else precioConfeccion = confeccion[350] || confeccion[300];
-
-           
-         const precioSistema = calcularPrecioSistema(ancho, sistemaNombre);
-        const precioTejidoFinal = dosPiezas ? precioTejido * 2 : precioTejido;
-        const precioConfeccionFinal = dosPiezas ? precioConfeccion * 2 : precioConfeccion;
-        
-        let precioOllados = 0;
-        
-        if (tipo === 'cortina_ollados') {
-        
-            // ❗ Usamos SIEMPRE el ancho total, no el ancho dividido
-            const tejidoCm = ancho * 2.2; 
-        
-            let numOllados = Math.floor(tejidoCm / 15);
-        
-            // Aplicar nuevas reglas:
-            if (numOllados % 2 === 0) {
-                numOllados += 2;  // si es par → +2
-            } else {
-                numOllados += 3;  // si es impar → +3
-            }
-        
-            precioOllados = numOllados * 5.5;
+        if (sistemaNombre !== 'Barra Cuadrada con Anillas') {
+            sistemaNombreCompleto = `${sistemaNombre} ${diametro}mm - ${medida}cm`;
+        } else {
+            sistemaNombreCompleto = `${sistemaNombre} - ${medida}cm`;
         }
-        
-        
-        const precioInstalacion = document.getElementById('incluir-instalacion').checked ? 50 : 0;
-        const precioTotal = precioTejidoFinal + precioConfeccionFinal + precioSistema + precioOllados + precioInstalacion;
-                    
-                      let sistemaNombreCompleto = sistemaNombre || 'Sin sistema';
-            if (SISTEMAS[sistemaNombre] === 'forja') {
-                const diametro = document.getElementById('diametro-barra').value;
-                const medida = document.getElementById('medida-barra').value;
-                if (sistemaNombre !== 'Barra Cuadrada con Anillas') {
-                    sistemaNombreCompleto = `${sistemaNombre} ${diametro}mm - ${medida}cm`;
-                } else {
-                    sistemaNombreCompleto = `${sistemaNombre} - ${medida}cm`;
-                }
-            }
-            
-            const item = {
-                id: editandoItemId || Date.now(),
-                tipo,
-                descripcion: `${TIPOS_NOMBRE[tipo]} - ${tejidoNombre}${dosPiezas ? ' (2 piezas)' : ''}`,
-                ancho, alto,
-                tejido_nombre: tejidoNombre,
-                sistema_nombre: sistemaNombreCompleto,
-                precio_total: precioTotal,
-                dos_piezas: dosPiezas
-            };
-            if (editandoItemId) {
-                const index = itemsActuales.findIndex(i => i.id === editandoItemId);
-                    itemsActuales[index] = item;
-                    editandoItemId = null;
-                document.getElementById('btn-texto').textContent = '➕ Calcular y Agregar al Presupuesto';
-                } else
+    }
 
-            itemsActuales.push(item);
-            actualizarItems();
-            actualizarResumen();
+    const dosPiezas = document.getElementById('dos-piezas').checked;
 
-            document.getElementById('tipo-cortina').value = '';
-            document.getElementById('ancho').value = '';
-            document.getElementById('alto').value = '';
-            document.getElementById('tejido').value = '';
-            document.getElementById('tejido-search').value = '';
-            document.getElementById('sistema').value = '';
-            document.getElementById('dos-piezas').checked = false;
-        }
+    if (!tipo || !ancho || !alto || !tejidoNombre) {
+        alert('Por favor completa todos los campos obligatorios');
+        return;
+    }
+
+    const tejido = TEJIDOS.find(t => t.nombre === tejidoNombre);
+    const anchoParaTejido = dosPiezas ? ancho / 2 : ancho;
+
+    let tejidoMetros = 0;
+
+    if (tipo === 'estor_paquetto' || tipo === 'estor_plegable')
+        tejidoMetros = (anchoParaTejido + 40) / 100;
+    else if (tipo === 'cortina_onda_perfecta')
+        tejidoMetros = (anchoParaTejido * 2.4) / 100;
+    else if (tipo === 'cortina_ollados')
+        tejidoMetros = (anchoParaTejido * 2.2) / 100;
+    else if (tipo === 'cortina_plana')
+        tejidoMetros = (anchoParaTejido * 1.4) / 100;
+    else if (tipo === 'cortina_fruncida')
+        tejidoMetros = (anchoParaTejido * 2.5) / 100;
+    else if (tipo === 'cortina_triple_pliegue')
+        tejidoMetros = (anchoParaTejido * 2.7) / 100;
+    else if (tipo === 'cortina_palas')
+        tejidoMetros = (anchoParaTejido * 2.6) / 100;
+    else if (tipo === 'cortina_plana_doble')
+        tejidoMetros = (anchoParaTejido * 2) / 100;
+    else if (tipo === 'cortina_plegones')
+        tejidoMetros = (anchoParaTejido * 2.6) / 100;
+
+    tejidoMetros = Math.round(tejidoMetros * 100) / 100;
+
+    const precioTejido = tejidoMetros * tejido.precio;
+    const confeccion = CONFECCION[tipo];
+
+    let precioConfeccion = 0;
+
+    if (anchoParaTejido <= 100) precioConfeccion = confeccion[100];
+    else if (anchoParaTejido <= 150) precioConfeccion = confeccion[150];
+    else if (anchoParaTejido <= 200) precioConfeccion = confeccion[200];
+    else if (anchoParaTejido <= 250) precioConfeccion = confeccion[250];
+    else if (anchoParaTejido <= 300) precioConfeccion = confeccion[300];
+    else precioConfeccion = confeccion[350] || confeccion[300];
+
+    const precioSistema = calcularPrecioSistema(ancho, sistemaNombre);
+    const precioTejidoFinal = dosPiezas ? precioTejido * 2 : precioTejido;
+    const precioConfeccionFinal = dosPiezas ? precioConfeccion * 2 : precioConfeccion;
+
+    let precioOllados = 0;
+
+    if (tipo === 'cortina_ollados') {
+        const tejidoCm = ancho * 2.2; 
+        let numOllados = Math.floor(tejidoCm / 15);
+
+        if (numOllados % 2 === 0) numOllados += 2;
+        else numOllados += 3;
+
+        precioOllados = numOllados * 5.5;
+    }
+
+    const precioInstalacion = document.getElementById('incluir-instalacion').checked ? 50 : 0;
+
+    const precioTotal = 
+        precioTejidoFinal + 
+        precioConfeccionFinal + 
+        precioSistema + 
+        precioOllados + 
+        precioInstalacion;
+
+    const item = {
+        id: editandoItemId || Date.now(),
+        tipo,
+        descripcion: `${TIPOS_NOMBRE[tipo]} - ${tejidoNombre}${dosPiezas ? ' (2 piezas)' : ''}`,
+        ancho, alto,
+        tejido_nombre: tejidoNombre,
+        sistema_nombre: sistemaNombreCompleto,
+        precio_total: precioTotal,
+        dos_piezas: dosPiezas
+    };
+
+    if (editandoItemId) {
+        const index = itemsActuales.findIndex(i => i.id === editandoItemId);
+        itemsActuales[index] = item;
+        editandoItemId = null;
+        document.getElementById('btn-texto').textContent = '➕ Calcular y Agregar al Presupuesto';
+    } else {
+        itemsActuales.push(item);
+    }
+
+    actualizarItems();
+    actualizarResumen();
+
+    document.getElementById('tipo-cortina').value = '';
+    document.getElementById('ancho').value = '';
+    document.getElementById('alto').value = '';
+    document.getElementById('tejido').value = '';
+    document.getElementById('tejido-search').value = '';
+    document.getElementById('sistema').value = '';
+    document.getElementById('dos-piezas').checked = false;
+}
 
         function eliminarItem(id) {
             itemsActuales = itemsActuales.filter(item => item.id !== id);
@@ -1341,8 +1353,7 @@ const PRECIOS_BARRAS = {
     const totalItems = itemsActuales.length;
     const subtotal = itemsActuales.reduce((sum, item) => sum + item.precio_total, 0);
     const incluirInstalacion = document.getElementById('incluir-instalacion').checked;
-    const instalacion = incluirInstalacion ? (50 * totalItems) : 0;
-    const subtotalConInstalacion = subtotal + instalacion;
+    const subtotalConInstalacion = subtotal;
     const iva = subtotalConInstalacion * 0.21;
     const total = subtotalConInstalacion + iva;
 
