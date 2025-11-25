@@ -784,9 +784,11 @@
                 <div class="step-number" style="background: #f59e0b;">3</div>
                 <div class="step-title">Accesorios</div>
             </div>
-            
-            <div id="accesorios-enrollable-list" style="max-height: 200px; overflow-y: auto; border: 1px solid #cbd5e1; border-radius: 8px; padding: 0.5rem;">
-            </div>
+           <div class="form-group">
+                <label>Accesorios Opcionales</label>
+                <div id="accesorios-enrollable-list" style="max-height: 250px; overflow-y: auto; border: 1px solid #cbd5e1; border-radius: 8px; padding: 0.5rem;">
+                    <!-- Se llena dinámicamente -->
+                </div>
             
             <div class="checkbox-container">
                 <input type="checkbox" id="instalacion-enrollable" onchange="actualizarPrecioEnrollable()">
@@ -806,8 +808,12 @@
         </button>
     </div>
 
+   <!-- VERTICAL (pendiente) -->
     <div id="form-vertical" style="display: none;">
-        <p style="text-align: center; color: #64748b;">Vertical pendiente...</p>
+        <div class="step-box" style="background: #f0fdf4; border-color: #22c55e; text-align: center; padding: 3rem;">
+            <h3 style="color: #15803d;">🚧 Cortinas Verticales</h3>
+            <p style="color: #64748b; margin-top: 1rem;">Próximamente...</p>
+        </div>
     </div>
 </div>
                     <div class="card" id="items-card" style="display: none;">
@@ -1161,7 +1167,6 @@ const ENROLLABLE_32_MANUAL = {
 
 // ==========================================
 // 2. SISTEMA MEDIUM Ø43 (MANUAL)
-[span_5](start_span)[span_6](start_span)[span_7](start_span)[span_8](start_span)[span_9](start_span)[span_10](start_span)[span_11](start_span)// Datos extraídos de PDF págs 7-9[span_5](end_span)[span_6](end_span)[span_7](end_span)[span_8](end_span)[span_9](end_span)[span_10](end_span)[span_11](end_span)
 // ==========================================
 const ENROLLABLE_43_MANUAL = {
     "THECNIC BASIC": {
@@ -1266,7 +1271,6 @@ const ENROLLABLE_43_MANUAL = {
 
 // ==========================================
 // 3. SISTEMA MEDIUM PLUS Ø58 (MANUAL)
-[span_12](start_span)[span_13](start_span)[span_14](start_span)[span_15](start_span)[span_16](start_span)[span_17](start_span)[span_18](start_span)[span_19](start_span)[span_20](start_span)// Datos extraídos de PDF págs 11-13[span_12](end_span)[span_13](end_span)[span_14](end_span)[span_15](end_span)[span_16](end_span)[span_17](end_span)[span_18](end_span)[span_19](end_span)[span_20](end_span)
 // ==========================================
 const ENROLLABLE_58_MANUAL = {
     "THECNIC BASIC": {
@@ -1372,7 +1376,6 @@ const ENROLLABLE_58_MANUAL = {
 
 // ==========================================
 // 4. SISTEMA MEDIUM MOTORIZADO Ø43
-[span_21](start_span)[span_22](start_span)[span_23](start_span)[span_24](start_span)[span_25](start_span)[span_26](start_span)[span_27](start_span)[span_28](start_span)[span_29](start_span)[span_30](start_span)[span_31](start_span)// Datos extraídos de PDF págs 15-17[span_21](end_span)[span_22](end_span)[span_23](end_span)[span_24](end_span)[span_25](end_span)[span_26](end_span)[span_27](end_span)[span_28](end_span)[span_29](end_span)[span_30](end_span)[span_31](end_span)
 // ==========================================
 const ENROLLABLE_43_MOTOR = {
     "THECNIC BASIC": {
@@ -1477,7 +1480,6 @@ const ENROLLABLE_43_MOTOR = {
 
 // ==========================================
 // 5. SISTEMA MEDIUM PLUS MOTORIZADO Ø58
-[span_32](start_span)[span_33](start_span)[span_34](start_span)[span_35](start_span)[span_36](start_span)[span_37](start_span)[span_38](start_span)[span_39](start_span)[span_40](start_span)[span_41](start_span)[span_42](start_span)// Datos extraídos de PDF págs 18-20[span_32](end_span)[span_33](end_span)[span_34](end_span)[span_35](end_span)[span_36](end_span)[span_37](end_span)[span_38](end_span)[span_39](end_span)[span_40](end_span)[span_41](end_span)[span_42](end_span)
 // ==========================================
 const ENROLLABLE_58_MOTOR = {
     "THECNIC BASIC": {
@@ -2195,7 +2197,7 @@ function mostrarOpcionesBarras() {
             document.getElementById('notas').value = '';
             document.getElementById('incluir-instalacion').checked = false;
             document.getElementById('btn-texto').textContent = '➕ Calcular y Agregar al Presupuesto';
-            itemsActuales = [];
+            let itemsActuales = [];
             actualizarItems();
             actualizarResumen();
         }
