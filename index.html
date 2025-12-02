@@ -2267,20 +2267,17 @@ function cambiarCategoria(cat) {
     const formTrad = document.getElementById('form-tradicionales');
     const formTec = document.getElementById('form-tecnicas');
     
-    if (categoria === 'tradicionales') {
-        formTradicionales.style.display = 'block';
-        formTecnicas.style.display = 'none';
-        btnTradicionales.classList.add('btn-primary');
-        btnTradicionales.classList.remove('btn-secondary');
-        btnTecnicas.classList.remove('btn-primary');
-        btnTecnicas.classList.add('btn-secondary');
-    } else {
-        formTradicionales.style.display = 'none';
-        formTecnicas.style.display = 'block';
-        btnTradicionales.classList.remove('btn-primary');
-        btnTradicionales.classList.add('btn-secondary');
-        btnTecnicas.classList.add('btn-primary');
-        btnTecnicas.classList.remove('btn-secondary');
+     if (cat === 'tradicionales') {
+        btnTrad.className = 'btn btn-primary';
+        btnTec.className = 'btn btn-secondary';
+        formTrad.style.display = 'block';
+        formTec.style.display = 'none';
+
+ } else {
+        btnTrad.className = 'btn btn-secondary';
+        btnTec.className = 'btn btn-primary';
+        formTrad.style.display = 'none';
+        formTec.style.display = 'block';
         cargarAccesoriosEnrollables();
     }
 }
