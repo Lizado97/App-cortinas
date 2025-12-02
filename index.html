@@ -348,13 +348,29 @@
             overflow-x: auto;
             -webkit-overflow-scrolling: touch;
         }
+.main-content {
+    display: flex; /* Activa Flexbox */
+    flex-direction: column; /* Apila el contenido (formularios y tarjeta de ítems) verticalmente */
+    gap: 2rem; /* Espacio entre los formularios (arriba) y la tarjeta de ítems (abajo) */
+}
 
+/* Contenedor específico para los formularios */
+.formularios-container {
+    /* Por defecto, los formularios solo ocuparán el ancho completo para evitar que
+       ambos se muestren a la vez si el JS solo quiere mostrar uno. */
+    width: 100%;
         .step-box {
             padding: 1.5rem;
             border-radius: 12px;
             border: 2px solid;
             margin-bottom: 1.5rem;
         }
+        #items-card {
+    padding: 1.5rem;
+    border: 2px solid #3b82f6; /* Borde azul para destacar */
+    border-radius: 8px;
+    background-color: #eff6ff; /* Fondo claro */
+}
 
         .step-blue {
             background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
@@ -580,7 +596,11 @@
 </div>
 
 <!-- ========== FORMULARIO TRADICIONALES ========== -->
-<div id="form-tradicionales">
+<div class="main-content">
+    
+    <div class="formularios-container">
+                        
+                        <div id="form-tradicionales">
     <!-- TODO TU CÓDIGO ORIGINAL DE TRADICIONALES (los 3 step-box) -->
     <!-- Sección 1: Tipo y Tejido -->
     <div class="step-box step-blue">
