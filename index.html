@@ -542,28 +542,6 @@
 </head>
    <body>
 
-    <div id="login-view" class="login-view">
-        <div id="login-card">
-            <h2>🔑 Acceso al Panel de Presupuestos</h2>
-            <div class="input-group">
-                <input type="text" id="login-usuario" placeholder="Usuario (ej: canotex)">
-            </div>
-            <div class="input-group">
-                <input type="password" id="login-pass" placeholder="Contraseña">
-            </div>
-            <button class="btn btn-primary" style="width: 100%;" onclick="procesarLogin()">
-                Iniciar Sesión
-            </button>
-            <p id="login-error" class="error-message hidden"></p>
-        </div>
-    </div>
-
-    <div id="main-app-container" class="hidden"> 
-        <div class="container">
-            </div>
-    </div>
-
-    </body>
    <div> <div class="container">
         <!-- Vista Dashboard -->
         <div id="dashboard-view">
@@ -2636,24 +2614,74 @@ function agregarItemEnrollable() {
     actualizarDiametrosDisponibles();
     document.getElementById('precio-enrollable-preview').textContent = '0.00€';
 }
-        function verificarSesion() {
-    const sesionGuardada = localStorage.getItem('clienteLogueado');
-    if (sesionGuardada) {
-        const datos = JSON.parse(sesionGuardada);
-        if (CLIENTES_CONFIG[datos.usuario]) {
-            // Si el usuario existe en la "base de datos", cargamos su perfil
-            document.getElementById('login-usuario').value = datos.usuario;
-            procesarLogin();
-            return;
-        }
-    }
-    // Si no hay sesión válida, se queda en el login
-    document.getElementById('login-view').classList.remove('hidden');
-    document.getElementById('main-app-container').classList.add('hidden');
-}
+     // Repetimos el CLIENTES_CONFIG para que la página principal sepa qué hacer
+        const CLIENTES_CONFIG = {
+            "canotex": { pass: "cortinas2024", nombre_publico: "Canotex S.L.", color_tema: "#8b5cf6", permisos: ["dashboard", "nuevo"], mensaje_especial: "¡Bienvenido, socio Canotex! Recuerda revisar el descuento especial aplicado." },
+            "sant_jord": { pass: "12345", nombre_publico: "Sant Jord SLU", color_tema: "#22c55e", permisos: ["dashboard"], mensaje_especial: "Acceso limitado. Solo visualización de presupuestos." }
+        };
 
-// Llama a esta función al final del script para que se ejecute al cargar la página
-verificarSesion();
+        function verificarAcceso() {
+            const userId = localStorage.getItem('logged_user_id');
+            const config = CLIENTES_CONFIG[userId];
+
+            if (!userId || !config) {
+                // Si no hay ID o el ID no es válido, redirigir al login
+                alert("Acceso denegado. Debe iniciar sesión.");
+                window.location.href = 'login.html';
+                return null;
+            }
+
+            // Si es válido, personalizar la interfaz
+            personalizarInterfaz(config);
+            return config;
+        }
+
+        // Reutilizamos la función de personalización de antes, adaptada para index.html
+        function personalizarInterfaz(config) {
+            // A. Personalizar el Header
+            const headerH1 = document.querySelector('.header h1');
+            const headerP = document.querySelector('.header p');
+            headerH1.innerHTML = `🪟 Sistema de Presupuestos - ${config.nombre_publico}`;
+            if (headerP) headerP.innerHTML = config.mensaje_especial; // Muestra el mensaje especial
+
+            // B. Adaptar el estilo
+            document.querySelectorAll('.stat-card').forEach(card => {
+                card.style.background = `linear-gradient(135deg, ${config.color_tema} 0%, #1d4ed8 100%)`;
+            });
+            
+            // C. Control de Permisos
+            const nuevoBtn = document.querySelector('#dashboard-view .btn-primary');
+            if (nuevoBtn && config.permisos && !config.permisos.includes('nuevo')) {
+                nuevoBtn.classList.add('hidden');
+            }
+            
+            // D. Añadir botón de Cierre de Sesión (si no lo tienes)
+            let logoutBtn = document.getElementById('btn-logout');
+            if (!logoutBtn) {
+                const headerBtns = document.querySelector('.header > div:last-child');
+                if (headerBtns) {
+                    logoutBtn = document.createElement('button');
+                    logoutBtn.id = 'btn-logout';
+                    logoutBtn.className = 'btn btn-secondary';
+                    logoutBtn.innerText = '🚪 Cerrar Sesión';
+                    logoutBtn.onclick = cerrarSesion;
+                    headerBtns.prepend(logoutBtn); // Añadir antes del botón Nuevo Presupuesto
+                }
+            }
+        }
+        
+        function cerrarSesion() {
+            localStorage.removeItem('logged_user_id'); // Borra la sesión
+            window.location.href = 'login.html'; // Vuelve al login
+        }
+
+        // EJECUTAR LA COMPROBACIÓN AL CARGAR LA PÁGINA
+        const perfilActual = verificarAcceso();
+        
+        if (perfilActual) {
+            // Aquí puedes llamar a tu función que carga los presupuestos filtrados
+            // cargarPresupuestos(perfilActual.nombre_publico); 
+        }
     </script>
 </body>
 </html>
