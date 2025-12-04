@@ -497,10 +497,74 @@
                 border: 1px solid #e2e8f0;
             }
         }
+    /* Nuevo CSS para el login */
+.login-view {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #1e293b 0%, #334155 100%); /* Fondo oscuro */
+}
+
+#login-card {
+    background: white;
+    padding: 3rem;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    width: 90%;
+    max-width: 400px;
+    text-align: center;
+}
+
+#login-card h2 {
+    color: #1e293b;
+    margin-bottom: 2rem;
+}
+
+.input-group {
+    margin-bottom: 1.5rem;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+    font-size: 1rem;
+}
+
+.error-message {
+    color: #ef4444;
+    margin-top: 1rem;
+    font-weight: 500;
+}
     </style>
 </head>
-<body>
-    <div class="container">
+   <body>
+
+    <div id="login-view" class="login-view">
+        <div id="login-card">
+            <h2>🔑 Acceso al Panel de Presupuestos</h2>
+            <div class="input-group">
+                <input type="text" id="login-usuario" placeholder="Usuario (ej: canotex)">
+            </div>
+            <div class="input-group">
+                <input type="password" id="login-pass" placeholder="Contraseña">
+            </div>
+            <button class="btn btn-primary" style="width: 100%;" onclick="procesarLogin()">
+                Iniciar Sesión
+            </button>
+            <p id="login-error" class="error-message hidden"></p>
+        </div>
+    </div>
+
+    <div id="main-app-container" class="hidden"> 
+        <div class="container">
+            </div>
+    </div>
+
+    </body>
+   <div> <div class="container">
         <!-- Vista Dashboard -->
         <div id="dashboard-view">
             <div class="header">
@@ -508,9 +572,18 @@
                     <h1>🪟 Sistema de Presupuestos</h1>
                     <p style="color: #64748b; margin-top: 0.5rem;">Gestión de presupuestos de cortinas</p>
                 </div>
-                <button class="btn btn-primary" onclick="mostrarVista('nuevo')">
-                    ➕ Nuevo Presupuesto
-                </button>
+              <div class="header">
+    <div>
+        </div>
+    <div>
+        <button class="btn btn-secondary" onclick="cerrarSesion()">
+            🚪 Cerrar Sesión
+        </button>
+        <button class="btn btn-primary" onclick="mostrarVista('nuevo')">
+            ➕ Nuevo Presupuesto
+        </button>
+    </div>
+</div>
             </div>
 
             <div class="stats">
@@ -908,6 +981,7 @@
             <div class="card" id="detalle-content"></div>
         </div>
     </div>
+            </div>
 
     <script>
             const TEJIDOS = [
@@ -1729,7 +1803,25 @@ const PRECIOS_BARRAS = {
             "cortina_plegones": "Cortina Plegones"
 
         };
+        const CLIENTES_CONFIG = {
+    "canotex": {
+        pass: "cortinas2024",
+        nombre_publico: "Canotex S.L.",
+        color_tema: "#8b5cf6", // Púrpura
+        permisos: ["dashboard", "nuevo"],
+        mensaje_especial: "¡Bienvenido, socio Canotex! Recuerda revisar el descuento especial aplicado."
+    },
+    "sant_jord": {
+        pass: "12345",
+        nombre_publico: "Sant Jord SLU",
+        color_tema: "#22c55e", // Verde
+        permisos: ["dashboard"], // Sant Jord solo ve, no crea
+        mensaje_especial: "Acceso limitado. Solo visualización de presupuestos."
+    }
+};
 
+
+        let clienteLogueado = null;
         let itemsActuales = [];
         let editandoItemId = null;
         let accesoriosEnrollablesSeleccionados = [];
@@ -1769,6 +1861,83 @@ function filtrarSistemasPorTipo() {
     });
 }
 
+
+        // Función principal para iniciar sesión
+function procesarLogin() {
+    const usuario = document.getElementById('login-usuario').value.toLowerCase();
+    const password = document.getElementById('login-pass').value;
+    const errorMsg = document.getElementById('login-error');
+    
+    errorMsg.classList.add('hidden');
+
+    const config = CLIENTES_CONFIG[usuario];
+
+    if (config && config.pass === password) {
+        // ÉXITO
+        clienteLogueado = config;
+        
+        // 1. Ocultar el formulario de Login
+        document.getElementById('login-view').classList.add('hidden');
+        
+        // 2. Mostrar la aplicación principal
+        document.getElementById('main-app-container').classList.remove('hidden');
+
+        // 3. Personalizar la interfaz (El paso clave)
+        personalizarInterfaz(config);
+
+        // Opcional: Guardar el usuario en localStorage para recordar (temporalmente)
+        localStorage.setItem('clienteLogueado', JSON.stringify({ usuario: usuario, loggedIn: true }));
+
+    } else {
+        // FALLO
+        errorMsg.innerText = "Usuario o contraseña incorrectos.";
+        errorMsg.classList.remove('hidden');
+    }
+}
+
+// Función para adaptar el diseño y permisos al cliente
+function personalizarInterfaz(config) {
+    // A. Personalizar el Header (Cambiar Título o Color)
+    const headerH1 = document.querySelector('#dashboard-view .header h1');
+    headerH1.innerHTML = `🪟 Sistema de Presupuestos - ${config.nombre_publico}`;
+
+    // B. Adaptar el estilo (por ejemplo, el color de los stat-cards)
+    document.querySelectorAll('.stat-card').forEach(card => {
+        card.style.background = `linear-gradient(135deg, ${config.color_tema} 0%, #1d4ed8 100%)`; // Usa el color del cliente
+    });
+    
+    // C. Control de Permisos (Ejemplo: Si Canotex tiene permiso para crear)
+    const nuevoBtn = document.querySelector('#dashboard-view .btn-primary');
+    
+    if (config.permisos && !config.permisos.includes('nuevo')) {
+        // Si no tiene permiso 'nuevo', ocultamos el botón
+        nuevoBtn.classList.add('hidden');
+        
+        // Agregamos un mensaje de advertencia específico en el dashboard
+        const dashboardView = document.getElementById('dashboard-view');
+        const aviso = document.createElement('div');
+        aviso.className = 'aviso-orientativo';
+        aviso.style.borderColor = config.color_tema; // Color del cliente
+        aviso.innerHTML = `<strong>Acceso Limitado:</strong> ${config.mensaje_especial}`;
+        dashboardView.prepend(aviso);
+
+    } else {
+        nuevoBtn.classList.remove('hidden');
+    }
+
+    // Lógica para cargar SOLO los presupuestos de este cliente
+    // (Esto requiere un backend REAL para ser efectivo y seguro)
+    // De momento, solo muestra el dashboard.
+    mostrarVista('dashboard'); 
+}
+
+
+// Función de Cierre de Sesión
+function cerrarSesion() {
+    clienteLogueado = null;
+    localStorage.removeItem('clienteLogueado');
+    location.reload(); // Recarga la página y vuelve al login
+}
 function mostrarOpcionesBarras() {
     const sistema = document.getElementById('sistema').value;
     const opcionesBarras = document.getElementById('opciones-barras');
@@ -2467,6 +2636,24 @@ function agregarItemEnrollable() {
     actualizarDiametrosDisponibles();
     document.getElementById('precio-enrollable-preview').textContent = '0.00€';
 }
+        function verificarSesion() {
+    const sesionGuardada = localStorage.getItem('clienteLogueado');
+    if (sesionGuardada) {
+        const datos = JSON.parse(sesionGuardada);
+        if (CLIENTES_CONFIG[datos.usuario]) {
+            // Si el usuario existe en la "base de datos", cargamos su perfil
+            document.getElementById('login-usuario').value = datos.usuario;
+            procesarLogin();
+            return;
+        }
+    }
+    // Si no hay sesión válida, se queda en el login
+    document.getElementById('login-view').classList.remove('hidden');
+    document.getElementById('main-app-container').classList.add('hidden');
+}
+
+// Llama a esta función al final del script para que se ejecute al cargar la página
+verificarSesion();
     </script>
 </body>
 </html>
